@@ -1,0 +1,77 @@
+.season-race{
+  display: table;
+}
+.season-race *{
+  display: table-cell;
+}
+.season-race-flag{
+  width: 4em;
+}
+
+//experimental
+.seasons{
+  position: absolute;
+  top: 7.25em;
+  z-index: 1000000;
+  background: $primary-color;
+  height: 630px;
+}
+.season{
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-right: 1em;
+  padding-left: 1em;
+  cursor: pointer
+}
+.selected-season{
+  background-color: $hightlight-color;
+  font-weight: bold;
+}
+.season:hover{
+  background-color: lighten($navigation-button-backgroundcolor,30%);
+  background-color: darken($navigation-button-color,30%);
+}
+.season-is-running{
+  color: red;
+  animation: dot-blink 5s linear infinite;
+}
+@keyframes dot-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.map-flag{
+  width: 24px;
+  height: 12px;
+  padding-right: 0.1em;
+}
+.map-popup{
+  border-radius: 0px;
+  background: $navigation-button-backgroundcolor;
+  color: $navigation-button-color;
+}
+.race-date{
+  font-style: italic;
+  font-size: smaller;
+  display: block;
+  margin-bottom: 0.5em;
+}
+.race-detail{
+  margin-top: -0.7em;
+  margin-left: -1em;
+  width: 100px;
+  margin-bottom: -0.5em;
+}
+.race-link{
+  padding-left: 0.5em;
+}
+.leaflet-popup-content-wrapper{
+  background: $navigation-button-backgroundcolor !important;
+  color: $navigation-button-color !important;
+}
+.leaflet-popup-tip{
+  background: $navigation-button-color !important;
+}
+.leaflet-control-container > .leaflet-left{
+  display:none;
+}

@@ -1,0 +1,9 @@
+{% extends 'frontend/layout.html' %}
+{% block content %}
+  <h1>{{ title }} </h1>
+  {% spaceless %}
+  {% for result in resultList %}
+    {{ result }}
+  {% endfor %}
+  {% endspaceless %}
+{% endblock %}

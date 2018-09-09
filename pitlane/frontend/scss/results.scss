@@ -1,0 +1,78 @@
+.result{
+  background: $result-background;
+  color: $result-color;
+  //display: inline-flex;
+  margin-bottom: 1em;    
+  display: block;
+}
+.medal{
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 50px 0 0;
+  border-color: $highlight-button transparent transparent transparent;
+}
+.medal-1{
+  border-color: gold transparent transparent transparent;
+  color: black;
+}
+.medal-2{
+  border-color: silver transparent transparent transparent;
+  color: black;
+}
+.medal-3{
+  border-color: brown transparent transparent transparent;
+  color: white;
+}
+.position{
+  position: relative;
+  top: -2.5em;
+  left: 0.5em;
+}
+.result-cell{
+  display: inline-block;
+  height: 100%;
+  height: 50px;
+  margin-right: 1em;
+  line-height: 50px;
+}
+.result > *:nth-of-type(2){
+  margin-left: 3.5em;
+}
+.result-str{
+  min-width: 80px;
+}
+.result-image > img{
+  height: 50%;
+  position: relative;
+  top: 0.4em;
+}
+.result-params{
+  font-size: 9pt;
+  text-overflow: ellipsis;
+  font-family: Monospace;
+  width: 100px;
+}
+.result-longstr{
+  min-width: 120px;
+}
+.result-int{
+  width: 12px;
+}
+.result-raw{
+  width: 156px;
+}
+.result-time{
+  width: 70px;
+}
+.result-float{
+  width: 40px;
+}
+.result-absolute-align{
+  position: absolute;
+}
+.dnf{
+  color: red;
+  text-transform: uppercase;
+  font-weight: bold;
+}

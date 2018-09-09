@@ -1,0 +1,17 @@
+{% extends 'frontend/layout.html' %}
+{% load static %}
+{% block content %}
+  <div>
+  <video src="{% static 'frontend/bg.mp4' %}" autoplay="autoplay" muted="muted" loop="loop" class="video-teaser"></video>
+    {% if newsflashArticle is not None %}
+      <div class="news-flash">
+        <div class="news-flash-content">
+          <b>{{ newsflashArticle.title }}</b>
+          <p>The summercup has started
+            {{ newsflashArticle.text | safe }}
+          <a href="/news/{{newsflashArticle.id}}">read more</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

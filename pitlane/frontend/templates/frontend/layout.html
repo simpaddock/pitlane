@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" type="text/css" href="{% static 'frontend/style.css' %}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="navigation">
+    <a href="/">
+      <img src="{{ config.logo }}"  class="logo">
+    </a>
+    {% for route_key, route_value in routes.items %}
+      <a href="/{{ route_key }}/" class="navigation-button">
+        {{ route_value }}
+      </a>
+    {% endfor %}
+    <a href="/signup" class="navigation-button navigation-button-highlight">
+      Sign up
+    </a>
+  </div>
+  <div class="body-content">
+    {% block content %} {% endblock %}
+  </div>
+</body>
+
+</html>

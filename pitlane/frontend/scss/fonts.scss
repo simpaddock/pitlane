@@ -1,0 +1,13 @@
+/* electrolize-regular - latin */
+@font-face {
+  font-family: 'Electrolize';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/electrolize-v6-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Electrolize'), local('Electrolize-Regular'),
+       url('fonts/electrolize-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('fonts/electrolize-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('fonts/electrolize-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('fonts/electrolize-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('fonts/electrolize-v6-latin-regular.svg#Electrolize') format('svg'); /* Legacy iOS */
+}

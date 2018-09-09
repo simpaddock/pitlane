@@ -1,0 +1,81 @@
+{% extends 'frontend/layout.html' %}
+{% block content %}
+  <script>
+    var seasons = JSON.parse('{{ seasonsJSON |safe }}')
+  </script>
+  <div class="vue-seasons seasons">
+    <div class="season" v-for="(season, season_key ) in seasons" :key="season_key" :class="{'selected-season': season.id === selectedSeason}">
+        <span v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]</span>
+        <span v-if="season.isRunning" class="season-is-running">Running</span>
+        <p>
+            <a :href="'/seasons/'+season.id+'/drivers/'">[[ season.drivers.length  ]] drivers</a>
+            <a :href="'/seasons/'+season.id+'/teams/'">[[ season.races.length  ]] teams</a>
+        </p>
+    </div>
+  </div>
+  <div id="map" style="height: 630px;width: 100%"></div>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+  <script src="https://vuejs.org/js/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  <script>
+    var seasonOverViewVueInstance = new Vue({
+     el: '.vue-seasons',
+     delimiters: ['[[', ']]'],
+     data: function () {
+       return {
+         'seasons': window.seasons,
+         'mapInstance': null,
+         'selectedSeason': null
+       }
+     }, 
+     created:  function (){
+       if (this.seasons.length > 0){
+         console.log("jflas")
+         this.updateMap(this.seasons[0].id)
+       }
+     },
+     methods: {
+      updateMap: function (seasonid){
+        this.selectedSeason = seasonid
+        if (this.mapInstance !== null){
+          this.mapInstance.off();
+          this.mapInstance.remove();
+        }
+        this.mapInstance = new L.Map('map');
+        // create the tile layer with correct attribution
+        var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 2, attribution: osmAttrib});		
+
+        // start the map in South-East England
+        this.mapInstance.setView(new L.LatLng(40.737, -73.923),9); // center view
+        this.mapInstance.addLayer(osm);
+        for(var i in seasons){
+          var season = seasons[i]
+          if (season.id === seasonid){
+            for(var x=0;x<season.races.length;x++){
+              console.log(season)
+              var race = season.races[x]
+              popup2 = new L.Popup({
+                "className": 'map-popup'
+              });
+              popup2.setLatLng(new L.LatLng(race.track.long, race.track.lat));
+              var content  = ""
+              var marker = L.marker(new L.LatLng(race.track.long, race.track.lat)).bindPopup(popup2)
+              marker.addTo(this.mapInstance )
+              var date = moment(race.startDate).format("L");   
+              popup2.setContent("<div class='race-detail'><span class='race-date'>"+date+" #"+(x+1)+"</span><img class=\"map-flag\" src='"+race.track.country.flag+ "'><a class='race-link' href='/races/"+race.id+"/'>"+race.name+"</a></div>");
+              this.mapInstance .addLayer(popup2);
+            }
+          }
+        }
+      }
+     }
+    })
+  </script>
+  <script>
+    
+  </script>
+{% endblock %}
+

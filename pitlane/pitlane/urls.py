@@ -1,0 +1,31 @@
+"""pitlane URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path
+from frontend import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('robots.txt', views.get_robots, name='robots.txt'),
+    path('', views.get_index, name='index'),
+    path('seasons/', views.get_seasonList, name='seasons'),
+    path('news/', views.get_news, name='news'),
+    path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
+    path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
+    path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),
+    path('drivers/', views.get_DriversList, name='get_DriversList'),
+    path('teams/', views.get_TeamsList, name='get_TeamsList')
+]

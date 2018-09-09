@@ -1,0 +1,25 @@
+@import 'variables.scss';
+@import 'fonts.scss';
+
+body{
+  font: 100% $font-stack;
+  background-color: $primary-color;
+  color: $color;
+  margin-left: 20%;
+  margin-top: 2em;
+  width: 60%;
+
+}
+
+a{
+  text-decoration: none;
+  color: white;
+}
+
+.body-content{
+  margin-top: 2em;
+}
+@import 'navbar.scss';
+@import 'index.scss'; // startpage
+@import 'seasons.scss'; // seasons-page
+@import 'results.scss'; // results-page
