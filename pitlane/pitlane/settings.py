@@ -119,8 +119,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "frontend", "static", "frontend")
 
+print(MEDIA_ROOT)
 LEAGUECONFIG = None
 CONFIGPATH = os.path.join((BASE_DIR), "config.json")
 with open(CONFIGPATH,"r") as config:
     LEAGUECONFIG = loads(config.read())
+

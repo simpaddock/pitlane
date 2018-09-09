@@ -65,3 +65,4 @@ class NewsArticle(models.Model):
   title = models.TextField()
   text = models.TextField()
   date = models.DateTimeField()
+  mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/')

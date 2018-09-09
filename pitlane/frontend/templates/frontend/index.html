@@ -2,8 +2,14 @@
 {% load static %}
 {% block content %}
   <div>
-  <video src="{% static 'frontend/bg.mp4' %}" autoplay="autoplay" muted="muted" loop="loop" class="video-teaser"></video>
-    {% if newsflashArticle is not None %}
+  {% if newsflashArticle is not None %}
+    {% if newsflashArticle.mediaFile %}
+      {% if isVideo %}
+      <video src="{% static mediaFile %}" autoplay="autoplay" muted="muted" loop="loop" class="video-teaser"></video>
+      {% else %}
+      <img src="{% static mediaFile %}" class="video-teaser">
+      {% endif %}
+    {% endif %}
       <div class="news-flash">
         <div class="news-flash-content">
           <b>{{ newsflashArticle.title }}</b>

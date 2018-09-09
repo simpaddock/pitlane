@@ -6,7 +6,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 from json import dumps
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-
+import filetype
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
@@ -34,10 +34,17 @@ def renderWithCommonData(request, template, context):
 def get_index(request):
   articles = NewsArticle.objects.all().order_by("date")
   newsflashArticle = None
+  mediaFile = None
+  isVideo = False
   if len(articles) > 0:
     newsflashArticle = articles[0]
+    if newsflashArticle.mediaFile:
+      mediaFile = 'frontend/' + newsflashArticle.mediaFile.url
+      isVideo =  "video" in filetype.guess(newsflashArticle.mediaFile.path).mime
   return renderWithCommonData(request, 'frontend/index.html', {
-    "newsflashArticle": newsflashArticle
+    "newsflashArticle": newsflashArticle,
+    "mediaFile":  mediaFile,
+    "isVideo": isVideo
   })
 
 def get_news(request):

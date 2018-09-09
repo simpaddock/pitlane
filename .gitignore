@@ -108,3 +108,4 @@ Design/
 pitlane/db.sqlite3
 config.json
 pitlane/frontend/static/
+pitlane/frontend/static/frontend/uploads/
