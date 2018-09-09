@@ -127,3 +127,4 @@ CONFIGPATH = os.path.join((BASE_DIR), "config.json")
 with open(CONFIGPATH,"r") as config:
     LEAGUECONFIG = loads(config.read())
 
+

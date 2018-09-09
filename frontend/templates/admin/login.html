@@ -1,0 +1,10 @@
+{% extends "admin/login.html" %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/style.css' %}">
+
+
+{% block branding  %}
+
+<h1 id="site-name"><a href="{% url 'admin:index' %}"><img class="vendor-logo" src = "{% static 'admin/logo.png' %}">
+  {{ site_header }}</a></h1>
+{% endblock %}

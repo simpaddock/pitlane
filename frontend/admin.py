@@ -14,3 +14,9 @@ admin.site.register(DriverRaceResult)
 admin.site.register(Season)
 admin.site.register(DriverRaceResultInfo)
 admin.site.register(NewsArticle)
+
+from pitlane.settings import LEAGUECONFIG
+
+admin.site.site_header = LEAGUECONFIG["name"]
+admin.site.site_title = "SimPaddock"
+admin.site.index_title = LEAGUECONFIG["name"]
