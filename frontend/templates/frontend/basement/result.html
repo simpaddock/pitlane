@@ -12,6 +12,7 @@
             </div> 
           </div>
         {% endif %}
+        {% if value.1 == "firstnamestr" %}<div class="result-firstnamestr result-cell">{{value.0}}</div>{% endif %}
         {% if value.1 == "str" %}<div class="result-str result-cell">{{value.0}}</div>{% endif %}
         {% if value.1 == "longstr" %}<div class="result-longstr result-cell">{{value.0}}</div>{% endif %}
         {% if value.1 == "raw" %}

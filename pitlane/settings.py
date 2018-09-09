@@ -131,3 +131,6 @@ with open(CONFIGPATH,"r") as config:
 
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
+SIMSOFTWARE = (
+    ('rFactor 2', 'rFactor 2'),
+)

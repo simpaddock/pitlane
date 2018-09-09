@@ -111,8 +111,8 @@ def getRank(row, haystack, columnToSearch: str, reverse=False) -> int:
     for column in element["additionalInfos"]:
       if column.name == columnToSearch:
         allElements.append(column.value)
-      if element == row:
-        needle = column.value
+        if element == row:
+          needle = column.value
   allElements.sort(reverse=reverse)
   if needle == None or needle not in allElements:
     return len(allElements)
@@ -135,7 +135,7 @@ def getRaceResult(id: int):
   # rank them
   for result in completeResults:
     result["position"] =  getRank(result, completeResults, "Position")
-  
+  completeResults = sorted(completeResults, key=lambda x: x["position"], reverse=False)
   # prepare additional columns types
   additionalColumnsNames = OrderedDict()
   additionalColumnsNames["Laps"] = "int"
@@ -151,7 +151,7 @@ def getRaceResult(id: int):
   for result in completeResults:
     viewData = OrderedDict()
     viewData["position"] = result["position"], "position"
-    viewData["firstName"] = result["baseInfos"].driverEntry.driver.firstName, "longstr"
+    viewData["firstName"] = result["baseInfos"].driverEntry.driver.firstName, "firstnamestr"
     viewData["lastName"] = result["baseInfos"].driverEntry.driver.lastName, "longstr"
     viewData["team"] = result["baseInfos"].driverEntry.teamEntry.team.name, "longstr"
     viewData["teamlogo"] = result["baseInfos"].driverEntry.teamEntry.team.logo, "image"
