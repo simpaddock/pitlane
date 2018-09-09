@@ -103,9 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-pitlane/frontend/node_modules/
+frontend/node_modules/
 Design/
-pitlane/db.sqlite3
+db.sqlite3
 config.json
-pitlane/frontend/static/
-pitlane/frontend/static/frontend/uploads/
+frontend/static/
+frontend/static/frontend/uploads/
