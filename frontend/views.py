@@ -74,6 +74,9 @@ def getSeasonDrivers(seasonId: int) -> list:
       drivers.append(driver.id) # FIXME: full object leads to json error
   return drivers
 
+class JSONEncoder(DjangoJSONEncoder):
+    def default(self, o):
+        return str(o)
 
 def get_seasonList(request):
   seasonList = Season.objects.all()
@@ -94,7 +97,7 @@ def get_seasonList(request):
       obj["races"].append(raceObj)
     resultList.append(obj)
   
-  seasonsJSON = dumps(resultList, cls=DjangoJSONEncoder)
+  seasonsJSON = dumps(resultList, cls=JSONEncoder)
   return renderWithCommonData(request, 'frontend/seasons.html', {
     "seasons": seasonList,
     "seasonsJSON": seasonsJSON

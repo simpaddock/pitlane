@@ -1,12 +1,20 @@
 from django.contrib import admin
-
+from django.utils.html import format_html
 from .models import Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
+
+class DriverEntryAdmin(admin.ModelAdmin):
+    list_display = ['toString']
+
+    def toString(self, obj):
+      return format_html("#{0}: {1}, {2}: {3}".format(str(obj.driverNumberFormat).format(obj.driverNumber), obj.driver.lastName, obj.driver.firstName, obj.teamEntry.team.name))
+    
+    toString.short_description = 'Driver entry'
 
 admin.site.register(Track)
 admin.site.register(Race)
 admin.site.register(Driver)
 admin.site.register(Team)
-admin.site.register(DriverEntry)
+admin.site.register(DriverEntry, DriverEntryAdmin)
 admin.site.register(TeamEntry)
 admin.site.register(RaceResult)
 admin.site.register(DriverRaceResult)

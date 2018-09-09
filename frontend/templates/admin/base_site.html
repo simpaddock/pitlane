@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% load static %}
+{% load static i18n %}
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
@@ -9,3 +9,10 @@
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
+
+{% block userlinks %}
+{% if site_url %}
+    <a class="white-link" href="{{ site_url }}">{% trans 'View your league' %}</a> /
+{% endif %}
+<a class="white-link" href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+{% endblock %}
