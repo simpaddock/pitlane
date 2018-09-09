@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.get_index, name='index'),
     path('seasons/', views.get_seasonList, name='seasons'),
     path('news/', views.get_news, name='news'),
+    path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),

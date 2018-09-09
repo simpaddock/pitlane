@@ -1,4 +1,6 @@
 {
   logo: 'pathtothelogo',
-  name: 'name of the league'
+  name: 'name of the league',
+  "theme": "basement",
+  "dateFormat": "%Y-%m-%d %H:%M:%S"
 }

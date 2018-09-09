@@ -29,6 +29,8 @@ def get_robots(request):
 def renderWithCommonData(request, template, context):
   context["routes"] = getRoutes()
   context["config"] = LEAGUECONFIG
+  template = template.replace("frontend/", "frontend/" + LEAGUECONFIG["theme"] + "/")
+  context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html' 
   return render(request, template, context)
 
 def get_index(request):
@@ -55,6 +57,13 @@ def get_news(request):
     "articles": paginator.get_page(page)
   })
 
+def get_SingleNews(request, id:int):
+  articles = NewsArticle.objects.all().filter(pk=id)
+  paginator = Paginator(articles, 1)
+  page = request.GET.get('page')
+  return renderWithCommonData(request, 'frontend/news.html', {
+    "articles": paginator.get_page(page)
+  })
 
 def getSeasonDrivers(seasonId: int) -> list:
   teams = TeamEntry.objects.all().filter(season_id=seasonId)

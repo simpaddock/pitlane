@@ -6,7 +6,6 @@ admin.site.register(Track)
 admin.site.register(Race)
 admin.site.register(Driver)
 admin.site.register(Team)
-admin.site.register(Country)
 admin.site.register(DriverEntry)
 admin.site.register(TeamEntry)
 admin.site.register(RaceResult)
@@ -19,4 +18,4 @@ from pitlane.settings import LEAGUECONFIG
 
 admin.site.site_header = LEAGUECONFIG["name"]
 admin.site.site_title = "SimPaddock"
-admin.site.index_title = LEAGUECONFIG["name"]
+admin.site.index_title = "" # we don't need a second title..

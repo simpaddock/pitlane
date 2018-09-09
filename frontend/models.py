@@ -1,4 +1,6 @@
 from django.db import models
+from ckeditor.fields import RichTextField
+from pitlane.settings import LEAGUECONFIG
 
 class Country(models.Model):
   name = models.TextField(max_length=100)
@@ -46,6 +48,8 @@ class DriverEntry(models.Model):
   driverNumber = models.IntegerField()
   teamEntry = models.ForeignKey(TeamEntry, on_delete=models.DO_NOTHING, default=None)
   driverNumberFormat = models.TextField()
+  def __str__(self):
+    return "#{0} {1}, {2}: {3}".format(self.driverNumberFormat, self.driver.lastName, self.driver.firstName, self.teamEntry.team.name)
 
 class DriverRaceResult(models.Model):
   raceResult = models.ForeignKey(RaceResult, on_delete=models.DO_NOTHING, default=None)
@@ -63,6 +67,8 @@ class DriverRaceResultInfo(models.Model):
 
 class NewsArticle(models.Model):
   title = models.TextField()
-  text = models.TextField()
+  text = RichTextField()
   date = models.DateTimeField()
   mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/')
+  def __str__(self):
+    return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)
