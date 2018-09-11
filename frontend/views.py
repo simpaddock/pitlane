@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
 from collections import OrderedDict
 
 from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team
@@ -7,6 +8,9 @@ from django.forms.models import model_to_dict
 from json import dumps
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import filetype
+from rest_framework import viewsets
+
+
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
@@ -394,3 +398,20 @@ def get_TeamsList(request):
     "resultList": resultList,
     "title": "Teams"
   })
+
+# JSON API Endpoints
+
+def get_raceData(request, id: int):
+  race = Race.objects.get(pk=id)
+  entries = DriverEntry.objects.filter(teamEntry__season_id=race.season.id)
+  result = []
+  for entry in entries:
+    # get relevant infos only.
+    resultData = {
+      "driverNumber": entry.driverNumber,
+      "driverNumberFormat": entry.driverNumberFormat,
+      "teamName": entry.teamEntry.team.name
+    }
+    result.append(resultData)
+  # TODO: IS THIS A SECURITY FLAW?????
+  return JsonResponse(result, safe=False)

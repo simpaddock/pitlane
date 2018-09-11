@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from frontend import views
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('robots.txt', views.get_robots, name='robots.txt'),
@@ -28,5 +30,7 @@ urlpatterns = [
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),
     path('drivers/', views.get_DriversList, name='get_DriversList'),
-    path('teams/', views.get_TeamsList, name='get_TeamsList')
-]
+    path('teams/', views.get_TeamsList, name='get_TeamsList'),
+    path('api/entries/<int:id>', views.get_raceData, name='get_raceData'),
+
+] 
