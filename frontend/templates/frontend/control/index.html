@@ -1,0 +1,10 @@
+<form method="POST">
+  {% csrf_token %}
+  {% for entry in entries %}
+    <input type="submit" name="currentDriver" value="{{ entry.driverNumber }}"> {{ entry.driver.firstName }}
+  {% endfor %}
+  <hr>
+  {% for key in battle %}
+    <input type="submit" name="battle" value="{{ key }}"> Battle for {{ key }}
+  {% endfor %}
+</form>

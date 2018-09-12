@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from collections import OrderedDict
 
-from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team
+from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 from json import dumps
@@ -401,6 +401,7 @@ def get_TeamsList(request):
 
 # JSON API Endpoints
 
+
 def get_raceData(request, id: int):
   race = Race.objects.get(pk=id)
   entries = DriverEntry.objects.filter(teamEntry__season_id=race.season.id)
@@ -410,8 +411,33 @@ def get_raceData(request, id: int):
     resultData = {
       "driverNumber": entry.driverNumber,
       "driverNumberFormat": entry.driverNumberFormat,
-      "teamName": entry.teamEntry.team.name
+      "teamName": entry.teamEntry.team.name,
     }
     result.append(resultData)
   # TODO: IS THIS A SECURITY FLAW?????
-  return JsonResponse(result, safe=False)
+  return JsonResponse({
+    "entries": result,
+    "controlSet": RaceOverlayControlSet.objects.filter(race_id=id).first().controlSet
+  }, safe=False)
+
+# Overlay control panel
+
+def get_overlayControl(request, id: int):
+  race = Race.objects.get(pk=id)
+  entries = DriverEntry.objects.filter(teamEntry__season_id=race.season.id)
+  allowed = [
+    "currentDriver",
+    "battle"
+  ]
+  if request.POST:
+    for value in request.POST:
+      if value in allowed:
+        RaceOverlayControlSet.objects.filter(race_id=id).delete()
+        overlay = RaceOverlayControlSet()
+        overlay.race = race
+        overlay.controlSet = dumps({
+          value: int(request.POST[value])
+        })
+        overlay.save()
+
+  return render(request, "frontend/control/index.html", {'entries': entries, 'battle': range(1,len(entries))})

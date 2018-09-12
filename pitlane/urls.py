@@ -32,5 +32,6 @@ urlpatterns = [
     path('drivers/', views.get_DriversList, name='get_DriversList'),
     path('teams/', views.get_TeamsList, name='get_TeamsList'),
     path('api/entries/<int:id>', views.get_raceData, name='get_raceData'),
+    path('control/<int:id>', views.get_overlayControl, name='get_raceData'),
 
 ] 

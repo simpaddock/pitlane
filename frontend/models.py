@@ -54,7 +54,9 @@ class Race(models.Model):
   def __str__(self):
     return "{0}: {1} in {2}".format(self.startDate, self.name, self.track)
 
-
+class RaceOverlayControlSet(models.Model):
+  race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
+  controlSet = models.TextField() # Json, controls what to highlight currently
 
 class RaceResult(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
