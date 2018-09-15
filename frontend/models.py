@@ -57,6 +57,8 @@ class Race(models.Model):
 class RaceOverlayControlSet(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
   controlSet = models.TextField() # Json, controls what to highlight currently
+  slotId = models.IntegerField(default=1)
+  cameraId = models.IntegerField(default=4)
 
 class RaceResult(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)

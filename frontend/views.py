@@ -414,10 +414,12 @@ def get_raceData(request, id: int):
       "teamName": entry.teamEntry.team.name,
     }
     result.append(resultData)
-  # TODO: IS THIS A SECURITY FLAW?????
+  cameraControl = RaceOverlayControlSet.objects.filter(race_id=id).first()
   return JsonResponse({
     "entries": result,
-    "controlSet": RaceOverlayControlSet.objects.filter(race_id=id).first().controlSet
+    "controlSet": cameraControl.controlSet,
+    "slotId": cameraControl.slotId,
+    "cameraId":  cameraControl.cameraId
   }, safe=False)
 
 # Overlay control panel
@@ -438,6 +440,7 @@ def get_overlayControl(request, id: int):
         overlay.controlSet = dumps({
           value: int(request.POST[value])
         })
+        overlay.slotId =  int(request.POST[value])
         overlay.save()
 
   return render(request, "frontend/control/index.html", {'entries': entries, 'battle': range(1,len(entries))})
