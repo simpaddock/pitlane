@@ -27,7 +27,7 @@ SECRET_KEY = 'oof2syr2*ayurpd#6l9!cvonck442n&g(td-jab!ths0ekbonn'
 DEBUG = True
 
 # for test purposes..
-ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]^M
+ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
 
 
 
