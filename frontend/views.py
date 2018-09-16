@@ -8,7 +8,6 @@ from django.forms.models import model_to_dict
 from json import dumps
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import filetype
-from rest_framework import viewsets
 
 
 LIST_DATA_RACE = "race"
