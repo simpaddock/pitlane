@@ -2,3 +2,4 @@ Django==2.1
 django-ckeditor==5.6.1
 django-js-asset==1.1.0
 djangorestframework==3.8.2
+filetype==1.0.1
