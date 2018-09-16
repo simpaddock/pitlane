@@ -418,7 +418,8 @@ def get_raceData(request, id: int):
     "entries": result,
     "controlSet": cameraControl.controlSet,
     "slotId": cameraControl.slotId,
-    "cameraId":  cameraControl.cameraId
+    "cameraId":  cameraControl.cameraId,
+    "commandId": cameraControl.id
   }, safe=False)
 
 # Overlay control panel
@@ -436,10 +437,18 @@ def get_overlayControl(request, id: int):
         RaceOverlayControlSet.objects.filter(race_id=id).delete()
         overlay = RaceOverlayControlSet()
         overlay.race = race
-        overlay.controlSet = dumps({
-          value: int(request.POST[value])
-        })
-        overlay.slotId =  int(request.POST[value])
+        requested = request.POST[value]
+        if " " in requested:
+          # driver view requested
+          overlay.slotId = -1
+          overlay.controlSet = dumps({
+            value: request.POST[value]
+          })
+        else:   
+          overlay.controlSet = dumps({
+            value: int(request.POST[value])
+          })
+          overlay.slotId =  int(request.POST[value])
         overlay.save()
 
-  return render(request, "frontend/control/index.html", {'entries': entries, 'battle': range(1,len(entries))})
+  return render(request, "frontend/control/index.html", {'entries': entries, 'battle': range(1,len(entries) -1)})
