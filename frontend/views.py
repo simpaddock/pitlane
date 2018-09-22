@@ -171,28 +171,21 @@ def getRaceResult(id: int):
     ('Points', None),
     ('Status', None),
     ])
-
-  # flatten te list for displaying
-  primaryKeys = {
-    "race": "position"
-  }
   
-  primaryKey = viewData[primaryKeys["race"]]
   viewList = []
   for result in completeResults:
     viewData = OrderedDict()
-    primaryKeyValue = None
     for columnName, columnPath in columns.items():
       if columnPath is None:  # None means "search in additional fields"
         for info in result["additionalInfos"]:
           if info.name == columnName:
-            viewData[columnName] = info.value, 'str'
-          if info.name == primaryKey:
-            primaryKeyValue = info.value
+            viewData[columnName] = info.value
+        if columnName not in viewData:
+          viewData[columnName] = "-"
       else:
-        viewData[columnName] = getChildValue(result, columnPath), "str"
-    
-    print(primaryKeyValue)
+        viewData[columnName] = getChildValue(result, columnPath)
+
+    viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
     viewList.append(viewData)
   return viewList
 
@@ -393,7 +386,7 @@ def getDriversList():
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(id)
-  return renderWithCommonData(request, 'frontend/result.html', {
+  return renderWithCommonData(request, 'frontend/race.html', {
     "race": race,
     "resultList": resultList,
     "title":  race.name +" - " + race.season.name

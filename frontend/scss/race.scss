@@ -1,0 +1,50 @@
+.race-result-row{
+  width: 100%;
+  background: $result-background;
+  color: $result-color;
+  height: 4em;
+  margin-bottom: 1em;
+}
+.inline{
+  width: 20%;
+  display: inline-block;
+  padding-right: 1em;
+}
+.centered{
+  text-align: center;
+  position: relative;
+  top: -1em;
+}
+.medium{
+  width: 7%;
+}
+.small{
+  width: 2%;
+}
+.race-result-driver{
+  margin-left: 60px;
+  padding: 0.5em;
+}
+.race-result-driver-names span:first-child{
+  padding-right: 4px;
+}
+.race-result-driver-names span:last-child{
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.race-result-driver-team{
+  font-size: small;
+  padding-top: 0.5em;
+}
+.race-result-team-logo{
+  width: 25px;
+  float: inherit;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+.race-result-number{
+  width: 1%;
+}
+.race-result-vehicle{
+  width: 15%;
+}

@@ -3,7 +3,13 @@
   <h1>{{ title }} </h1>
   {% spaceless %}
   {% for result in resultList %}
-    <div class="result">
+    <div class="race-result-row">
+      {{result.firstName}}
+      <div class="result-absolute-align">
+        <div class="medal medal-{{ result.position }}">
+            <span class="position">{{ result.position }}</span>
+        </div> 
+      </div>
       {% for key, value in result.items %}
         {% if value.1 == "position" %}
           <div class="result-absolute-align">
@@ -32,9 +38,6 @@
         {% endif %}
         {% if value.1 == "image" %}
           <div class="result-image result-cell"><img src="http://localhost:8000/static/frontend/logo.png"></div>
-        {% endif %}
-        {% if value.1 == "params" %}
-          <div class="result-params result-cell">{{value.0}}</div>
         {% endif %}
       {% endfor %}
     </div>
