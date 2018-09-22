@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from collections import OrderedDict
+from django.db import models
 
 from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
@@ -121,6 +122,19 @@ def getRank(row, haystack, columnToSearch: str, reverse=False) -> int:
     return len(allElements)
   return allElements.index(needle) + 1
 
+def getChildValue(haystack, needle):
+  parts = needle.split(".")
+  value = haystack
+  for part in parts:
+    # last parent is dict or object -> extract children
+    if isinstance(value, dict):
+      value = value[part]
+    elif isinstance(value, models.Model):
+      value = getattr(value, part)
+    elif isinstance(value, object):
+      value = value.__dict__[part]
+  return value
+
 
 def getRaceResult(id: int):
   results = DriverRaceResult.objects.all().filter(raceResult_id=id)
@@ -138,31 +152,47 @@ def getRaceResult(id: int):
   # rank them
   for result in completeResults:
     result["position"] =  getRank(result, completeResults, "Position")
+
   completeResults = sorted(completeResults, key=lambda x: x["position"], reverse=False)
-  # prepare additional columns types
-  additionalColumnsNames = OrderedDict()
-  additionalColumnsNames["Laps"] = "int"
-  additionalColumnsNames["Stops"] = "int"
-  additionalColumnsNames["Time"] = "time"
-  additionalColumnsNames["Avg"] = "float"
-  additionalColumnsNames["Points"] = "int"
-  additionalColumnsNames["Status"] = "status"
-  additionalColumnsNames["ControlAndAids"] = "params"
+
+  columns = OrderedDict([
+    ('position', "position"), 
+    ('firstName', "baseInfos.driverEntry.driver.firstName"),
+    ('lastName', "baseInfos.driverEntry.driver.lastName"),
+    ('team', "baseInfos.driverEntry.teamEntry.team.name"),
+    ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
+    ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
+    ('number', "baseInfos.driverEntry.driverNumber"),
+    ('numberFormat', "baseInfos.driverEntry.driverNumberFormat"),
+    ('Laps', None), # none leads to direct additional searching
+    ('Stops', None),
+    ('Time', None),
+    ('Avg', None),
+    ('Points', None),
+    ('Status', None),
+    ])
 
   # flatten te list for displaying
+  primaryKeys = {
+    "race": "position"
+  }
+  
+  primaryKey = viewData[primaryKeys["race"]]
   viewList = []
   for result in completeResults:
     viewData = OrderedDict()
-    viewData["position"] = result["position"], "position"
-    viewData["firstName"] = result["baseInfos"].driverEntry.driver.firstName, "firstnamestr"
-    viewData["lastName"] = result["baseInfos"].driverEntry.driver.lastName, "longstr"
-    viewData["team"] = result["baseInfos"].driverEntry.teamEntry.team.name, "longstr"
-    viewData["teamlogo"] = result["baseInfos"].driverEntry.teamEntry.team.logo, "image"
-    viewData["vehicle"] = result["baseInfos"].driverEntry.teamEntry.vehicle  + "#" + result["baseInfos"].driverEntry.driverNumberFormat.format(result["baseInfos"].driverEntry.driverNumber), "raw"
-    for additionalColumnKey, additionalColumnType in additionalColumnsNames.items():
-      for info in result["additionalInfos"]:
-        if info.name == additionalColumnKey:
-          viewData[info.name] = info.value, additionalColumnType
+    primaryKeyValue = None
+    for columnName, columnPath in columns.items():
+      if columnPath is None:  # None means "search in additional fields"
+        for info in result["additionalInfos"]:
+          if info.name == columnName:
+            viewData[columnName] = info.value, 'str'
+          if info.name == primaryKey:
+            primaryKeyValue = info.value
+      else:
+        viewData[columnName] = getChildValue(result, columnPath), "str"
+    
+    print(primaryKeyValue)
     viewList.append(viewData)
   return viewList
 

@@ -191,8 +191,6 @@ class DriverEntry(models.Model):
 class DriverRaceResult(models.Model):
   raceResult = models.ForeignKey(RaceResult, on_delete=models.DO_NOTHING, default=None)
   driverEntry = models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None)
-  def __str__(self):
-    return self.driverEntry.driver.lastName
 
 class DriverRaceResultInfo(models.Model):
   driverRaceResult = models.ForeignKey(DriverRaceResult, on_delete=models.DO_NOTHING, default=None)
