@@ -11,3 +11,7 @@ def time(seconds) -> str:
   hours, remainder = divmod(seconds, 3600)
   minutes, seconds = divmod(remainder, 60)
   return'{:02}:{:02}:{:02}'.format(int(hours), int(minutes), int(seconds))
+
+@register.filter
+def index(list, i):
+    return list[int(i)]

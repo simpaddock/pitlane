@@ -7,11 +7,13 @@
 .season-race-flag{
   width: 4em;
 }
-
+.season a{
+  display: block;
+  margin-bottom: 1em;
+}
 //experimental
 .seasons{
   position: absolute;
-  top: 7.25em;
   z-index: 1000000;
   background: $primary-color;
   height: 630px;
@@ -25,11 +27,10 @@
 }
 .selected-season{
   background-color: $hightlight-color;
-  font-weight: bold;
 }
-.season:hover{
-  background-color: lighten($navigation-button-backgroundcolor,30%);
-  background-color: darken($navigation-button-color,30%);
+.selected-season .season-name{
+  color: black;
+  font-weight: bold;
 }
 .season-is-running{
   color: red;

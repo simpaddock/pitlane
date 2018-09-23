@@ -23,6 +23,11 @@
     <a href="/signup" class="navigation-button navigation-button-highlight">
       Sign up
     </a>
+    <div class="running-comp">
+      NEXT
+      <span class="comp-name">{{ running.name }}</span>
+      <a class="next-race" href="/races/{{running.nextRace.id}}">{{ running.nextRace.startDate }}: {{ running.nextRace.name }}</a>
+    </div>
   </div>
   <div class="body-content">
     {% block content %} {% endblock %}

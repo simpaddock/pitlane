@@ -24,6 +24,7 @@ COLUMNS = {
     ('firstName', "baseInfos.driverEntry.driver.firstName"),
     ('lastName', "baseInfos.driverEntry.driver.lastName"),
     ('team', "baseInfos.driverEntry.teamEntry.team.name"),
+    ('teamid', "baseInfos.driverEntry.teamEntry.team.id"),
     ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
     ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
     ('number', "baseInfos.driverEntry.driverNumber"),
@@ -43,6 +44,11 @@ COLUMNS = {
     ('logo', "logo"),
     ('vehicle', "vehicle"),
     ('number', "number"),
+  ]),
+  "teams": OrderedDict([
+    ('team', "team"),
+    ('logo', "logo"),
+    ('vehicle', "vehicle")
   ])
 }
 
@@ -50,10 +56,12 @@ from pitlane.settings import LEAGUECONFIG
 
 def getRoutes():
   routes = OrderedDict()
+  season = getCurrentCup()
   routes["news"] = "News"
   routes["seasons"] = "Seasons"
-  routes["drivers"] = "Drivers"
-  routes["teams"] = "Teams"
+  if season is not None:
+    routes["seasons/"+str(season.id)+"/drivers"] = "Drivers"
+    routes["seasons/"+str(season.id)+"/teams"] = "Teams"
   routes["contact"] = "contact"
   routes["pitlane"] = "Pitlane"
   return routes
@@ -61,9 +69,18 @@ def getRoutes():
 def get_robots(request):
   return HttpResponse("foo", content_type='text/plain')
 
+def getCurrentCup():
+  cup =  Season.objects.filter(isRunning=True).first()
+  if cup is not None:
+    # next race
+    nextRace = Race.objects.filter(season_id=cup.id).order_by("-startDate").first()
+    cup.nextRace = nextRace
+  return cup
+
 def renderWithCommonData(request, template, context):
   context["routes"] = getRoutes()
   context["config"] = LEAGUECONFIG
+  context["running"] = getCurrentCup()
   template = template.replace("frontend/", "frontend/" + LEAGUECONFIG["theme"] + "/")
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html' 
   return render(request, template, context)
@@ -106,7 +123,7 @@ def getSeasonDrivers(seasonId: int) -> list:
   for team in teams:
     teamDrivers = DriverEntry.objects.all().filter(teamEntry_id=team.id)
     for driver in teamDrivers:
-      drivers.append(driver.id) # FIXME: full object leads to json error
+      drivers.append(driver) # FIXME: full object leads to json error
   return drivers
 
 class JSONEncoder(DjangoJSONEncoder):
@@ -121,6 +138,11 @@ def get_seasonList(request):
     obj = model_to_dict(season)
     obj["races"] = []
     obj["drivers"] =getSeasonDrivers(season.id)
+    obj["teams"] = []
+    for driver in obj["drivers"]:
+      if driver.teamEntry.id not in obj["teams"]:
+        obj["teams"].append(driver.teamEntry.id)
+    
     seasonId = season.id
     # TODO: FIND A BETTER FUCKING WAY TO SERIALIZE
     for race in Race.objects.all().filter(season_id=seasonId):
@@ -182,76 +204,33 @@ def getRaceResult(id: int):
   return sorted(viewList, key=lambda x: x["position"], reverse=False)
 
 def getTeamStandings(id: int):
-  results = TeamEntry.objects.all().filter(season_id=id)
-  completeResults = []
-  # collect all infos
-  for result in results:
-    infos = []
-    driverEntries = DriverEntry.objects.all().filter(teamEntry_id=result.id)
-    teamPoints = 0
-    for driverEntry in driverEntries:
-      # get race results
-      races = DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
-      racePoints = 0
-      for race in races:
-        driverPoints = DriverRaceResultInfo.objects.filter(driverRaceResult_id=race.id).filter(name='Points')
-        for point in driverPoints:
-          racePoints = racePoints + int(point.value)
-      # add per race sum
-      pointColumn = DriverRaceResultInfo()
-      pointColumn.name = race.raceResult.race.name
-      pointColumn.value = racePoints
-      infos.append(pointColumn)
-      teamPoints = teamPoints + racePoints
-    
-    # add a sum column
-    pointColumn = DriverRaceResultInfo()
-    pointColumn.name = "Points"
-    pointColumn.value = teamPoints
-    infos.append(pointColumn)
+  races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
+  viewList = {}
+  for key, race in enumerate(races):
+    results = getRaceResult(race.id)
+    for driver in results:
+      teamId = driver["teamid"]
+      if teamId not in viewList: # first race, create name column..
+        viewList[teamId] = OrderedDict()
+        for columnName, columnValue in COLUMNS["teams"].items():
+          viewList[teamId][columnName] = driver[columnValue]
+        viewList[teamId]["sum"] = 0   
+        viewList[teamId]["points"] = []
 
-    # append to complete list
-    completeResults.append(
-      {
-        "baseInfos": result,
-        "additionalInfos": infos,
-        "position": 0
-      }
-    )
-  # rank them
-  for result in completeResults:
-    result["position"] =  getRank(result, completeResults, "Points", True)
-  
-  # prepare additional columns types
-  additionalColumnsNames = OrderedDict()
-  
-  additionalColumnsNames["Points"] = "int"
-  races = Race.objects.filter(season_id=id)
-  for race in races:
-    additionalColumnsNames[race.name] = "int"
-  
-
-
-
-  # flatten te list for displaying
-  viewList = []
-  for result in completeResults:
-    viewData = OrderedDict()
-    viewData["position"] = result["position"], "position"
-    viewData["name"] = result["baseInfos"].team.name, "longstr"
-    for additionalColumnKey, additionalColumnType in additionalColumnsNames.items():
-      for info in result["additionalInfos"]:
-        print(info.value, info.name)
-        if info.name == additionalColumnKey:
-          viewData[info.name] = info.value, additionalColumnType
-    viewList.append(viewData)
-  print(viewList)
-  return viewList
+      if len( viewList[teamId]["points"]) > key:
+        # we already seen a result for that race
+        viewList[teamId]["points"][key] = viewList[teamId]["points"][key] + int(driver["points"])
+      else:
+        viewList[teamId]["points"].append(int(driver["points"]))
+      viewList[teamId]["sum"] = reduce(lambda x,y: x+y, viewList[teamId]["points"])
+      
+  viewList = list(viewList.values())
+  return sorted(viewList, key=lambda tup: tup["points"], reverse=True)
 
 def getDriversStandings(id: int):
   races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
   viewList = {}
-  for key, race in enumerate(races):
+  for race in races:
     results = getRaceResult(race.id)
     for driver in results:
       driverId = driver["id"]
@@ -259,77 +238,13 @@ def getDriversStandings(id: int):
         viewList[driverId] = OrderedDict()
         for columnName, columnValue in COLUMNS["drivers"].items():
           viewList[driverId][columnName] = driver[columnValue]
-
-      viewList[driverId][race.name] = driver["points"]
-  print(viewList)
-  return viewList
-
-def getTeamList():
-  drivers = Team.objects.all()
-  completeResults = []
-  
-  for driver in drivers:
-    infos = []
-    completeResults.append(
-      {
-        "baseInfos": driver,
-        "additionalInfos": infos,
-        "position": 0
-      }
-    )
-  # rank them
-  for result in completeResults:
-    result["position"] =  getRank(result, completeResults, "Points", True)
-  
-  # prepare additional columns types
-  additionalColumnsNames = OrderedDict()
-
-  # flatten te list for displaying
-  viewList = []
-  for result in completeResults:
-    viewData = OrderedDict()
-    viewData["name"] = result["baseInfos"].name, "longstr"
-    viewData["logo"] = result["baseInfos"].logo, "longstr"
-    for additionalColumnKey, additionalColumnType in additionalColumnsNames.items():
-      for info in result["additionalInfos"]:
-        if info.name == additionalColumnKey:
-          viewData[info.name] = info.value, additionalColumnType
-    viewList.append(viewData)
-  return viewList 
-
-def getDriversList():
-  drivers = Driver.objects.all()
-  completeResults = []
-  
-  for driver in drivers:
-    infos = []
-    completeResults.append(
-      {
-        "baseInfos": driver,
-        "additionalInfos": infos,
-        "position": 0
-      }
-    )
-  # rank them
-  for result in completeResults:
-    result["position"] =  getRank(result, completeResults, "Points", True)
-  
-  # prepare additional columns types
-  additionalColumnsNames = OrderedDict()
-  
-
-  # flatten te list for displaying
-  viewList = []
-  for result in completeResults:
-    viewData = OrderedDict()
-    viewData["firstName"] = result["baseInfos"].firstName, "longstr"
-    viewData["lastName"] = result["baseInfos"].lastName, "longstr"
-    for additionalColumnKey, additionalColumnType in additionalColumnsNames.items():
-      for info in result["additionalInfos"]:
-        if info.name == additionalColumnKey:
-          viewData[info.name] = info.value, additionalColumnType
-    viewList.append(viewData)
-  return viewList 
+        viewList[driverId]["sum"] = 0   
+        viewList[driverId]["points"] = []
+      
+      viewList[driverId]["points"].append(int(driver["points"]))
+      viewList[driverId]["sum"] = reduce(lambda x,y: x+y, viewList[driverId]["points"])
+  viewList = list(viewList.values())
+  return sorted(viewList, key=lambda tup: tup["points"], reverse=True)
 
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
@@ -341,32 +256,29 @@ def get_raceDetail(request, id: int):
   })
 
 def get_seasonStandingsTeams(request, id: int):
+  racesRaw = Race.objects.filter(season_id=id)
+  races = []
+  for race in racesRaw:
+    races.append(race.name)
   resultList = getTeamStandings(id)
-  return renderWithCommonData(request, 'frontend/result.html', {
-    "resultList": resultList,
+  return renderWithCommonData(request, 'frontend/standings.html', {
+    "resultList":  enumerate(resultList),
+    "isDriverStandings": False,
+    "races": races,
     "title": "Team standing - " + Season.objects.all().filter(pk=id).get().name
   })
 
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
-  return renderWithCommonData(request, 'frontend/result.html', {
-    "resultList": resultList,
+  racesRaw = Race.objects.filter(season_id=id)
+  races = []
+  for race in racesRaw:
+    races.append(race.name)
+  return renderWithCommonData(request, 'frontend/standings.html', {
+    "resultList": enumerate(resultList),
+    "isDriverStandings": True,
+    "races": races,
     "title": "Drivers standing - " + Season.objects.all().filter(pk=id).get().name
-  })
-
-def get_DriversList(request):
-  resultList = getDriversList()
-  return renderWithCommonData(request, 'frontend/result.html', {
-    "resultList": resultList,
-    "title": "Drivers"
-  })
-
-def get_TeamsList(request):
-  resultList = getTeamList()
-  
-  return renderWithCommonData(request, 'frontend/result.html', {
-    "resultList": resultList,
-    "title": "Teams"
   })
 
 # JSON API Endpoints

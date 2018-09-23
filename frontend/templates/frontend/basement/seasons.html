@@ -5,12 +5,13 @@
   </script>
   <div class="vue-seasons seasons">
     <div class="season" v-for="(season, season_key ) in seasons" :key="season_key" :class="{'selected-season': season.id === selectedSeason}">
-        <span v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]</span>
-        <span v-if="season.isRunning" class="season-is-running">Running</span>
+        <span class="season-name" v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]</span>
         <p>
             <a :href="'/seasons/'+season.id+'/drivers/'">[[ season.drivers.length  ]] drivers</a>
-            <a :href="'/seasons/'+season.id+'/teams/'">[[ season.races.length  ]] teams</a>
+            <a :href="'/seasons/'+season.id+'/teams/'">[[ season.teams.length  ]] teams</a>
         </p>
+        
+        <span v-if="season.isRunning" class="season-is-running">Running</span>
     </div>
   </div>
   <div id="map" style="height: 630px;width: 100%"></div>

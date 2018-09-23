@@ -29,8 +29,6 @@ urlpatterns = [
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),
-    path('drivers/', views.get_DriversList, name='get_DriversList'),
-    path('teams/', views.get_TeamsList, name='get_TeamsList'),
     path('api/entries/<int:id>', views.get_raceData, name='get_raceData'),
     path('control/<int:id>', views.get_overlayControl, name='get_raceData'),
 

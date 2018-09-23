@@ -1,0 +1,57 @@
+{% extends baseLayout %}
+{% load frontend_extras %}
+{% block content %}
+  <h1>{{ title }} </h1>
+  {% spaceless %}
+  {% for key, result in resultList %}
+  
+  <div class="race-result-row">
+      <div class="result-absolute-align">
+        <div class="medal medal-{{ key | add:1 }}">
+            <span class="position">{{ key | add:1 }}</span>
+        </div> 
+      </div>
+      <div class="race-result-driver inline">
+       <div class="race-result-driver-names">
+         {% if isDriverStandings %}
+          <span>{{result.firstName}}</span>
+          <span>{{result.lastName}}</span>
+         {% endif %}
+         
+         {% if not isDriverStandings %}
+          <span>{{result.team}}</span>
+         {% endif %}
+       </div>
+       <div class="race-result-driver-team">
+          {% if isDriverStandings %}
+            <img class="race-result-team-logo" src="http://localhost:8000/static/frontend/logo.png">  
+            <span>{{result.team}}</span>
+          {% endif %}
+          {% if not isDriverStandings %}
+            <span>{{result.vehicle}}</span>
+          {% endif %}
+        </div>
+      </div>
+      
+      {% if isDriverStandings %}
+        <div class="race-result-number inline centered">
+            <span>{{result.number | safe }}</span>
+        </div>
+      {% endif %}
+      
+      <div class="race-result-points inline small centered">
+        <span>{{result.sum}} P</span>
+      </div>
+      
+      {% for race in races %}
+        <div class="race-result-race-points inline medium centered">
+          <span class="race-name">{{ race }}</span>
+          <span>{{ result.points | index:forloop.counter0 }} P</span>
+        </div>
+      {% endfor %}
+
+  </div>
+
+  {% endfor %}
+  {% endspaceless %}
+{% endblock %}
