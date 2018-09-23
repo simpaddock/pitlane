@@ -1,4 +1,5 @@
 {% extends baseLayout %}
+{% load frontend_extras %}
 {% block content %}
   <h1>{{ title }} </h1>
   {% spaceless %}
@@ -29,28 +30,29 @@
           <span>{{result.vehicle}}</span>
       </div>
       
+
+      <div class="race-result-points inline small centered">
+        <span>{{result.points}} P</span>
+      </div>
+
       <div class="race-result-laps inline small centered">
-          <span>{{result.Laps}}</span>
+          <span>{{result.laps}} L</span>
       </div>
       
       <div class="race-result-time medium inline centered">
-          <span>{{result.Time}}</span>
+          <span>{{result.time | time}}</span>
       </div>
 
       <div class="race-result-stops inline small centered">
-          <span>{{result.Stops}}</span>
+          <span>{{result.stops}} S</span>
       </div>
 
-      <div class="race-result-stops inline small centered">
-          <span>{{result.Avg}}</span>
+      <div class="race-result-avg inline centered">
+          <span>{{result.avg}} km/h</span>
       </div>
 
-      <div class="race-result-stops inline small centered">
-          <span>{{result.Status}}</span>
-      </div>
-
-      <div class="race-result-stops inline small centered">
-          <span>{{result.Points}}</span>
+      <div class="race-result-finishstatus inline medium centered">
+          <span>{{result.finishstatus}}</span>
       </div>
   </div>
 
