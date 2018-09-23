@@ -225,7 +225,7 @@ def getTeamStandings(id: int):
       viewList[teamId]["sum"] = reduce(lambda x,y: x+y, viewList[teamId]["points"])
       
   viewList = list(viewList.values())
-  return sorted(viewList, key=lambda tup: tup["points"], reverse=True)
+  return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
 def getDriversStandings(id: int):
   races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
@@ -244,7 +244,7 @@ def getDriversStandings(id: int):
       viewList[driverId]["points"].append(int(driver["points"]))
       viewList[driverId]["sum"] = reduce(lambda x,y: x+y, viewList[driverId]["points"])
   viewList = list(viewList.values())
-  return sorted(viewList, key=lambda tup: tup["points"], reverse=True)
+  return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
