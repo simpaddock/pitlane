@@ -1,5 +1,31 @@
 from django import forms
-from .models import Season, Team, TeamEntry
+from .models import Season, Team, TeamEntry, DriverEntry, Driver,Country
+
+class DriverSignUpForm(forms.Form):
+  firstName = forms.CharField(max_length=30)
+  lastName = forms.CharField(max_length=30)
+  number = forms.IntegerField()
+  numberFormat = forms.CharField(max_length=100, initial="{0}")
+  teamEntry = forms.ModelChoiceField(queryset = TeamEntry.objects.all(),empty_label="(Nothing)")
+  password = forms.CharField(widget=forms.PasswordInput())
+  def clean(self):
+    super().clean()
+    driver = Driver()
+    driver.firstName = self.cleaned_data["firstName"]
+    driver.lastName = self.cleaned_data["lastName"]
+    driver.country = Country.objects.first()
+    driver.save()
+
+    driverEntry = DriverEntry()
+    driverEntry.teamEntry = self.cleaned_data["teamEntry"]
+    driverEntry.driverNumber = self.cleaned_data["number"]
+    driverEntry.driverNumberFormat = self.cleaned_data["numberFormat"]
+    driverEntry.driver = driver
+    driverEntry.save()
+    print(self.cleaned_data)
+
+
+
 class TeamSignUpForm(forms.Form):
   name = forms.CharField(max_length=30)
   email = forms.EmailField(max_length=254)

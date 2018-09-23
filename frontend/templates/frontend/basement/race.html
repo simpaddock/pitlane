@@ -6,9 +6,13 @@
   {% for result in resultList %}
   
   <div class="race-result-row">
+      
       <div class="result-absolute-align">
         <div class="medal medal-{{ result.position }}">
+            
+            {% if result.position != "999" %}
             <span class="position">{{ result.position }}</span>
+            {% endif %}
         </div> 
       </div>
       <div class="race-result-driver inline">

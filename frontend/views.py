@@ -178,15 +178,46 @@ def getRaceResult(id: int):
   results = DriverRaceResult.objects.all().filter(raceResult_id=id)
   completeResults = []
   # collect all infos
+  seasonId=None
+  knownDrivers = []
   for result in results:
+    seasonId = result.driverEntry.teamEntry.season.id
     infos = DriverRaceResultInfo.objects.all().filter(driverRaceResult_id=result.id)
+    knownDrivers.append(result.driverEntry.driver.id)
     completeResults.append(
       {
         "baseInfos": result,
         "additionalInfos": infos,
         "position": 0
-      }
-    )
+      })
+
+  # get all drivers to append DNS entries
+  drivers = DriverEntry.objects.filter(teamEntry__season__id=seasonId)
+  for driver in drivers:
+    infos = {
+      "laps": "0",
+      "points": "0",
+      "stops": "0",
+      "position": "999",
+      "finishstatus": "DNS"
+    }
+    if driver.id not in knownDrivers:
+      infosToAppend = []
+      for key, info in infos.items():
+        raceresultinfo = DriverRaceResultInfo()
+        raceresultinfo.name = key
+        raceresultinfo.value=info
+        infosToAppend.append(raceresultinfo)
+      completeResults.append(
+      {
+        "position":999,
+        "baseInfos": {
+          "driverEntry": driver
+        },
+        "additionalInfos": infosToAppend
+      })
+
+   
   viewList = []
   for result in completeResults:
     viewData = OrderedDict()
@@ -201,6 +232,7 @@ def getRaceResult(id: int):
         viewData[columnName] = getChildValue(result, columnPath)
     viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
     viewList.append(viewData)
+
   return sorted(viewList, key=lambda x: x["position"], reverse=False)
 
 def getTeamStandings(id: int):
@@ -281,7 +313,7 @@ def get_seasonStandingsDrivers(request, id: int):
     "title": "Drivers standing - " + Season.objects.all().filter(pk=id).get().name
   })
 
-def  signUp(request):
+def signUp(request):
   form = TeamSignUpForm()
   if request.POST:
     form = TeamSignUpForm(request.POST,request.FILES)
@@ -289,6 +321,21 @@ def  signUp(request):
     "form": form,
   })
 
+def signUpTeam(request):
+  form = TeamSignUpForm()
+  if request.POST:
+    form = TeamSignUpForm(request.POST,request.FILES)
+  return renderWithCommonData(request, 'frontend/signup.html', {
+    "form": form,
+  })
+
+def signUpDriver(request):
+  form = DriverSignUpForm()
+  if request.POST:
+    form = DriverSignUpForm(request.POST,request.FILES)
+  return renderWithCommonData(request, 'frontend/signup.html', {
+    "form": form,
+  })
 # JSON API Endpoints
 
 

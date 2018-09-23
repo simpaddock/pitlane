@@ -116,7 +116,10 @@ class RaceResult(models.Model):
       if int(rawData["Position"]) in pointMap:
         if int(rawData["Position"]) == 1:
           maxLaps = runLaps
-        percentage = 100/(maxLaps/runLaps)
+        if runLaps > 0 and maxLaps > 0:
+          percentage = 100/(maxLaps/runLaps)
+        else:
+          percentage = 0
         # i assume that the rfactor xml is sorted.
         if percentage > 90:
           rawData["Points"] = pointMap[int(rawData["Position"])]
