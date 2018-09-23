@@ -26,7 +26,10 @@ class Season(models.Model):
 
 class Team(models.Model):
   name = models.CharField(max_length=100)
+  email = models.EmailField(default=None, null=True) # for managing..
+  password = models.TextField(default=None, null=True) # for managing..
   logo = models.FileField(default=None, blank=True, upload_to='uploads/')
+
   def __str__(self):
     return self.name
 

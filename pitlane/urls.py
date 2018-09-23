@@ -26,10 +26,10 @@ urlpatterns = [
     path('seasons/', views.get_seasonList, name='seasons'),
     path('news/', views.get_news, name='news'),
     path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
+    path('signup/', views.signUp, name='signup'),
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),
     path('api/entries/<int:id>', views.get_raceData, name='get_raceData'),
-    path('control/<int:id>', views.get_overlayControl, name='get_raceData'),
-
+    path('control/<int:id>', views.get_overlayControl, name='get_raceData')
 ] 

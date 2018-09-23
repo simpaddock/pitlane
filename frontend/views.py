@@ -10,7 +10,7 @@ from json import dumps
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import filetype
 from functools import reduce
-
+from .forms import *
 
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
@@ -279,6 +279,14 @@ def get_seasonStandingsDrivers(request, id: int):
     "isDriverStandings": True,
     "races": races,
     "title": "Drivers standing - " + Season.objects.all().filter(pk=id).get().name
+  })
+
+def  signUp(request):
+  form = TeamSignUpForm()
+  if request.POST:
+    form = TeamSignUpForm(request.POST,request.FILES)
+  return renderWithCommonData(request, 'frontend/signup.html', {
+    "form": form,
   })
 
 # JSON API Endpoints
