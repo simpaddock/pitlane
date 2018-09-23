@@ -9,12 +9,34 @@ from django.forms.models import model_to_dict
 from json import dumps
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import filetype
+from functools import reduce
 
 
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
 LIST_DATA_DRIVERS ="listdrivers"
+
+COLUMNS = {
+  "race": OrderedDict([
+    ('position', None), 
+    ('firstName', "baseInfos.driverEntry.driver.firstName"),
+    ('lastName', "baseInfos.driverEntry.driver.lastName"),
+    ('team', "baseInfos.driverEntry.teamEntry.team.name"),
+    ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
+    ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
+    ('number', "baseInfos.driverEntry.driverNumber"),
+    ('numberFormat', "baseInfos.driverEntry.driverNumberFormat"),
+    ('laps', None), # none leads to direct additional searching
+    ('stops', None),
+    ('time', None),
+    ('avg', None),
+    ('points', None),
+    ('finishstatus', None),
+    ('controlandaids', None),
+  ])
+}
+
 from pitlane.settings import LEAGUECONFIG
 
 def getRoutes():
@@ -107,20 +129,6 @@ def get_seasonList(request):
     "seasonsJSON": seasonsJSON
   })
 
-def getRank(row, haystack, columnToSearch: str, reverse=False) -> int:
-  allElements = []
-  needle = None
-  column: DriverRaceResultInfo
-  for element in haystack: 
-    for column in element["additionalInfos"]:
-      if column.name == columnToSearch:
-        allElements.append(column.value)
-        if element == row:
-          needle = column.value
-  allElements.sort(reverse=reverse)
-  if needle == None or needle not in allElements:
-    return len(allElements)
-  return allElements.index(needle) + 1
 
 def getChildValue(haystack, needle):
   parts = needle.split(".")
@@ -135,7 +143,6 @@ def getChildValue(haystack, needle):
       value = value.__dict__[part]
   return value
 
-
 def getRaceResult(id: int):
   results = DriverRaceResult.objects.all().filter(raceResult_id=id)
   completeResults = []
@@ -149,45 +156,21 @@ def getRaceResult(id: int):
         "position": 0
       }
     )
-  # rank them
-  for result in completeResults:
-    result["position"] =  getRank(result, completeResults, "Position")
-
-  completeResults = sorted(completeResults, key=lambda x: x["position"], reverse=False)
-
-  columns = OrderedDict([
-    ('position', "position"), 
-    ('firstName', "baseInfos.driverEntry.driver.firstName"),
-    ('lastName', "baseInfos.driverEntry.driver.lastName"),
-    ('team', "baseInfos.driverEntry.teamEntry.team.name"),
-    ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
-    ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
-    ('number', "baseInfos.driverEntry.driverNumber"),
-    ('numberFormat', "baseInfos.driverEntry.driverNumberFormat"),
-    ('Laps', None), # none leads to direct additional searching
-    ('Stops', None),
-    ('Time', None),
-    ('Avg', None),
-    ('Points', None),
-    ('Status', None),
-    ])
-  
   viewList = []
   for result in completeResults:
     viewData = OrderedDict()
-    for columnName, columnPath in columns.items():
+    for columnName, columnPath in COLUMNS["race"].items():
       if columnPath is None:  # None means "search in additional fields"
         for info in result["additionalInfos"]:
-          if info.name == columnName:
+          if info.name.lower() == columnName:
             viewData[columnName] = info.value
         if columnName not in viewData:
           viewData[columnName] = "-"
       else:
         viewData[columnName] = getChildValue(result, columnPath)
-
     viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
     viewList.append(viewData)
-  return viewList
+  return sorted(viewList, key=lambda x: x["position"], reverse=False)
 
 def getTeamStandings(id: int):
   results = TeamEntry.objects.all().filter(season_id=id)
@@ -249,9 +232,11 @@ def getTeamStandings(id: int):
     viewData["name"] = result["baseInfos"].team.name, "longstr"
     for additionalColumnKey, additionalColumnType in additionalColumnsNames.items():
       for info in result["additionalInfos"]:
+        print(info.value, info.name)
         if info.name == additionalColumnKey:
           viewData[info.name] = info.value, additionalColumnType
     viewList.append(viewData)
+  print(viewList)
   return viewList
 
 def getDriversStandings(id: int):
