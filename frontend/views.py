@@ -20,6 +20,7 @@ LIST_DATA_DRIVERS ="listdrivers"
 COLUMNS = {
   "race": OrderedDict([
     ('position', None), 
+    ('id', "baseInfos.driverEntry.driver.id"), 
     ('firstName', "baseInfos.driverEntry.driver.firstName"),
     ('lastName', "baseInfos.driverEntry.driver.lastName"),
     ('team', "baseInfos.driverEntry.teamEntry.team.name"),
@@ -34,6 +35,14 @@ COLUMNS = {
     ('points', None),
     ('finishstatus', None),
     ('controlandaids', None),
+  ]),
+  "drivers": OrderedDict([
+    ('firstName', "firstName"),
+    ('lastName', "lastName"),
+    ('team', "team"),
+    ('logo', "logo"),
+    ('vehicle', "vehicle"),
+    ('number', "number"),
   ])
 }
 
@@ -240,65 +249,19 @@ def getTeamStandings(id: int):
   return viewList
 
 def getDriversStandings(id: int):
-  allTeams = TeamEntry.objects.all().filter(season_id=id)
-  completeResults = []
-  # collect all infos
-  for team in allTeams:
-    driverEntries = DriverEntry.objects.all().filter(teamEntry_id=team.id)
- 
-    for driverEntry in driverEntries:
-      # get race results
-      races = DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
-      infos = []
-      allPoints = 0
-      for race in races:
-        driverPoints = DriverRaceResultInfo.objects.filter(driverRaceResult_id=race.id).filter(name='Points')
-        for point in driverPoints:
-          # add per race sum
-          pointColumn = DriverRaceResultInfo()
-          pointColumn.name = race.raceResult.race.name
-          pointColumn.value = int(point.value)
-          allPoints = allPoints + int(point.value)
-          infos.append(pointColumn)
-        
-      # add a sum column
-      pointColumn = DriverRaceResultInfo()
-      pointColumn.name = "Points"
-      pointColumn.value = allPoints
-      infos.append(pointColumn)
-      # append to complete list
-      completeResults.append(
-        {
-          "baseInfos": driverEntry,
-          "additionalInfos": infos,
-          "position": 0
-        }
-      )
+  races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
+  viewList = {}
+  for key, race in enumerate(races):
+    results = getRaceResult(race.id)
+    for driver in results:
+      driverId = driver["id"]
+      if driverId not in viewList: # first race, create name column..
+        viewList[driverId] = OrderedDict()
+        for columnName, columnValue in COLUMNS["drivers"].items():
+          viewList[driverId][columnName] = driver[columnValue]
 
-  # rank them
-  for result in completeResults:
-    result["position"] =  getRank(result, completeResults, "Points", True)
-  
-  # prepare additional columns types
-  additionalColumnsNames = OrderedDict()
-  
-  additionalColumnsNames["Points"] = "int"
-  races = Race.objects.filter(season_id=id)
-  for race in races:
-    additionalColumnsNames[race.name] = "int"
-
-  # flatten te list for displaying
-  viewList = []
-  for result in completeResults:
-    viewData = OrderedDict()
-    viewData["position"] = result["position"], "position"
-    viewData["firstName"] = result["baseInfos"].driver.firstName, "longstr"
-    viewData["lastName"] = result["baseInfos"].driver.lastName, "longstr"
-    for additionalColumnKey, additionalColumnType in additionalColumnsNames.items():
-      for info in result["additionalInfos"]:
-        if info.name == additionalColumnKey:
-          viewData[info.name] = info.value, additionalColumnType
-    viewList.append(viewData)
+      viewList[driverId][race.name] = driver["points"]
+  print(viewList)
   return viewList
 
 def getTeamList():

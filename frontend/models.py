@@ -79,7 +79,7 @@ class RaceResult(models.Model):
     for driverRaceResult in DriverRaceResult.objects.filter(raceResult_id=self.id):
       DriverRaceResultInfo.objects.filter(driverRaceResult_id=driverRaceResult.id).delete()
       driverRaceResult.delete()
-
+    maxLaps = 0
     for driver in drivers:
       rawData = {}
       runLaps = 0
@@ -111,7 +111,14 @@ class RaceResult(models.Model):
         10: 1
       }
       if int(rawData["Position"]) in pointMap:
-        rawData["Points"] = pointMap[int(rawData["Position"])]
+        if int(rawData["Position"]) == 1:
+          maxLaps = runLaps
+        percentage = 100/(maxLaps/runLaps)
+        # i assume that the rfactor xml is sorted.
+        if percentage > 90:
+          rawData["Points"] = pointMap[int(rawData["Position"])]
+        else:
+          rawData["Points"]  = 0
       else:
         rawData["Points"] = 0
 
@@ -186,13 +193,14 @@ class RaceResult(models.Model):
             driverRaceResultInfo.value = rawData[wantedKey]
           driverRaceResultInfo.infoType = "str"
           driverRaceResultInfo.save()
-      # create additional result infos
-      driverRaceResultInfo = DriverRaceResultInfo()
-      driverRaceResultInfo.driverRaceResult = driverRaceResult
-      driverRaceResultInfo.name = "avg"
-      driverRaceResultInfo.value = round(((trackLength/1000)*runLaps)/ (float(rawData["Time"])/60/60),2)
-      driverRaceResultInfo.infoType = "str"
-      driverRaceResultInfo.save()
+      if "Time" in rawData:
+        # create additional result infos
+        driverRaceResultInfo = DriverRaceResultInfo()
+        driverRaceResultInfo.driverRaceResult = driverRaceResult
+        driverRaceResultInfo.name = "avg"
+        driverRaceResultInfo.value = round(((trackLength/1000)*runLaps)/ (float(rawData["Time"])/60/60),2)
+        driverRaceResultInfo.infoType = "str"
+        driverRaceResultInfo.save()
 
     # parse the xml input file
     # todo: put into separate file
