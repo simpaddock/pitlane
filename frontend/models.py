@@ -71,8 +71,14 @@ class RaceResult(models.Model):
     super(RaceResult, self).save(*args, **kwargs)
     filename = self.resultFile.path
     xml = minidom.parse(filename)
+
+    trackLength = float(xml.getElementsByTagName('TrackLength')[0].childNodes[0].nodeValue)
     drivers = xml.getElementsByTagName('Driver')
     
+    
+    for driverRaceResult in DriverRaceResult.objects.filter(raceResult_id=self.id):
+      DriverRaceResultInfo.objects.filter(driverRaceResult_id=driverRaceResult.id).delete()
+      driverRaceResult.delete()
 
     for driver in drivers:
       rawData = {}
@@ -92,7 +98,6 @@ class RaceResult(models.Model):
             runLaps  = runLaps + 1
 
       rawData["Laps"] = runLaps
-      
       pointMap = {
         1: 25,
         2: 18,
@@ -155,6 +160,8 @@ class RaceResult(models.Model):
       driver = Driver.objects.all().filter(firstName=firstName).filter(lastName=lastName).get()
       driverEntry = DriverEntry.objects.get(driver=driver, teamEntry=teamEntry)
       # remove old ones
+      
+
       driverRaceResult = DriverRaceResult()
       driverRaceResult.driverEntry = driverEntry
       driverRaceResult.raceResult =  self
@@ -169,12 +176,23 @@ class RaceResult(models.Model):
         "Points": "int"
       }
       for wantedKey in ["Stops", "Position", "FinishStatus", "Time","ControlAndAids", "Laps", "Points"]:
-        driverRaceResultInfo = DriverRaceResultInfo()
-        driverRaceResultInfo.driverRaceResult = driverRaceResult
-        driverRaceResultInfo.name = wantedKey
-        driverRaceResultInfo.value = rawData[wantedKey]
-        driverRaceResultInfo.infoType = keyTypes[wantedKey]
-        driverRaceResultInfo.save()
+        if wantedKey in rawData:
+          driverRaceResultInfo = DriverRaceResultInfo()
+          driverRaceResultInfo.driverRaceResult = driverRaceResult
+          driverRaceResultInfo.name = wantedKey.lower()
+          if wantedKey == "ControlAndAids":
+            driverRaceResultInfo.value = rawData[wantedKey].replace("PlayerControl,","")
+          else:
+            driverRaceResultInfo.value = rawData[wantedKey]
+          driverRaceResultInfo.infoType = "str"
+          driverRaceResultInfo.save()
+      # create additional result infos
+      driverRaceResultInfo = DriverRaceResultInfo()
+      driverRaceResultInfo.driverRaceResult = driverRaceResult
+      driverRaceResultInfo.name = "avg"
+      driverRaceResultInfo.value = round(((trackLength/1000)*runLaps)/ (float(rawData["Time"])/60/60),2)
+      driverRaceResultInfo.infoType = "str"
+      driverRaceResultInfo.save()
 
     # parse the xml input file
     # todo: put into separate file
