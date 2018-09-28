@@ -383,18 +383,23 @@ def get_overlayControl(request, id: int):
     overlay = RaceOverlayControlSet()
     overlay.race = race
     driver = data["driver"]
-    position =data["position"]
+    position = data["position"]
+    overlay.cameraId = int(data["cameraId"])
     if driver is not None:
       overlay.slotId = driver
       overlay.controlSet = dumps({
         "driver": driver
       })
-    else:
+    if position is not None:
       overlay.slotId = position
       overlay.controlSet = dumps({
         "battle": position
       })
-    
+    if "pause" in data and data["pause"] == True:
+      overlay.slotId = -1
+      overlay.controlSet = dumps({
+        "pause": True
+      })
     overlay.save()
     return JsonResponse({})
   else:
