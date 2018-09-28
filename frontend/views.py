@@ -6,11 +6,13 @@ from django.db import models
 from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
-from json import dumps
+from json import dumps, loads
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import filetype
 from functools import reduce
 from .forms import *
+from requests import get
+from django.views.decorators.csrf import csrf_exempt
 
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
@@ -352,41 +354,48 @@ def get_raceData(request, id: int):
     }
     result.append(resultData)
   cameraControl = RaceOverlayControlSet.objects.filter(race_id=id).first()
-  return JsonResponse({
-    "entries": result,
-    "controlSet": cameraControl.controlSet,
-    "slotId": cameraControl.slotId,
-    "cameraId":  cameraControl.cameraId,
-    "commandId": cameraControl.id
-  }, safe=False)
+  if cameraControl is not None:
+    return JsonResponse({
+      "entries": result,
+      "controlSet": cameraControl.controlSet,
+      "slotId": cameraControl.slotId,
+      "cameraId":  cameraControl.cameraId,
+      "commandId": cameraControl.id
+    }, safe=False)
+  else:
+    return JsonResponse({
+      "entries": result,
+      "controlSet": -1,
+      "slotId": -1,
+      "cameraId":  -1,
+      "commandId": -1
+    }, safe=False)
 
 # Overlay control panel
-
+@csrf_exempt 
 def get_overlayControl(request, id: int):
-  race = Race.objects.get(pk=id)
-  entries = DriverEntry.objects.filter(teamEntry__season_id=race.season.id)
-  allowed = [
-    "currentDriver",
-    "battle"
-  ]
-  if request.POST:
-    for value in request.POST:
-      if value in allowed:
-        RaceOverlayControlSet.objects.filter(race_id=id).delete()
-        overlay = RaceOverlayControlSet()
-        overlay.race = race
-        requested = request.POST[value]
-        if " " in requested:
-          # driver view requested
-          overlay.slotId = -1
-          overlay.controlSet = dumps({
-            value: request.POST[value]
-          })
-        else:   
-          overlay.controlSet = dumps({
-            value: int(request.POST[value])
-          })
-          overlay.slotId =  int(request.POST[value])
-        overlay.save()
-
-  return render(request, "frontend/control/index.html", {'entries': entries, 'battle': range(1,len(entries) -1)})
+  if request.method  == "POST":
+    race = Race.objects.get(pk=id)
+    lastControlSet = RaceOverlayControlSet.objects.first()
+    
+    RaceOverlayControlSet.objects.filter(race_id=id).delete()
+    data = loads(request.body.decode("utf-8"))
+    overlay = RaceOverlayControlSet()
+    overlay.race = race
+    driver = data["driver"]
+    position =data["position"]
+    if driver is not None:
+      overlay.slotId = driver
+      overlay.controlSet = dumps({
+        "driver": driver
+      })
+    else:
+      overlay.slotId = position
+      overlay.controlSet = dumps({
+        "battle": position
+      })
+    
+    overlay.save()
+    return JsonResponse({})
+  else:
+    return HttpResponse("Nein")
