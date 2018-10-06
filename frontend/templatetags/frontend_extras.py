@@ -14,4 +14,6 @@ def time(seconds) -> str:
 
 @register.filter
 def index(list, i):
-    return list[int(i)]
+  if i >= len(list):
+    return None
+  return list[int(i)]

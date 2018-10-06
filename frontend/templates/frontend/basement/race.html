@@ -3,8 +3,10 @@
 {% block content %}
   <h1>{{ title }} </h1>
   {% spaceless %}
+  {% if result|length  == 0 %}
+    No results yet!
+  {% endif %}
   {% for result in resultList %}
-  
   <div class="race-result-row">
       
       <div class="result-absolute-align">
@@ -16,29 +18,23 @@
         </div> 
       </div>
       <div class="race-result-driver inline">
-       <div class="race-result-driver-names">
+       <div class="race-result-driver-names" title="{{result.firstName}} {{result.lastName}}">
           <span>{{result.firstName}}</span>
           <span>{{result.lastName}}</span>
        </div>
        <div class="race-result-driver-team">
-          <img class="race-result-team-logo" src="http://localhost:8000/static/frontend/logo.png">
-          <span>{{result.team}}</span>
+          {% if result.logo  %}
+            <img class="race-result-team-logo" src="/static/frontend/{{ result.logo.url }}">
+          {% endif %}
+          <span title="{{result.team}}">{{result.team}}</span>
+          <span>#{{result.number | safe }}</span>
         </div>
-      </div>
-      
-      <div class="race-result-number inline centered">
-          <span>{{result.number | safe }}</span>
       </div>
 
       <div class="race-result-vehicle medium inline centered">
           <span>{{result.vehicle}}</span>
       </div>
       
-
-      <div class="race-result-points inline small centered">
-        <span>{{result.points}} P</span>
-      </div>
-
       <div class="race-result-laps inline small centered">
           <span>{{result.laps}} L</span>
       </div>

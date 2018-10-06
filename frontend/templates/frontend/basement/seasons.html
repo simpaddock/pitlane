@@ -32,7 +32,6 @@
      }, 
      created:  function (){
        if (this.seasons.length > 0){
-         console.log("jflas")
          this.updateMap(this.seasons[0].id)
        }
      },
@@ -55,19 +54,34 @@
         for(var i in seasons){
           var season = seasons[i]
           if (season.id === seasonid){
+            var races = {}
             for(var x=0;x<season.races.length;x++){
-              console.log(season)
               var race = season.races[x]
+              if (typeof races[race.track.name] !== 'undefined'){
+                races[race.track.name].push(race)
+              } else{
+                races[race.track.name] = [race]
+              }
+            }
+            for(var x in races){
+              var racesOnTrack = races[x]
               popup2 = new L.Popup({
                 "className": 'map-popup'
               });
-              popup2.setLatLng(new L.LatLng(race.track.long, race.track.lat));
+              console.log(racesOnTrack)
+              popup2.setLatLng(new L.LatLng(racesOnTrack[0].track.long, racesOnTrack[0].track.lat));
               var content  = ""
-              var marker = L.marker(new L.LatLng(race.track.long, race.track.lat)).bindPopup(popup2)
+              var marker = L.marker(new L.LatLng(racesOnTrack[0].track.long, racesOnTrack[0].track.lat)).bindPopup(popup2)
               marker.addTo(this.mapInstance )
               var date = moment(race.startDate).format("L");   
-              popup2.setContent("<div class='race-detail'><span class='race-date'>"+date+" #"+(x+1)+"</span><img class=\"map-flag\" src='"+race.track.country.flag+ "'><a class='race-link' href='/races/"+race.id+"/'>"+race.name+"</a></div>");
-              this.mapInstance .addLayer(popup2);
+              var popupText = ""
+              for (var i in racesOnTrack){
+                var trackRace = racesOnTrack[i]
+                popupText += "<a class='race-link' href='/races/"+trackRace.id+"/'>"+trackRace.name+"</a><br>"
+              }
+              popup2.setContent("<div class='race-detail'><span class='race-date'>"+date+"</span>"+popupText+"</div>");
+              this.mapInstance.addLayer(popup2);
+              this.mapInstance.closePopup(popup2)
             }
           }
         }

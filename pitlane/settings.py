@@ -129,7 +129,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "frontend", "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "frontend", "static", "frontend")
 
-print(MEDIA_ROOT)
 LEAGUECONFIG = None
 CONFIGPATH = os.path.join((BASE_DIR), "config.json")
 with open(CONFIGPATH,"r") as config:

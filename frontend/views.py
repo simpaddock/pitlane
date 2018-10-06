@@ -65,7 +65,8 @@ def getRoutes():
     routes["seasons/"+str(season.id)+"/drivers"] = "Drivers"
     routes["seasons/"+str(season.id)+"/teams"] = "Teams"
   routes["contact"] = "contact"
-  routes["pitlane"] = "Pitlane"
+  if LEAGUECONFIG["pitlane"] is not None:
+    routes[LEAGUECONFIG["pitlane"]] = "Pitlane"
   return routes
 
 def get_robots(request):
@@ -177,7 +178,7 @@ def getChildValue(haystack, needle):
   return value
 
 def getRaceResult(id: int):
-  results = DriverRaceResult.objects.all().filter(raceResult_id=id)
+  results = DriverRaceResult.objects.all().filter(raceResult__race_id=id)
   completeResults = []
   # collect all infos
   seasonId=None
@@ -219,7 +220,6 @@ def getRaceResult(id: int):
         "additionalInfos": infosToAppend
       })
 
-   
   viewList = []
   for result in completeResults:
     viewData = OrderedDict()
@@ -234,8 +234,7 @@ def getRaceResult(id: int):
         viewData[columnName] = getChildValue(result, columnPath)
     viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
     viewList.append(viewData)
-
-  return sorted(viewList, key=lambda x: x["position"], reverse=False)
+  return sorted(viewList, key=lambda x: int(x["position"]), reverse=False)
 
 def getTeamStandings(id: int):
   races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
@@ -262,7 +261,7 @@ def getTeamStandings(id: int):
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
 def getDriversStandings(id: int):
-  races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
+  races = Race.objects.filter(season_id = id).order_by('startDate') # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
   viewList = {}
   for race in races:
     results = getRaceResult(race.id)
@@ -282,7 +281,7 @@ def getDriversStandings(id: int):
 
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
-  resultList = getRaceResult(id)
+  resultList = getRaceResult(race.id)
   return renderWithCommonData(request, 'frontend/race.html', {
     "race": race,
     "resultList": resultList,
@@ -290,28 +289,22 @@ def get_raceDetail(request, id: int):
   })
 
 def get_seasonStandingsTeams(request, id: int):
-  racesRaw = Race.objects.filter(season_id=id)
-  races = []
-  for race in racesRaw:
-    races.append(race.name)
+  racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
   return renderWithCommonData(request, 'frontend/standings.html', {
     "resultList":  enumerate(resultList),
     "isDriverStandings": False,
-    "races": races,
+    "races": racesRaw,
     "title": "Team standing - " + Season.objects.all().filter(pk=id).get().name
   })
 
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
-  racesRaw = Race.objects.filter(season_id=id)
-  races = []
-  for race in racesRaw:
-    races.append(race.name)
+  racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   return renderWithCommonData(request, 'frontend/standings.html', {
     "resultList": enumerate(resultList),
     "isDriverStandings": True,
-    "races": races,
+    "races": racesRaw,
     "title": "Drivers standing - " + Season.objects.all().filter(pk=id).get().name
   })
 

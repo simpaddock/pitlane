@@ -25,6 +25,11 @@
   margin-left: 60px;
   padding: 0.5em;
 }
+.race-result-driver-names{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .race-result-driver-names span:first-child{
   padding-right: 4px;
 }
@@ -56,10 +61,14 @@
 }
 .race-name{
   display:block;
+  font-size:  xx-small;
 }
 .race-result-race-points{
-  width: 10%;
+  width: 4%;
   position: relative;
   height: 100%;
   top: -0.5em;
+}
+.race-result-points{
+  width: 2%;
 }

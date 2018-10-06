@@ -32,6 +32,11 @@ class Team(models.Model):
 
   def __str__(self):
     return self.name
+  def logoUrl(self):
+    if self.logo:
+      return self.logo.url
+    else:
+      return None
 
 class Driver(models.Model):
   firstName = models.CharField(max_length=100)

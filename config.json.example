@@ -2,5 +2,6 @@
   logo: 'pathtothelogo',
   name: 'name of the league',
   "theme": "basement",
-  "dateFormat": "%Y-%m-%d %H:%M:%S"
+  "dateFormat": "%Y-%m-%d %H:%M:%S",
+  "pitlane": "forumlinkornull"
 }

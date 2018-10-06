@@ -19,13 +19,16 @@
          {% endif %}
          
          {% if not isDriverStandings %}
+         {% if result.logo  %}
+           <img class="race-result-team-logo" src="/static/frontend/{{ result.logo.url }}">
+         {% endif %}
           <span>{{result.team}}</span>
          {% endif %}
        </div>
        <div class="race-result-driver-team">
           {% if isDriverStandings %}
-            <img class="race-result-team-logo" src="http://localhost:8000/static/frontend/logo.png">  
             <span>{{result.team}}</span>
+            <span>#{{result.number | safe }} </span>
           {% endif %}
           {% if not isDriverStandings %}
             <span>{{result.vehicle}}</span>
@@ -33,20 +36,17 @@
         </div>
       </div>
       
-      {% if isDriverStandings %}
-        <div class="race-result-number inline centered">
-            <span>{{result.number | safe }}</span>
-        </div>
-      {% endif %}
-      
       <div class="race-result-points inline small centered">
-        <span>{{result.sum}} P</span>
+        <span>{{result.sum}}</span>
       </div>
       
       {% for race in races %}
         <div class="race-result-race-points inline medium centered">
-          <span class="race-name">{{ race }}</span>
-          <span>{{ result.points | index:forloop.counter0 }} P</span>
+          <a href="/races/{{race.id}}/">
+            <span class="race-name"> {{ race.name }}</span>
+            <span>{{ result.points | index:forloop.counter0 |default:0}}</span>
+          </a>
+          
         </div>
       {% endfor %}
 
