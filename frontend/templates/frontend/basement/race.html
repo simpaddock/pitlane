@@ -3,7 +3,7 @@
 {% block content %}
   <h1>{{ title }} </h1>
   {% spaceless %}
-  {% if result|length  == 0 %}
+  {% if resultList|length == 0  %}
     No results yet!
   {% endif %}
   {% for result in resultList %}
