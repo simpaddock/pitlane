@@ -5,13 +5,11 @@
   </script>
   <div class="vue-seasons seasons">
     <div class="season" v-for="(season, season_key ) in seasons" :key="season_key" :class="{'selected-season': season.id === selectedSeason}">
-        <span class="season-name" v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]</span>
-        <p>
-            <a :href="'/seasons/'+season.id+'/drivers/'">[[ season.drivers.length  ]] drivers</a>
-            <a :href="'/seasons/'+season.id+'/teams/'">[[ season.teams.length  ]] teams</a>
-        </p>
         
-        <span v-if="season.isRunning" class="season-is-running">Running</span>
+        <span v-if="season.isRunning">Running: </span><span class="season-name" v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]</span>
+        <a :href="'/seasons/'+season.id+'/drivers/'">[[ season.drivers.length  ]] drivers</a>,
+        <a :href="'/seasons/'+season.id+'/teams/'">[[ season.teams.length  ]] teams</a>
+
     </div>
   </div>
   <div id="map" style="height: 630px;width: 100%"></div>
@@ -44,8 +42,8 @@
         }
         this.mapInstance = new L.Map('map');
         // create the tile layer with correct attribution
-        var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osmUrl='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png';
+        var osmAttrib='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
         var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 2, attribution: osmAttrib});		
 
         // start the map in South-East England
@@ -73,13 +71,13 @@
               var content  = ""
               var marker = L.marker(new L.LatLng(racesOnTrack[0].track.long, racesOnTrack[0].track.lat)).bindPopup(popup2)
               marker.addTo(this.mapInstance )
-              var date = moment(race.startDate).format("L");   
               var popupText = ""
               for (var i in racesOnTrack){
                 var trackRace = racesOnTrack[i]
-                popupText += "<a class='race-link' href='/races/"+trackRace.id+"/'>"+trackRace.name+"</a><br>"
+                var date = moment(trackRace.startDate).format("L");   
+                popupText += "<a class='race-link' href='/races/"+trackRace.id+"/'>"+date+": "+trackRace.name+"</a><br>"
               }
-              popup2.setContent("<div class='race-detail'><span class='race-date'>"+date+"</span>"+popupText+"</div>");
+              popup2.setContent("<div class='race-detail'>"+popupText+"</div>");
               this.mapInstance.addLayer(popup2);
               this.mapInstance.closePopup(popup2)
             }

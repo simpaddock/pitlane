@@ -3,7 +3,7 @@
   background: $result-background;
   color: $result-color;
   height: 4em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .inline{
   width: 20%;
@@ -35,16 +35,20 @@
 }
 .race-result-driver-names span:last-child{
   text-transform: uppercase;
-  font-weight: bold;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
 }
 .race-result-driver-team{
   font-size: small;
   padding-top: 0.5em;
+  letter-spacing: 0.08em;
 }
 .race-result-team-logo{
-  width: 25px;
-  float: inherit;
+  position: relative;
+  top: -1em;
+  left: 3.5em;
   vertical-align: middle;
+  width: 35px;
   margin-right: 0.5em;
 }
 .race-result-number{
@@ -62,13 +66,36 @@
 .race-name{
   display:block;
   font-size:  xx-small;
+  font-family: Electrolize;
+}
+.race-flag{
+  height: 2em;
 }
 .race-result-race-points{
   width: 4%;
   position: relative;
   height: 100%;
-  top: -0.5em;
+  top: -0.0em;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 .race-result-points{
   width: 2%;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.race-result-sum{
+  color: #00aeef;
+}
+.race-meta-entry{
+  display: block;
+  margin-bottom: 0.5em;
+}
+.race-meta-entry i{
+  padding-right: 1em;
+}
+.race-meta{
+  margin-bottom: 1em;
 }

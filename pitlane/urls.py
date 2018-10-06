@@ -25,6 +25,7 @@ urlpatterns = [
     path('', views.get_index, name='index'),
     path('seasons/', views.get_seasonList, name='seasons'),
     path('news/', views.get_news, name='news'),
+    path('about/', views.get_about, name='about'),
     path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
     path('signup/', views.signUp, name='signup'),
     path('signup/team/', views.signUpTeam, name='signUpTeam'),

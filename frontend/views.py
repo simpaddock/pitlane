@@ -64,7 +64,7 @@ def getRoutes():
   if season is not None:
     routes["seasons/"+str(season.id)+"/drivers"] = "Drivers"
     routes["seasons/"+str(season.id)+"/teams"] = "Teams"
-  routes["contact"] = "contact"
+  routes["about"] = "about"
   if LEAGUECONFIG["pitlane"] is not None:
     routes[LEAGUECONFIG["pitlane"]] = "Pitlane"
   return routes
@@ -110,6 +110,21 @@ def get_news(request):
   page = request.GET.get('page')
   return renderWithCommonData(request, 'frontend/news.html', {
     "articles": paginator.get_page(page)
+  })
+def get_about(request):
+  name = LEAGUECONFIG["name"]
+  logo = LEAGUECONFIG["logo"]
+  raceCount = Race.objects.all().count()
+  teamCount = Team.objects.all().count()
+  driverCount = Driver.objects.all().count()
+  seasonCount = Season.objects.all().count()
+  return renderWithCommonData(request, 'frontend/about.html', {
+    "name": name,
+    "logo": logo,
+    "raceCount": raceCount,
+    "teamCount": teamCount,
+    "driverCount": driverCount,
+    "seasonCount": seasonCount
   })
 
 def get_SingleNews(request, id:int):
@@ -282,10 +297,13 @@ def getDriversStandings(id: int):
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
+  raceResult = RaceResult.objects.all().filter(race_id=id).get()
   return renderWithCommonData(request, 'frontend/race.html', {
     "race": race,
     "resultList": resultList,
-    "title":  race.name +" - " + race.season.name
+    "title":  race.name,
+    "streamLink": raceResult.streamLink,
+    "commentatorInfo": raceResult.commentatorInfo 
   })
 
 def get_seasonStandingsTeams(request, id: int):

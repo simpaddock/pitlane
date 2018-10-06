@@ -73,6 +73,8 @@ class RaceResult(models.Model):
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   resultSoftware = models.CharField(max_length=30,choices=SIMSOFTWARE,default='rFactor 2')
   resultFile = models.FileField(default=None, blank=True, upload_to='uploads/')
+  streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
+  commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
   def __str__(self):
     return str(self.race.endDate) + ": " + self.race.name + " - " + self.season.name 
   def save(self, *args, **kwargs):

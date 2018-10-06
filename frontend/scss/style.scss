@@ -8,7 +8,16 @@ body{
   margin-left: 20%;
   margin-top: 2em;
   width: 60%;
-
+}
+.background-image{
+  background-image: url(/static/frontend/bg.jpg) !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  filter: grayscale(1.0);
+  height: 100%;
+  width:100%;
 }
 
 a{
@@ -18,6 +27,12 @@ a{
 
 .body-content{
   margin-top: 2em;
+}
+h1{
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00aeef;
 }
 @import 'navbar.scss';
 @import 'index.scss'; // startpage

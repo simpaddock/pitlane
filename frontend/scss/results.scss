@@ -9,7 +9,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 50px 50px 0 0;
+  border-width: 3.99em 4em 0 0;
   border-color: $highlight-button transparent transparent transparent;
 }
 .medal-1{
@@ -21,13 +21,14 @@
   color: black;
 }
 .medal-3{
-  border-color: brown transparent transparent transparent;
+  border-color: #CD7F32 transparent transparent transparent;
   color: white;
 }
 .position{
   position: relative;
-  top: -2.5em;
+  top: -2.7em;
   left: 0.5em;
+  font-size: 13pt;
 }
 .result-cell{
   display: inline-block;

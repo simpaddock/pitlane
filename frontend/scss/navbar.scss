@@ -2,6 +2,7 @@
   width: 100px;
   float: left;
   margin-right: 1em;
+  filter: brightness(100%) drop-shadow(0px 0px 5px white);
 }
 .navigation .navigation-button{
   background: $navigation-button-backgroundcolor;
@@ -11,6 +12,9 @@
   text-decoration: none;
   text-transform: uppercase;
   margin-left: -4px;
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.1em;
 }
 
 .navigation .navigation-button:hover{

@@ -1,8 +1,30 @@
 {% extends baseLayout %}
 {% load frontend_extras %}
 {% block content %}
+{% spaceless %}
   <h1>{{ title }} </h1>
-  {% spaceless %}
+  <div class="race-meta">
+    <span class="race-meta-entry">
+        <i class="fas fa-trophy"></i>{{ race.season }}
+    </span>
+    <span class="race-meta-entry">
+        <i class="fas fa-calendar-alt"></i>
+        {{ race.startDate }}-{{ race.startDate }}
+    </span>
+    {% if streamLink  %}
+    <span class="race-meta-entry">
+        <i class="fab fa-youtube"></i><a href="{ streamLink }}">{{ streamLink }}</a>
+    </span>
+    {% endif %}
+    {% if commentatorInfo  %}
+    <span class="race-meta-entry">
+        <i class="fas fa-headset"></i> 
+        <span>
+        {{ commentatorInfo }}
+        </span>
+    </span>
+    {% endif %}
+  </div>
   {% if resultList|length == 0  %}
     No results yet!
   {% endif %}
@@ -23,9 +45,6 @@
           <span>{{result.lastName}}</span>
        </div>
        <div class="race-result-driver-team">
-          {% if result.logo  %}
-            <img class="race-result-team-logo" src="/static/frontend/{{ result.logo.url }}">
-          {% endif %}
           <span title="{{result.team}}">{{result.team}}</span>
           <span>#{{result.number | safe }}</span>
         </div>
@@ -57,5 +76,5 @@
   </div>
 
   {% endfor %}
-  {% endspaceless %}
+{% endspaceless %}
 {% endblock %}

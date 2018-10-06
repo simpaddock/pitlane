@@ -8,15 +8,15 @@
   width: 4em;
 }
 .season a{
-  display: block;
-  margin-bottom: 1em;
+  margin-left: 0.2em;
 }
 //experimental
 .seasons{
   position: absolute;
   z-index: 1000000;
-  background: $primary-color;
   height: 630px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
 }
 .season{
   padding-top: 1em;
@@ -27,10 +27,6 @@
 }
 .selected-season{
   background-color: $hightlight-color;
-}
-.selected-season .season-name{
-  color: black;
-  font-weight: bold;
 }
 .season-is-running{
   color: red;
