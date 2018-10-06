@@ -3,5 +3,6 @@
   name: 'name of the league',
   "theme": "basement",
   "dateFormat": "%Y-%m-%d %H:%M:%S",
-  "pitlane": "forumlinkornull"
+  "pitlane": "forumlinkornull",
+  "established": "yearofleaguestart"
 }

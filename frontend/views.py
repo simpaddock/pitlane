@@ -29,6 +29,7 @@ COLUMNS = {
     ('teamid', "baseInfos.driverEntry.teamEntry.team.id"),
     ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
     ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
+    ('vehicleImage', "baseInfos.driverEntry.teamEntry.vehicleImage"),
     ('number', "baseInfos.driverEntry.driverNumber"),
     ('numberFormat', "baseInfos.driverEntry.driverNumberFormat"),
     ('laps', None), # none leads to direct additional searching
@@ -45,12 +46,13 @@ COLUMNS = {
     ('team', "team"),
     ('logo', "logo"),
     ('vehicle', "vehicle"),
-    ('number', "number"),
+    ('number', "number")
   ]),
   "teams": OrderedDict([
     ('team', "team"),
     ('logo', "logo"),
-    ('vehicle', "vehicle")
+    ('vehicle', "vehicle"),
+    ('vehicleImage', "vehicleImage")
   ])
 }
 
@@ -106,7 +108,7 @@ def get_index(request):
 
 def get_news(request):
   articles = NewsArticle.objects.all().order_by("date")
-  paginator = Paginator(articles, 1)
+  paginator = Paginator(articles, 5)
   page = request.GET.get('page')
   return renderWithCommonData(request, 'frontend/news.html', {
     "articles": paginator.get_page(page)
@@ -114,11 +116,13 @@ def get_news(request):
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
+  established = LEAGUECONFIG["established"]
   raceCount = Race.objects.all().count()
   teamCount = Team.objects.all().count()
   driverCount = Driver.objects.all().count()
   seasonCount = Season.objects.all().count()
   return renderWithCommonData(request, 'frontend/about.html', {
+    "established": established,
     "name": name,
     "logo": logo,
     "raceCount": raceCount,
@@ -129,7 +133,7 @@ def get_about(request):
 
 def get_SingleNews(request, id:int):
   articles = NewsArticle.objects.all().filter(pk=id)
-  paginator = Paginator(articles, 1)
+  paginator = Paginator(articles, 5)
   page = request.GET.get('page')
   return renderWithCommonData(request, 'frontend/news.html', {
     "articles": paginator.get_page(page)

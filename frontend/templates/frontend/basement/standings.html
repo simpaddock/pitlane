@@ -28,6 +28,9 @@
             <span>#{{result.number | safe }} </span>
           {% endif %}
           {% if not isDriverStandings %}
+            {% if result.vehicleImage %}
+              <img class="car-vendor" src="/static/frontend/{{result.vehicleImage}}">
+            {% endif %}
             <span>{{result.vehicle}}</span>
           {% endif %}
         </div>
@@ -37,7 +40,7 @@
         <div class="race-result-race-points inline medium centered">
           <a href="/races/{{race.id}}/">
             <span class="race-name">
-              <img class="race-flag" title="{{race.name}}" src="{{ race.track.country.flag }}">
+              <img class="race-flag" title="{{race.name}}" src="/static/frontend/{{ race.track.country.flag }}">
             </span>
             <span>{{ result.points | index:forloop.counter0 |default:0}}</span>
           </a>

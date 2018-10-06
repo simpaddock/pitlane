@@ -50,6 +50,7 @@ class TeamEntry(models.Model):
   team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, default=None)
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   vehicle = models.CharField(null=True, default=None, max_length=100)
+  vehicleImage = models.FileField(default=None, null=True, blank=True, upload_to='uploads/')
   def __str__(self):
     return "{0}@{1}: {2}".format(self.team.name, self.season.name, self.vehicle)
 

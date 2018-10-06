@@ -22,6 +22,7 @@ admin.site.register(Season)
 admin.site.register(DriverRaceResultInfo)
 admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
+admin.site.register(Country)
 
 from pitlane.settings import LEAGUECONFIG
 

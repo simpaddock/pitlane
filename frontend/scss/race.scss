@@ -55,13 +55,13 @@
   width: 1%;
 }
 .race-result-vehicle{
-  width: 15%;
+  width: 18%;
 }
 .race-result-avg{
   width: 10%;
 }
 .race-result-finishstatus{
-  width: 16%;
+  width: 5%;
 }
 .race-name{
   display:block;
@@ -81,10 +81,7 @@
   text-transform: uppercase;
 }
 .race-result-points{
-  width: 2%;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  width: 4%;
 }
 .race-result-sum{
   color: #00aeef;
@@ -98,4 +95,10 @@
 }
 .race-meta{
   margin-bottom: 1em;
+}
+.car-vendor{
+  vertical-align: middle;
+  padding-right: 0.4em;
+  filter: invert(100%);
+  height: 20px;
 }

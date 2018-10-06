@@ -2,7 +2,11 @@
 {% load static %}
 {% block content %}
   <h1>About {{ name }}</h1>
-  <p>Season: {{ seasonCount  }}</p>
+  <p>
+    {{ name }} was established in {{ established }}.
+  </p>
+
+  <p>Season {{ seasonCount  }}</p>
   <p>Races: {{ raceCount }}</p>
   <p>Teams: {{ teamCount }}</p>
   <p>Drivers: {{ driverCount }}</p>

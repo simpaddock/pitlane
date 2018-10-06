@@ -32,10 +32,13 @@
   <div class="race-result-row">
       
       <div class="result-absolute-align">
-        <div class="medal medal-{{ result.position }}">
+        <div class="medal medal-{{ result.position }} medal-{{result.finishstatus|lower}}">
             
-            {% if result.position != "999" %}
+            {% if result.position != "999" and result.finishstatus == "Finished Normally" %}
             <span class="position">{{ result.position }}</span>
+            {% else %}
+            <span class="position">{{result.finishstatus|upper}}</span>
+
             {% endif %}
         </div> 
       </div>
@@ -50,7 +53,13 @@
         </div>
       </div>
 
+      <div class="race-result-points inline medium centered">
+          <span>{{result.points}} P</span>
+      </div>
       <div class="race-result-vehicle medium inline centered">
+          {% if result.vehicleImage %}
+            <img class="car-vendor" src="/static/frontend/{{result.vehicleImage}}">
+          {% endif %}
           <span>{{result.vehicle}}</span>
       </div>
       
@@ -68,10 +77,6 @@
 
       <div class="race-result-avg inline centered">
           <span>{{result.avg}} km/h</span>
-      </div>
-
-      <div class="race-result-finishstatus inline medium centered">
-          <span>{{result.finishstatus}}</span>
       </div>
   </div>
 

@@ -13,8 +13,7 @@
       <div class="news-flash">
         <div class="news-flash-content">
           <b>{{ newsflashArticle.title }}</b>
-          <p>The summercup has started
-            {{ newsflashArticle.text | safe }}
+          <p>{{ newsflashArticle.text |slice:"0:200" | safe }}...</p>
           <a href="/news/{{newsflashArticle.id}}">read more</a>
         </div>
       </div>

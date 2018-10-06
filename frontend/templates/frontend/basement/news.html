@@ -1,13 +1,11 @@
 {% extends baseLayout %}
 {% load static %}
 {% block content %}
-  <div>
+  <div class="news-article-content">
     {% for article in articles %}
       <h1>{{ article.title }}</h1>
       {{ article.date }}
-      <p>
-          {{ article.text | safe}}
-      </p>
+      {{ article.text | safe}}
     {% endfor %}
   </div>
   <div class="pagination">
