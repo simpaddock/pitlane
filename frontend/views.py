@@ -91,11 +91,20 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
+@cache_page(60 * 15)
 def get_index(request):
+  from datetime import datetime
   articles = NewsArticle.objects.all().order_by("date")
+  races = Race.objects.all().filter(season_id=getCurrentCup().id).order_by("-startDate")
+  newsArticles = NewsArticle.objects.all().order_by("date")[:5]
+
+  events = []
+  events = races
+
   newsflashArticle = None
   mediaFile = None
   isVideo = False
+
   if len(articles) > 0:
     newsflashArticle = articles[0]
     if newsflashArticle.mediaFile:
@@ -104,9 +113,12 @@ def get_index(request):
   return renderWithCommonData(request, 'frontend/index.html', {
     "newsflashArticle": newsflashArticle,
     "mediaFile":  mediaFile,
-    "isVideo": isVideo
+    "isVideo": isVideo,
+    "events": events,
+    "newsArticles": newsArticles
   })
 
+@cache_page(60 * 15)
 def get_news(request):
   articles = NewsArticle.objects.all().order_by("date")
   paginator = Paginator(articles, 5)
@@ -114,6 +126,8 @@ def get_news(request):
   return renderWithCommonData(request, 'frontend/news.html', {
     "articles": paginator.get_page(page)
   })
+
+@cache_page(60 * 15)
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
@@ -136,9 +150,11 @@ def get_about(request):
     "dsqCount": dsqCount
   })
 
+@cache_page(60 * 15)
 def get_privacy(request):
   return renderWithCommonData(request, 'frontend/privacy.html', {})
 
+@cache_page(60 * 15)
 def get_imprint(request):
   return renderWithCommonData(request, 'frontend/imprint.html', {})
 

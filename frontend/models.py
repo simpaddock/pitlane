@@ -285,7 +285,7 @@ class NewsArticle(models.Model):
 
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")
-  number =models.IntegerField(max_length=3)
+  number =models.IntegerField()
   skinFile = models.FileField(default=None, blank=False, upload_to='uploads/',verbose_name="Skin file")
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   wasUploaded = models.BooleanField(default=False, blank=False)
