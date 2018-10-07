@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from collections import OrderedDict
 from django.db import models
-
+from django.http import Http404
 from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
@@ -344,6 +344,8 @@ def getDriversStandings(id: int):
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
+  if  RaceResult.objects.all().filter(race_id=id).count() == 0:
+    raise Http404()
   raceResult = RaceResult.objects.all().filter(race_id=id).get()
   return renderWithCommonData(request, 'frontend/race.html', {
     "race": race,
