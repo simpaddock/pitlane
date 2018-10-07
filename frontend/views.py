@@ -326,21 +326,31 @@ def get_raceDetail(request, id: int):
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
+  season = Season.objects.all().filter(pk=id).get()
+  titleAttachment = ""
+  if not season.isRunning:
+    titleAttachment = " - Final results"
   return renderWithCommonData(request, 'frontend/standings.html', {
     "resultList":  enumerate(resultList),
     "isDriverStandings": False,
     "races": racesRaw,
-    "title": "Team standing - " + Season.objects.all().filter(pk=id).get().name
+    "title": "Team standing - " + season.name + titleAttachment,
+    "season": season
   })
 
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
+  season = Season.objects.all().filter(pk=id).get()
+  titleAttachment = ""
+  if not season.isRunning:
+    titleAttachment = " - Final results"
   return renderWithCommonData(request, 'frontend/standings.html', {
     "resultList": enumerate(resultList),
     "isDriverStandings": True,
     "races": racesRaw,
-    "title": "Drivers standing - " + Season.objects.all().filter(pk=id).get().name
+    "title": "Drivers standing - " + season.name + titleAttachment,
+    "season": season
   })
 
 def signUp(request):

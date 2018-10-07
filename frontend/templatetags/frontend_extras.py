@@ -17,3 +17,9 @@ def index(list, i):
   if i >= len(list):
     return None
   return list[int(i)]
+
+@register.filter
+def indexOrDNS(list, i):
+  if i >= len(list):
+    return "DNS"
+  return list[int(i)]
