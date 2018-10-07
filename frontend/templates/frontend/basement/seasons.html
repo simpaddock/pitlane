@@ -6,8 +6,7 @@
   </script>
   <div class="vue-seasons seasons">
     <div class="season" v-for="(season, season_key ) in seasons" :key="season_key" :class="{'selected-season': season.id === selectedSeason}">
-        
-        <span v-if="season.isRunning">Running: </span><span class="season-name" v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]</span>
+        <span v-if="selectedSeason !== null && selectedSeason === season.id">&#9654;</span><span class="season-name" v-on:click.prevent="updateMap(season.id)" >[[ season.name ]]<span v-if="season.isRunning"> (Running)</span></span>
         <a :href="'/seasons/'+season.id+'/drivers/'">[[ season.drivers.length  ]] drivers</a>,
         <a :href="'/seasons/'+season.id+'/teams/'">[[ season.teams.length  ]] teams</a>
 

@@ -139,10 +139,11 @@ def get_about(request):
 
 def get_privacy(request):
   return renderWithCommonData(request, 'frontend/privacy.html', {})
-  
+
 def get_imprint(request):
   return renderWithCommonData(request, 'frontend/imprint.html', {})
 
+@cache_page(60 * 15)
 def get_SingleNews(request, id:int):
   articles = NewsArticle.objects.all().filter(pk=id)
   paginator = Paginator(articles, 5)
