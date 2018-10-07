@@ -3,7 +3,7 @@
 {% block content %}
   <div class="news-article-content">
     {% for article in articles %}
-      <h1>{{ article.title }}</h1>
+      <a href="/news/{{article.id}}/"><h1>{{ article.title }}</h1></a>
       {{ article.date }}
       {{ article.text | safe}}
     {% endfor %}
