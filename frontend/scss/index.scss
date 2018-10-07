@@ -1,8 +1,5 @@
 .video-teaser{
-  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.6063000000000001 0.3576 0.0361 0 0 0.1063 0.8575999999999999 0.0361 0 0 0.1063 0.3576 0.5361 0 0 0 0 0 1 0" /></filter></svg>#filter');
-  -webkit-filter: grayscale(50%);
-
-  opacity: 0.5;
+  filter: contrast(80%) saturate(40%) grayscale(0%);
   position: fixed;
   width: 60%;
 }
@@ -40,4 +37,8 @@
 }
 .legal-links a:not(:last-child){
   padding-right: 0.5em;
+}
+label{
+  width: 20%;
+  display: inline-block;
 }

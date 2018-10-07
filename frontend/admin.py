@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from .models import Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
 
 class DriverEntryAdmin(admin.ModelAdmin):
     list_display = ['toString']
@@ -12,6 +12,9 @@ class DriverEntryAdmin(admin.ModelAdmin):
 
 class RaceResultAdmin(admin.ModelAdmin):
    readonly_fields = ('results',)
+
+class RegistrationAdmin(admin.ModelAdmin):
+  readonly_fields = ('downloadLink',)
 
 admin.site.register(Track)
 admin.site.register(Race)
@@ -26,6 +29,7 @@ admin.site.register(Season)
 #admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
+admin.site.register(Registration, RegistrationAdmin)
 
 from pitlane.settings import LEAGUECONFIG
 

@@ -91,7 +91,6 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
-@cache_page(60 * 15)
 def get_index(request):
   articles = NewsArticle.objects.all().order_by("date")
   newsflashArticle = None
@@ -371,28 +370,21 @@ def get_seasonStandingsDrivers(request, id: int):
   })
 
 def signUp(request):
-  form = TeamSignUpForm()
+  form = RegistrationForm()
+  token = None
   if request.POST:
-    form = TeamSignUpForm(request.POST,request.FILES)
+    form = RegistrationForm(request.POST,request.FILES)
+    if form.is_valid():
+      registrationData = form.save(commit=False)
+      registrationData.save()
+      token = registrationData.token
+      form = None
+      token = registrationData.token
   return renderWithCommonData(request, 'frontend/signup.html', {
     "form": form,
+    "token": token
   })
 
-def signUpTeam(request):
-  form = TeamSignUpForm()
-  if request.POST:
-    form = TeamSignUpForm(request.POST,request.FILES)
-  return renderWithCommonData(request, 'frontend/signup.html', {
-    "form": form,
-  })
-
-def signUpDriver(request):
-  form = DriverSignUpForm()
-  if request.POST:
-    form = DriverSignUpForm(request.POST,request.FILES)
-  return renderWithCommonData(request, 'frontend/signup.html', {
-    "form": form,
-  })
 # JSON API Endpoints
 
 

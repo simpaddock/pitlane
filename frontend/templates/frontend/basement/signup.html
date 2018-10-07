@@ -1,9 +1,43 @@
 {% extends baseLayout %}
+{% spaceless %}
 {% block content %}
 <h1>signup</h1>
+{% if token is None %}
+<div class="remarks">
+  <ol>
+    <li>
+      A submitted car number cannot be changed
+    </li>
+    <li>
+      Use the token as a password to update your submission. You don't need a token for an initial submission
+    </li>
+    <li>
+      Driver Names and Vehicles will be updated automatically at standings update
+    </li>
+    <li>
+      We may contact you via mail if there are problems with your submission.
+    </li>
+  </ol>
+
+</div>
+
 <form action="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
-  {{ form }}
+  {{ form.as_p }}
+  <b>GDPR remark</b>
+  <p>
+    Because the names of any driver will be displayed public on our website and/ or in streams,<br>
+    you have to give the consent for any drivers you are submitting a skin for.
+  </p>
+  <p>
+    Feel free to <a href="/imprint/">contact u</a>s if you have any questions.
+  </p>
   <input type="submit" value="Submit">
 </form>
+
+
+{% else %}
+Thank you for your submission. Your token is {{ token }}. Keep that.
+{% endif %}
 {% endblock %}
+{% endspaceless %}

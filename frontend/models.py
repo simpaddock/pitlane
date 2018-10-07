@@ -4,7 +4,10 @@ from django.db.models.functions import Cast
 from pitlane.settings import LEAGUECONFIG, SIMSOFTWARE
 from xml.dom import minidom
 import re
-
+from django.utils.html import mark_safe
+from django.core.exceptions import ValidationError
+import random
+import string
 class Country(models.Model):
   name = models.CharField(max_length=100)
   flag = models.FileField(default=None, blank=True, upload_to='uploads/')
@@ -27,8 +30,6 @@ class Season(models.Model):
 
 class Team(models.Model):
   name = models.CharField(max_length=100)
-  email = models.EmailField(default=None, null=True) # for managing..
-  password = models.TextField(default=None, null=True) # for managing..
   logo = models.FileField(default=None, blank=True, upload_to='uploads/')
 
   def __str__(self):
@@ -281,3 +282,40 @@ class NewsArticle(models.Model):
   mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/')
   def __str__(self):
     return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)
+
+class Registration(models.Model):
+  email =models.EmailField(max_length=200, default="")
+  number =models.IntegerField(max_length=3)
+  skinFile = models.FileField(default=None, blank=False, upload_to='uploads/',verbose_name="Skin file")
+  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
+  wasUploaded = models.BooleanField(default=False, blank=False)
+  gdprAccept = models.BooleanField(default=False, blank=False, verbose_name="I consent the GDPR compilant processing of my submission data")
+  copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
+  token = models.CharField(max_length=10, default="",blank=True)
+  def __str__(self):
+    return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ") on Server: " + str(self.wasUploaded)
+  @property
+  def downloadLink(self):
+    return mark_safe("""<a target="blank" href="/static/frontend/{}">Download skin file</a>""".format(self.skinFile.url)) 
+  def clean(self):
+    if not self.gdprAccept:
+      raise ValidationError("You need to accept the GDPR that we can continue.")
+    if not self.copyrightAccept:
+      raise ValidationError("Please make sure your skin is free of any copyright violation.")
+
+    numberGiven = Registration.objects.filter(number=self.number, season_id = self.season.id).count() > 0
+    if numberGiven:
+      otherCarWithThatNumber = Registration.objects.filter(number=self.number, season_id = self.season.id).first()
+      if otherCarWithThatNumber.id != self.id: # dont do the validations when the id's are identical.
+        if otherCarWithThatNumber.token != self.token:
+          raise ValidationError("This number is given by another team")
+        else:
+          # update other entry
+          otherCarWithThatNumber.skinFile = self.skinFile
+          otherCarWithThatNumber.wasUploaded = False
+          otherCarWithThatNumber.save()
+          self.token = otherCarWithThatNumber.token
+          raise ValidationError("The old registration was updated.")
+    self.token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+    
+

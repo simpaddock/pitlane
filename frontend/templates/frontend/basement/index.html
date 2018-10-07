@@ -1,6 +1,7 @@
 {% extends baseLayout %}
 {% load static %}
 {% block content %}
+
   <div>
   {% if newsflashArticle is not None %}
     {% if newsflashArticle.mediaFile %}
@@ -12,7 +13,7 @@
     {% endif %}
       <div class="news-flash">
         <div class="news-flash-content">
-          <b>{{ newsflashArticle.title }}</b>
+          <b>{{newsflashArticle.date }}: {{ newsflashArticle.title }}</b>
           <p>{{ newsflashArticle.text |slice:"0:200" | safe }}...</p>
           <a href="/news/{{newsflashArticle.id}}">read more</a>
         </div>
