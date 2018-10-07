@@ -205,7 +205,7 @@ def getRaceResult(id: int):
   for result in results:
     seasonId = result.driverEntry.teamEntry.season.id
     infos = DriverRaceResultInfo.objects.all().filter(driverRaceResult_id=result.id)
-    knownDrivers.append(result.driverEntry.driver.id)
+    knownDrivers.append(result.driverEntry.driverNumber)
     completeResults.append(
       {
         "baseInfos": result,
@@ -223,7 +223,7 @@ def getRaceResult(id: int):
       "position": "999",
       "finishstatus": "DNS"
     }
-    if driver.id not in knownDrivers:
+    if driver.driverNumber not in knownDrivers:
       infosToAppend = []
       for key, info in infos.items():
         raceresultinfo = DriverRaceResultInfo()
@@ -271,12 +271,23 @@ def getTeamStandings(id: int):
 
       if len( viewList[teamId]["points"]) > key:
         # we already seen a result for that race
-        viewList[teamId]["points"][key] = viewList[teamId]["points"][key] + int(driver["points"])
+        viewList[teamId]["points"][key].append(int(driver["points"]))
       else:
-        viewList[teamId]["points"].append(int(driver["points"]))
-      viewList[teamId]["sum"] = reduce(lambda x,y: x+y, viewList[teamId]["points"])
-      
+        viewList[teamId]["points"].append([int(driver["points"])])
   viewList = list(viewList.values())
+  # Rule: only the first two drivers will score
+  for teamIndex, team in enumerate(viewList):
+    teamPointSum = 0
+    for key, race in enumerate(team["points"]):
+      newRacePoints = sorted(race, reverse=True)
+      if len(newRacePoints) > 2:
+        newRacePoints = newRacePoints[0:2]
+      newRacePointsSum = reduce(lambda x,y: int(x)+int(y),  newRacePoints)
+      teamPointSum = teamPointSum + newRacePointsSum
+      viewList[teamIndex]["points"][key]  = newRacePointsSum
+    
+    viewList[teamIndex]["sum"] =teamPointSum
+
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
 def getDriversStandings(id: int):
@@ -292,8 +303,10 @@ def getDriversStandings(id: int):
           viewList[driverId][columnName] = driver[columnValue]
         viewList[driverId]["sum"] = 0   
         viewList[driverId]["points"] = []
+        viewList[driverId]["finishstates"] = []
       
       viewList[driverId]["points"].append(int(driver["points"]))
+      viewList[driverId]["finishstates"].append(driver["finishstatus"])
       viewList[driverId]["sum"] = reduce(lambda x,y: x+y, viewList[driverId]["points"])
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)

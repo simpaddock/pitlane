@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.db.models.functions import Cast
 from pitlane.settings import LEAGUECONFIG, SIMSOFTWARE
 from xml.dom import minidom
 import re
@@ -76,10 +77,29 @@ class RaceResult(models.Model):
   resultFile = models.FileField(default=None, blank=True, upload_to='uploads/')
   streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
   commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
+  @property
+  def results(self):
+    if self.resultFile is not None:
+      resultText = ""
+      positions = DriverRaceResultInfo.objects.filter(driverRaceResult__raceResult_id=self.id).annotate(
+        intPosition=Cast('value', models.IntegerField())
+      ).filter(name="position").order_by("intPosition")
+      for position in positions:
+        driverRaceResult = position.driverRaceResult
+        resultText = "{0}{1}. {2} {3}\n".format(resultText, position.value, driverRaceResult.driverEntry.driver.firstName, driverRaceResult.driverEntry.driver.lastName)
+        print(driverRaceResult)
+      return resultText
+    return ""
   def __str__(self):
     return str(self.race.endDate) + ": " + self.race.name + " - " + self.season.name 
   def save(self, *args, **kwargs):
     super(RaceResult, self).save(*args, **kwargs)
+
+    
+    # cleanup old data
+    DriverRaceResultInfo.objects.filter(driverRaceResult__raceResult_id=self.id).delete()
+    DriverRaceResult.objects.filter(raceResult_id=self.id).delete()
+
     filename = self.resultFile.path
     xml = minidom.parse(filename)
 
@@ -129,7 +149,7 @@ class RaceResult(models.Model):
         else:
           percentage = 0
         # i assume that the rfactor xml is sorted.
-        if percentage > 90:
+        if percentage > 70:
           rawData["Points"] = pointMap[int(rawData["Position"])]
         else:
           rawData["Points"]  = 0
@@ -148,21 +168,26 @@ class RaceResult(models.Model):
         newTeam = Team()
         newTeam.name = teamName
         newTeam.save()
-        # create season entry
+
+
+      
+      team = Team.objects.get(name=teamName) 
+      
+      if TeamEntry.objects.filter(season_id=self.season.id, team_id=team.id).count() == 0:
+        # team is existing -> get new entry if needed
         newTeamEntry = TeamEntry()
-        newTeamEntry.team = newTeam
+        newTeamEntry.team = Team.objects.all().filter(name=teamName).get()
         newTeamEntry.vehicle = vehicle
         newTeamEntry.season = self.season
         newTeamEntry.save()
-      
-      team = Team.objects.get(name=teamName)
-      teamEntry = TeamEntry.objects.get(team=team)
 
+      teamEntry = TeamEntry.objects.filter(season_id=self.season.id, team=team).get()
       # 2. find Driver
       nameParts = rawData["Name"].split(" ")
       firstName = nameParts[0]
       lastName = nameParts[1]
-      fittingDrivers = Driver.objects.all().filter(firstName=firstName).filter(lastName=lastName)
+      fittingDrivers = Driver.objects.all().filter(firstName=firstName,lastName=lastName)
+      driver=None
       if fittingDrivers.count() == 0:
         # create new driver
         driver = Driver()
@@ -170,18 +195,27 @@ class RaceResult(models.Model):
         driver.lastName = lastName
         driver.country = Country.objects.first()
         driver.save()
-
+      
+      driver = Driver.objects.filter(firstName=firstName,lastName=lastName).get()
+      if DriverEntry.objects.filter(driver_id=driver, teamEntry_id=teamEntry.id).count() == 0:
+        # give the driver a new team entry 
         driverEntry = DriverEntry()
-        driverEntry.driver = driver
+        driverEntry.driver = Driver.objects.filter(firstName=firstName,lastName=lastName).get()
         driverEntry.teamEntry = teamEntry
         driverEntry.driverNumber = carNumber
         driverEntry.driverNumberFormat = "{0}"
         driverEntry.save()
       
-      driver = Driver.objects.all().filter(firstName=firstName).filter(lastName=lastName).get()
-      driverEntry = DriverEntry.objects.get(driver=driver, teamEntry=teamEntry)
-      # remove old ones
-      
+      print(driver.id, driver, teamEntry)
+      test =DriverEntry.objects.all()
+      """
+      I may run into a bug here. Django does not return anything useful with filter()
+      """
+      driverEntry = None
+      for t in test:
+        if t.driver == driver and t.teamEntry.season == self.season:
+         driverEntry = t
+         break
 
       driverRaceResult = DriverRaceResult()
       driverRaceResult.driverEntry = driverEntry

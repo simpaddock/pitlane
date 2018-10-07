@@ -35,14 +35,30 @@
           {% endif %}
         </div>
       </div>
-      
       {% for race in races %}
         <div class="race-result-race-points inline medium centered">
           <a href="/races/{{race.id}}/">
             <span class="race-name">
               <img class="race-flag" title="{{race.name}}" src="/static/frontend/{{ race.track.country.flag }}">
             </span>
-            <span>{{ result.points | index:forloop.counter0 |default:0}}</span>
+            <span>
+              {% with points=result.points|index:forloop.counter0 %}
+                {% with racePoints=points %}
+                  {% if racePoints == 0 and result.finishstatus != 'Finished Normally'%}
+                    {% with state=result.finishstates|index:forloop.counter0 %}
+                    {% if state == 'Finished Normally'%}
+                      {{ racePoints }}
+                    {% else %}
+                      {{ state }}
+                    {% endif %}
+                    {% endwith %}
+                  {% else %}
+                    {{racePoints}}
+                  {% endif %}
+                {% endwith %}
+               
+              {% endwith %}
+            </span>
           </a>
         </div>
       {% endfor %}

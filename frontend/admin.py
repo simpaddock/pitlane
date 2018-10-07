@@ -10,17 +10,20 @@ class DriverEntryAdmin(admin.ModelAdmin):
     
     toString.short_description = 'Driver entry'
 
+class RaceResultAdmin(admin.ModelAdmin):
+   readonly_fields = ('results',)
+
 admin.site.register(Track)
 admin.site.register(Race)
 admin.site.register(Driver)
 admin.site.register(Team)
 admin.site.register(DriverEntry, DriverEntryAdmin)
 admin.site.register(TeamEntry)
-admin.site.register(RaceResult)
-admin.site.register(DriverRaceResult)
+admin.site.register(RaceResult, RaceResultAdmin)
+#admin.site.register(DriverRaceResult)
 admin.site.register(Season)
-admin.site.register(DriverRaceResultInfo)
-admin.site.register(RaceOverlayControlSet)
+#admin.site.register(DriverRaceResultInfo)
+#admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
 
