@@ -14,6 +14,28 @@
 
 <body>
   <div class="background-image"></div>
+  <div id="eu-cookies" class="eu-cookies">
+    {{ config.name }} uses cookies to improve the user expierience. You can receive additional informations using the <a href="/about">about</a>-page. <a href="#" onclick="DismissCookieWarning()">Dismiss this hint.</a>
+  </div>
+  <script>
+    // EU Cookie foo
+    function DismissCookieWarning(){
+      var d = new Date;
+	    d.setTime(d.getTime() + 24*60*60*1000*30);
+	    document.cookie = "cookielawdismissed" + "=" + true + ";path=/;expires=" + d.toGMTString();
+      ApplyCookieWarning()
+    }
+    function IsCookieWarningDismissed() {
+	    var v = document.cookie.match('(^|;) ?cookielawdismissed=([^;]*)(;|$)');
+	    return v ? v[2] === "true" : false;
+	  }
+    function ApplyCookieWarning(){
+      if (IsCookieWarningDismissed()){
+        document.getElementById("eu-cookies").remove()
+      }
+    }
+    ApplyCookieWarning()
+  </script>
   <div class="navigation">
     <a href="/">
       <img src="{{ config.logo }}"  class="logo">

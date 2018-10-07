@@ -88,7 +88,7 @@ def renderWithCommonData(request, template, context):
   context["config"] = LEAGUECONFIG
   context["running"] = getCurrentCup()
   template = template.replace("frontend/", "frontend/" + LEAGUECONFIG["theme"] + "/")
-  context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html' 
+  context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
 @cache_page(60 * 15)
