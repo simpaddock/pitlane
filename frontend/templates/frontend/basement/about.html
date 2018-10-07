@@ -10,6 +10,8 @@
   <p>Races: {{ raceCount }}</p>
   <p>Teams: {{ teamCount }}</p>
   <p>Drivers: {{ driverCount }}</p>
+  <p>DNF's happened (all seasons): {{ dnfCount }}</p>
+  <p>DSQ's given (all seasons): {{ dsqCount }}</p>
   <h1>About SimPaddock</h1>
   <p>
     {{ name }} uses SimPaddock, a MPL-2.0 licensed Open Source league manager.
@@ -33,6 +35,19 @@
   </p>
   <p>
     You can find SimPaddock on Github: <a href="https://github.com/simpaddock">https://github.com/simpaddock</a>
+  </p>
+  <h2>Contents</h2>
+  <p>
+    As SimPaddock does not contain any assets, any assets (logos, texts, names) are user published.
+  </p>
+  <h2>Privacy</h2>
+  <p>
+    SimPaddock uses two Cookies for technical purposes:
+    <ul>
+      <li>csrftoken - A cookie to help preventing Cross-Site-Request-Forgery</li>
+      <li>sessionid - A cookie to help us to cache requests and improve performance</li>
+    </ul>
+    SimPaddock has no embedded tracking features.
   </p>
 
 {% endblock %}

@@ -29,6 +29,12 @@ DEBUG = True
 # for test purposes..
 ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'frontend_caches',
+    }
+}
 
 
 # Application definition

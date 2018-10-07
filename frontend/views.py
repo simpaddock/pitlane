@@ -13,6 +13,7 @@ from functools import reduce
 from .forms import *
 from requests import get
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
 
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
@@ -90,6 +91,7 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html' 
   return render(request, template, context)
 
+@cache_page(60 * 15)
 def get_index(request):
   articles = NewsArticle.objects.all().order_by("date")
   newsflashArticle = None
@@ -121,6 +123,8 @@ def get_about(request):
   teamCount = Team.objects.all().count()
   driverCount = Driver.objects.all().count()
   seasonCount = Season.objects.all().count()
+  dnfCount = DriverRaceResultInfo.objects.filter(value="DNF").count()
+  dsqCount = DriverRaceResultInfo.objects.filter(value="DSQ").count()
   return renderWithCommonData(request, 'frontend/about.html', {
     "established": established,
     "name": name,
@@ -128,7 +132,9 @@ def get_about(request):
     "raceCount": raceCount,
     "teamCount": teamCount,
     "driverCount": driverCount,
-    "seasonCount": seasonCount
+    "seasonCount": seasonCount,
+    "dnfCount": dnfCount,
+    "dsqCount": dsqCount
   })
 
 def get_SingleNews(request, id:int):
@@ -152,6 +158,7 @@ class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         return str(o)
 
+@cache_page(60 * 15)
 def get_seasonList(request):
   seasonList = Season.objects.all()
   races = {}
@@ -311,6 +318,7 @@ def getDriversStandings(id: int):
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
+@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
@@ -323,6 +331,7 @@ def get_raceDetail(request, id: int):
     "commentatorInfo": raceResult.commentatorInfo 
   })
 
+@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
@@ -338,6 +347,7 @@ def get_seasonStandingsTeams(request, id: int):
     "season": season
   })
 
+@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
