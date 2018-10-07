@@ -1,7 +1,7 @@
 .video-teaser{
   filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.6063000000000001 0.3576 0.0361 0 0 0.1063 0.8575999999999999 0.0361 0 0 0.1063 0.3576 0.5361 0 0 0 0 0 1 0" /></filter></svg>#filter');
   -webkit-filter: grayscale(50%);
-  filter: grayscale(50%);
+
   opacity: 0.5;
   position: fixed;
   width: 60%;
@@ -22,7 +22,7 @@
 }
 .eu-cookies{
   position: fixed;
-  top: 0px;
+  bottom: 0px;
   left: 0px;
   width: 100%;
   background: #ff6c00;
@@ -31,4 +31,13 @@
   text-align: center;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+.legal-links{
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 99999;
+}
+.legal-links a:not(:last-child){
+  padding-right: 0.5em;
 }

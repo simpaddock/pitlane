@@ -4,5 +4,9 @@
   "theme": "basement",
   "dateFormat": "%Y-%m-%d %H:%M:%S",
   "pitlane": "forumlinkornull",
-  "established": "yearofleaguestart"
+  "established": "yearofleaguestart",
+  "privacy": {
+    "imprint": "",
+    "gdpr": ""
+  }
 }
