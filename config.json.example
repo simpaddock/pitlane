@@ -5,6 +5,7 @@
   "dateFormat": "%Y-%m-%d %H:%M:%S",
   "pitlane": "forumlinkornull",
   "established": "yearofleaguestart",
+  "livetiming": "link to the livetiming or null",
   "privacy": {
     "imprint": "",
     "gdpr": ""

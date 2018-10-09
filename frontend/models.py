@@ -287,6 +287,18 @@ class NewsArticle(models.Model):
   def __str__(self):
     return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)
 
+class Incident(models.Model):
+  timeCode = models.FloatField()
+  opponentCar = models.CharField(default="", max_length=100, verbose_name="Opponent car")
+  ownCar =  models.CharField(default="", max_length=100, verbose_name="Own car")
+  description =  models.TextField(default="", max_length=1000, verbose_name="Description")
+  race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
+  result =  models.TextField(default="", max_length=100)
+  def __str__(self):
+    return "{0}: {1} vs {1}: {2}".format(self.race.name, self.ownCar, self.opponentCar, self.result)
+
+
+
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")
   number =models.IntegerField()

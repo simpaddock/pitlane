@@ -69,7 +69,8 @@ def getRoutes():
     routes["seasons/"+str(season.id)+"/teams"] = "Teams"
   routes["about"] = "about"
   if LEAGUECONFIG["pitlane"] is not None:
-    routes[LEAGUECONFIG["pitlane"]] = "Pitlane"
+    routes[LEAGUECONFIG["pitlane"]] = "Forum"
+  routes["incidentreport"] = "Incident report"
   return routes
 
 def get_robots(request):
@@ -345,12 +346,18 @@ def getDriversStandings(id: int):
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
   if  RaceResult.objects.all().filter(race_id=id).count() == 0:
-    raise Http404()
+    return renderWithCommonData(request, 'frontend/race.html', {
+      "race": race,
+      "resultList": None,
+      "title":  race.name,
+      "streamLink": None,
+      "commentatorInfo": None
+    })
   raceResult = RaceResult.objects.all().filter(race_id=id).get()
   return renderWithCommonData(request, 'frontend/race.html', {
     "race": race,
@@ -360,7 +367,7 @@ def get_raceDetail(request, id: int):
     "commentatorInfo": raceResult.commentatorInfo 
   })
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
@@ -376,7 +383,7 @@ def get_seasonStandingsTeams(request, id: int):
     "season": season
   })
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
@@ -407,6 +414,19 @@ def signUp(request):
     "form": form,
     "token": token
   })
+
+def incidentReport(request):
+  form = IncidentForm()
+  if request.POST:
+    form = IncidentForm(request.POST,request.FILES)
+    if form.is_valid():
+      data = form.save(commit=False)
+      data.save()
+      form = None
+  return renderWithCommonData(request, 'frontend/incident.html', {
+    "form": form
+  })
+
 
 # JSON API Endpoints
 

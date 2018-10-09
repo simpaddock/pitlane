@@ -30,6 +30,7 @@ urlpatterns = [
     path('imprint/', views.get_imprint, name='imprint'),
     path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
     path('signup/', views.signUp, name='signup'),
+    path('incidentreport/', views.incidentReport, name='incident'),
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from .models import Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
 
 class DriverEntryAdmin(admin.ModelAdmin):
     list_display = ['toString']
@@ -47,6 +47,7 @@ admin.site.register(DriverRaceResultInfo)
 #admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
+admin.site.register(Incident)
 admin.site.register(Registration, RegistrationAdmin)
 
 from pitlane.settings import LEAGUECONFIG

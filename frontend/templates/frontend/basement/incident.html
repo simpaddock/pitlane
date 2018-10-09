@@ -1,0 +1,22 @@
+{% extends baseLayout %}
+{% spaceless %}
+{% block content %}
+<h1>Incident report</h1>
+<div class="remarks">
+  Result for race reports will be posted in the race thread.<br>
+  Unfair usage of reports to gain an advantage will be punished.
+</div>
+{% if form is not None %}
+
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit">
+</form>
+{% else %}
+<div class="remarks">
+  Thank you for your report.
+</div>
+{% endif %}
+{% endblock %}
+{% endspaceless %}
