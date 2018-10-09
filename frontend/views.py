@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from collections import OrderedDict
 from django.db import models
 from django.http import Http404
-from .models import NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
+from .models import Rule, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 from json import dumps, loads
@@ -148,7 +148,8 @@ def get_about(request):
     "driverCount": driverCount,
     "seasonCount": seasonCount,
     "dnfCount": dnfCount,
-    "dsqCount": dsqCount
+    "dsqCount": dsqCount,
+    "rules": Rule.objects.all()
   })
 
 @cache_page(60 * 15)

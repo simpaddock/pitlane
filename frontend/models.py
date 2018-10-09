@@ -297,7 +297,11 @@ class Incident(models.Model):
   def __str__(self):
     return "{0}: {1} vs {1}: {2}".format(self.race.name, self.ownCar, self.opponentCar, self.result)
 
-
+class Rule(models.Model):
+  title = models.CharField(default="", max_length=100)
+  text =  RichTextField()
+  def __str__(self):
+    return "{0}".format(self.title)
 
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")

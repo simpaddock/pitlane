@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from .models import Rule,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from django.db.models.signals import post_save
+from django.core.cache import cache
+from django.dispatch import receiver
 
 class DriverEntryAdmin(admin.ModelAdmin):
     list_display = ['toString']
@@ -48,7 +51,12 @@ admin.site.register(DriverRaceResultInfo)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
 admin.site.register(Incident)
+admin.site.register(Rule)
 admin.site.register(Registration, RegistrationAdmin)
+
+@receiver(post_save)
+def clear_the_cache(**kwargs):
+  cache.clear() # clear cache on save..
 
 from pitlane.settings import LEAGUECONFIG
 

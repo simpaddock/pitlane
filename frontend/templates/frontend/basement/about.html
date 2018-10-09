@@ -12,6 +12,14 @@
   <p>Drivers: {{ driverCount }}</p>
   <p>DNF's happened (all seasons): {{ dnfCount }}</p>
   <p>DSQ's given (all seasons): {{ dsqCount }}</p>
+  <h1>Our rules</h1>
+  
+  {% for rule in rules %}
+    <b>{{ rule.title }} </b>
+    <p>
+      {{ rule.text | safe}}
+    </p>
+  {% endfor %}
   <h1>About SimPaddock</h1>
   <p>
     {{ name }} uses SimPaddock, a MPL-2.0 licensed Open Source league manager.
