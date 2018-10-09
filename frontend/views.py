@@ -285,7 +285,7 @@ def getRaceResult(id: int):
   return sorted(viewList, key=lambda x: int(x["position"]), reverse=False)
 
 def getTeamStandings(id: int):
-  races = Race.objects.filter(season_id = id) # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
+  races = Race.objects.filter(season_id = id).order_by('startDate')
   viewList = {}
   for key, race in enumerate(races):
     results = getRaceResult(race.id)
@@ -297,12 +297,14 @@ def getTeamStandings(id: int):
           viewList[teamId][columnName] = driver[columnValue]
         viewList[teamId]["sum"] = 0   
         viewList[teamId]["points"] = []
-
+        viewList[teamId]["detailPoints"] = []
       if len( viewList[teamId]["points"]) > key:
         # we already seen a result for that race
         viewList[teamId]["points"][key].append(int(driver["points"]))
+        viewList[teamId]["detailPoints"][key].append(int(driver["points"]))
       else:
         viewList[teamId]["points"].append([int(driver["points"])])
+        viewList[teamId]["detailPoints"].append([int(driver["points"])])
   viewList = list(viewList.values())
   # Rule: only the first two drivers will score
   for teamIndex, team in enumerate(viewList):
@@ -316,7 +318,6 @@ def getTeamStandings(id: int):
       viewList[teamIndex]["points"][key]  = newRacePointsSum
     
     viewList[teamIndex]["sum"] =teamPointSum
-
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
 def getDriversStandings(id: int):
@@ -355,7 +356,7 @@ def get_raceDetail(request, id: int):
     "commentatorInfo": raceResult.commentatorInfo 
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)

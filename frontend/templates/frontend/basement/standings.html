@@ -42,14 +42,17 @@
               <img class="race-flag" title="{{race.name}}" src="/static/frontend/{{ race.track.country.flag }}">
             </span>
             <span>
+              
               {% with points=result.points|index:forloop.counter0 %}
                 {% with racePoints=points %}
-                  {% if racePoints == 0 %}
+                  {% if isDriverStandings and racePoints == 0 %}
                     {% with state=result.finishstates|index:forloop.counter0 %}
                     {% if state == 'Finished Normally'%}
                       {{ racePoints }}
                     {% else %}
-                      {{ state }}
+                      {% if state is None%}
+                        DNS
+                      {% endif %}
                     {% endif %}
                     {% endwith %}
                   {% else %}
