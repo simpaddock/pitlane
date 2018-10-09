@@ -10,8 +10,26 @@ class DriverEntryAdmin(admin.ModelAdmin):
     
     toString.short_description = 'Driver entry'
 
+
+
 class RaceResultAdmin(admin.ModelAdmin):
-   readonly_fields = ('results',)
+  readonly_fields = ('results',)
+
+class DriverRaceResultAdmin(admin.ModelAdmin):
+  actions = ['disqualify', 'undisqualify', 'undisqualify_dnf']
+
+  def disqualify(modeladmin, request, queryset):
+    for driver in queryset:
+      resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='dsq')
+  disqualify.short_description = "Disqualify Driver"
+  def undisqualify(modeladmin, request, queryset):
+    for driver in queryset:
+      resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='Finished Normally')
+  undisqualify.short_description = "Un-Disqualify Driver (Finished Normally)"
+  def undisqualify_dnf(modeladmin, request, queryset):
+    for driver in queryset:
+      resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='dnf')
+  undisqualify_dnf.short_description = "Un-Disqualify Driver (DNF)"
 
 class RegistrationAdmin(admin.ModelAdmin):
   readonly_fields = ('downloadLink',)
@@ -23,9 +41,9 @@ admin.site.register(Team)
 admin.site.register(DriverEntry, DriverEntryAdmin)
 admin.site.register(TeamEntry)
 admin.site.register(RaceResult, RaceResultAdmin)
-#admin.site.register(DriverRaceResult)
+admin.site.register(DriverRaceResult,DriverRaceResultAdmin)
 admin.site.register(Season)
-#admin.site.register(DriverRaceResultInfo)
+admin.site.register(DriverRaceResultInfo)
 #admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
 admin.site.register(Country)

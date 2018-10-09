@@ -281,6 +281,10 @@ def getRaceResult(id: int):
       else:
         viewData[columnName] = getChildValue(result, columnPath)
     viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
+    # Alter the results if a driver was disqualified (after) the race booking
+    if viewData["finishstatus"] == "dsq":
+      viewData["position"] = 999
+      viewData["points"] = 0
     viewList.append(viewData)
   return sorted(viewList, key=lambda x: int(x["position"]), reverse=False)
 
@@ -341,7 +345,7 @@ def getDriversStandings(id: int):
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
@@ -372,7 +376,7 @@ def get_seasonStandingsTeams(request, id: int):
     "season": season
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 

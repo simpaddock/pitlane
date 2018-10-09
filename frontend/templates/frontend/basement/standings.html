@@ -50,9 +50,7 @@
                     {% if state == 'Finished Normally'%}
                       {{ racePoints }}
                     {% else %}
-                      {% if state is None%}
-                        DNS
-                      {% endif %}
+                      {{ state }}
                     {% endif %}
                     {% endwith %}
                   {% else %}

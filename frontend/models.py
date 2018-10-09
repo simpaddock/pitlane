@@ -266,6 +266,10 @@ class DriverEntry(models.Model):
 class DriverRaceResult(models.Model):
   raceResult = models.ForeignKey(RaceResult, on_delete=models.DO_NOTHING, default=None)
   driverEntry = models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None)
+  def __str__(self):
+    position = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="position").first()
+    status = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="finishstatus").first()
+    return "{0} {1}@{2} ({3}): {4}. ({5})".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,  self.raceResult.race.startDate, position.value, status.value)
 
 class DriverRaceResultInfo(models.Model):
   driverRaceResult = models.ForeignKey(DriverRaceResult, on_delete=models.DO_NOTHING, default=None)
