@@ -8,6 +8,7 @@ from django.utils.html import mark_safe
 from django.core.exceptions import ValidationError
 import random
 import string
+from django.utils.html import strip_tags
 class Country(models.Model):
   name = models.CharField(max_length=100)
   flag = models.FileField(default=None, blank=True, upload_to='uploads/')
@@ -302,6 +303,9 @@ class Rule(models.Model):
   text =  RichTextField()
   def __str__(self):
     return "{0}".format(self.title)
+  @property
+  def plainText(self):
+    return strip_tags(self.text.replace("\r",""))
 
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")

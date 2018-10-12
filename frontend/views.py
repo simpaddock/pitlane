@@ -14,6 +14,8 @@ from .forms import *
 from requests import get
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
+from pitlane.settings import STATIC_ROOT, LEAGUECONFIG
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
@@ -92,7 +94,7 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_index(request):
   from datetime import datetime
   articles = NewsArticle.objects.all().order_by("date")
@@ -119,7 +121,7 @@ def get_index(request):
     "newsArticles": newsArticles
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_news(request):
   articles = NewsArticle.objects.all().order_by("date")
   paginator = Paginator(articles, 5)
@@ -128,7 +130,7 @@ def get_news(request):
     "articles": paginator.get_page(page)
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
@@ -152,15 +154,15 @@ def get_about(request):
     "rules": Rule.objects.all()
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_privacy(request):
   return renderWithCommonData(request, 'frontend/privacy.html', {})
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_imprint(request):
   return renderWithCommonData(request, 'frontend/imprint.html', {})
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_SingleNews(request, id:int):
   articles = NewsArticle.objects.all().filter(pk=id)
   paginator = Paginator(articles, 5)
@@ -182,7 +184,7 @@ class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         return str(o)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonList(request):
   seasonList = Season.objects.all()
   races = {}
@@ -347,7 +349,7 @@ def getDriversStandings(id: int):
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
@@ -368,7 +370,7 @@ def get_raceDetail(request, id: int):
     "commentatorInfo": raceResult.commentatorInfo 
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
@@ -384,7 +386,50 @@ def get_seasonStandingsTeams(request, id: int):
     "season": season
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
+def get_raceBanner(request, id: int):
+  race = Race.objects.filter(pk=id).get()
+  schedule = Rule.objects.filter(title="Race Schedule").first()
+  if schedule is None: # we need a schedule...
+    return Http404()
+  data = {
+    "raceName": race.name,
+    "startDate": "Start " + race.startDate.strftime(LEAGUECONFIG["dateFormat"]),
+    "endDate": "End " + race.startDate.strftime(LEAGUECONFIG["dateFormat"]),
+    "schedule": schedule.plainText,
+    "url": LEAGUECONFIG["url"]
+  }
+  blocks = LEAGUECONFIG["bannerConfig"]
+  img = Image.new('RGBA', (1920, 1080), (0,0,0,0))
+  race = Race.objects.filter(pk=id).get()
+  draw = ImageDraw.Draw(img)
+  for block in blocks:
+    if block["type"].lower() == "image":
+      blockImage = Image.open(STATIC_ROOT + block["path"], 'r')
+      wasResized = False
+      if block["filter"] is not None:
+        blockImage = blockImage.convert(block["filter"])
+      if block["size"] is not None:
+        blockImage = blockImage.resize(tuple(block["size"]))
+        wasResized = True
+      if wasResized:
+        img.paste(blockImage, tuple(block["position"]), blockImage) # only use the transparency map if the size was altered
+      else:
+        img.paste(blockImage, tuple(block["position"]))
+    if block["type"].lower() == "text":
+      text = data[block["text"]]
+      draw.text(tuple(block["position"]), text, font=ImageFont.truetype( size=int(block["fontSize"]), font=STATIC_ROOT + block["fontPath"]), fill=tuple(block["fontColor"]))
+    if block["type"].lower() == "multilinetext":
+      text = data[block["text"]]
+      draw.multiline_text(tuple(block["position"]), text, font=ImageFont.truetype( size=int(block["fontSize"]), font=STATIC_ROOT + block["fontPath"]), fill=tuple(block["fontColor"]))
+    
+
+      
+  response = HttpResponse(content_type="image/png")
+  img.save(response, "PNG")
+  return response
+
+#@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 

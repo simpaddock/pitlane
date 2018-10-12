@@ -5,3 +5,4 @@ djangorestframework==3.8.2
 filetype==1.0.1
 django-cors-headers==2.4.0
 requests==2.19.1
+Pillow==5.2.0

@@ -29,6 +29,7 @@ urlpatterns = [
     path('privacy/', views.get_privacy, name='privacy'),
     path('imprint/', views.get_imprint, name='imprint'),
     path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
+    path('racebanner/<int:id>/', views.get_raceBanner, name='get_raceBanner'),
     path('signup/', views.signUp, name='signup'),
     path('incidentreport/', views.incidentReport, name='incident'),
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
