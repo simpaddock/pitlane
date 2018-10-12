@@ -6,20 +6,38 @@ from django.core.cache import cache
 from django.dispatch import receiver
 
 class DriverEntryAdmin(admin.ModelAdmin):
-    list_display = ['toString']
+  list_display = ['toString']
 
-    def toString(self, obj):
-      return format_html("#{0}: {1}, {2}: {3}".format(str(obj.driverNumberFormat).format(obj.driverNumber), obj.driver.lastName, obj.driver.firstName, obj.teamEntry.team.name))
-    
-    toString.short_description = 'Driver entry'
+  def toString(self, obj):
+    return format_html("#{0}: {1}, {2}: {3}".format(str(obj.driverNumberFormat).format(obj.driverNumber), obj.driver.lastName, obj.driver.firstName, obj.teamEntry.team.name))
+  
+  toString.short_description = 'Driver entry'
+  def get_queryset(self, request):
+    qs = super(DriverEntryAdmin, self).get_queryset(request)
+    return qs.filter(teamEntry__season__isRunning=True)
 
+class TeamEntryAdmin(admin.ModelAdmin):
+  def get_queryset(self, request):
+    qs = super(TeamEntryAdmin, self).get_queryset(request)
+    return qs.filter(season__isRunning=True)
+
+class RuleAdmin(admin.ModelAdmin):
+  def get_queryset(self, request):
+    qs = super(RuleAdmin, self).get_queryset(request)
+    return qs.filter(season__isRunning=True)
 
 
 class RaceResultAdmin(admin.ModelAdmin):
   readonly_fields = ('results',)
+  def get_queryset(self, request):
+    qs = super(RaceResultAdmin, self).get_queryset(request)
+    return qs.filter(season__isRunning=True)
 
 class DriverRaceResultAdmin(admin.ModelAdmin):
   actions = ['disqualify', 'undisqualify', 'undisqualify_dnf']
+  def get_queryset(self, request):
+    qs = super(DriverRaceResultAdmin, self).get_queryset(request)
+    return qs.filter(raceResult__season__isRunning=True)
 
   def disqualify(modeladmin, request, queryset):
     for driver in queryset:
@@ -35,14 +53,22 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
   undisqualify_dnf.short_description = "Un-Disqualify Driver (DNF)"
 
 class RegistrationAdmin(admin.ModelAdmin):
-  readonly_fields = ('downloadLink',)
+  readonly_fields = ('downloadLink',)  
+  def get_queryset(self, request):
+    qs = super(RegistrationAdmin, self).get_queryset(request)
+    return qs.filter(season__isRunning=True)
+
+class IncidentAdmin(admin.ModelAdmin):
+  def get_queryset(self, request):
+    qs = super(IncidentAdmin, self).get_queryset(request)
+    return qs.filter(race__season__isRunning=True)
 
 admin.site.register(Track)
 admin.site.register(Race)
 admin.site.register(Driver)
 admin.site.register(Team)
 admin.site.register(DriverEntry, DriverEntryAdmin)
-admin.site.register(TeamEntry)
+admin.site.register(TeamEntry, TeamEntryAdmin)
 admin.site.register(RaceResult, RaceResultAdmin)
 admin.site.register(DriverRaceResult,DriverRaceResultAdmin)
 admin.site.register(Season)
@@ -50,8 +76,8 @@ admin.site.register(DriverRaceResultInfo)
 #admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
-admin.site.register(Incident)
-admin.site.register(Rule)
+admin.site.register(Incident, IncidentAdmin)
+admin.site.register(Rule,RuleAdmin)
 admin.site.register(Registration, RegistrationAdmin)
 
 @receiver(post_save)
