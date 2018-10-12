@@ -53,7 +53,7 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
   undisqualify_dnf.short_description = "Un-Disqualify Driver (DNF)"
 
 class RegistrationAdmin(admin.ModelAdmin):
-  readonly_fields = ('downloadLink',)  
+  readonly_fields = ('downloadLink', 'gdprAccept', 'copyrightAccept')  
   def get_queryset(self, request):
     qs = super(RegistrationAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
