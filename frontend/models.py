@@ -301,6 +301,7 @@ class Incident(models.Model):
 class Rule(models.Model):
   title = models.CharField(default="", max_length=100)
   text =  RichTextField()
+  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   def __str__(self):
     return "{0}".format(self.title)
   @property
