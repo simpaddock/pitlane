@@ -14,9 +14,13 @@
         <i class="fas fa-trophy"></i>{{ race.season }}
     </span>
     <span class="race-meta-entry">
-        <i class="fas fa-calendar-alt"></i>
-        {{ race.startDate }}-{{ race.startDate }}
+        <i class="fas fa-calendar-alt"></i>{{ race.startDate }}-{{ race.startDate }}
     </span>
+    {% if config.livetiming  %}
+    <span class="race-meta-entry">
+        <i class="fas fa-stopwatch"></i><a href="{{ config.livetiming }}">Livetiming</a>
+    </span>
+    {% endif %}
     {% if streamLink  %}
     <span class="race-meta-entry">
         <i class="fab fa-youtube"></i><a href="{{ streamLink }}">{{ streamLink }}</a>
