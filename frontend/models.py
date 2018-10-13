@@ -1,7 +1,8 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db.models.functions import Cast
-from pitlane.settings import LEAGUECONFIG, SIMSOFTWARE
+from pitlane.settings import LEAGUECONFIG, SIMSOFTWARE, TEXTBLOCKCONTEXT
 from xml.dom import minidom
 import re
 from django.utils.html import mark_safe
@@ -11,7 +12,7 @@ import string
 from django.utils.html import strip_tags
 class Country(models.Model):
   name = models.CharField(max_length=100)
-  flag = models.FileField(default=None, blank=True, upload_to='uploads/')
+  flag = models.FileField(default=None, blank=True, upload_to='uploads/flags/')
   def __str__(self):
     return self.name
 
@@ -31,7 +32,7 @@ class Season(models.Model):
 
 class Team(models.Model):
   name = models.CharField(max_length=100)
-  logo = models.FileField(default=None, blank=True, upload_to='uploads/')
+  logo = models.FileField(default=None, blank=True, upload_to='uploads/teams/')
 
   def __str__(self):
     return self.name
@@ -45,7 +46,7 @@ class Driver(models.Model):
   firstName = models.CharField(max_length=100)
   lastName = models.CharField(max_length=100)
   country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, default=None)
-  image = models.FileField(default='logo.png', blank=True, upload_to='uploads/')
+  image = models.FileField(default='logo.png', blank=True, upload_to='uploads/drivers/')
   def __str__(self):
     return "{0}, {1} ({2})".format(self.lastName, self.firstName, self.country.name)
 
@@ -53,7 +54,7 @@ class TeamEntry(models.Model):
   team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, default=None)
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   vehicle = models.CharField(null=True, default=None, max_length=100)
-  vehicleImage = models.FileField(default=None, null=True, blank=True, upload_to='uploads/')
+  vehicleImage = models.FileField(default=None, null=True, blank=True, upload_to='uploads/vehicles')
   def __str__(self):
     return "{0}@{1}: {2}".format(self.team.name, self.season.name, self.vehicle)
 
@@ -76,7 +77,7 @@ class RaceResult(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   resultSoftware = models.CharField(max_length=30,choices=SIMSOFTWARE,default='rFactor 2')
-  resultFile = models.FileField(default=None, blank=True, upload_to='uploads/')
+  resultFile = models.FileField(default=None, blank=True, upload_to='uploads/results/')
   streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
   commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
   @property
@@ -282,9 +283,9 @@ class DriverRaceResultInfo(models.Model):
 
 class NewsArticle(models.Model):
   title =models.CharField(max_length=200)
-  text = RichTextField()
+  text = RichTextUploadingField()
   date = models.DateTimeField()
-  mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/')
+  mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/news/')
   def __str__(self):
     return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)
 
@@ -298,20 +299,23 @@ class Incident(models.Model):
   def __str__(self):
     return "{0}: {1} vs {1}: {2}".format(self.race.name, self.ownCar, self.opponentCar, self.result)
 
-class Rule(models.Model):
+class TextBlock(models.Model):
   title = models.CharField(default="", max_length=100)
-  text =  RichTextField()
-  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
+  text =  RichTextUploadingField()
+  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, blank=True, null=True)
+  context = models.CharField(max_length=30,choices=TEXTBLOCKCONTEXT,default=TEXTBLOCKCONTEXT[0])
   def __str__(self):
     return "{0}".format(self.title)
   @property
   def plainText(self):
     return strip_tags(self.text.replace("\r",""))
 
+
+
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")
   number =models.IntegerField()
-  skinFile = models.FileField(default=None, blank=False, upload_to='uploads/',verbose_name="Skin file")
+  skinFile = models.FileField(default=None, blank=False, upload_to='uploads/registration/',verbose_name="Skin file")
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   wasUploaded = models.BooleanField(default=False, blank=False)
   gdprAccept = models.BooleanField(default=False, blank=False, verbose_name="I consent the GDPR compilant processing of my submission data")

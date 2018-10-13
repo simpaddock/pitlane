@@ -41,6 +41,7 @@ CACHES = {
 
 INSTALLED_APPS = [
     'ckeditor',
+    'ckeditor_uploader',
     'frontend.apps.FrontendConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -133,7 +134,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "frontend", "static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "frontend", "static", "frontend")
+MEDIA_ROOT = os.path.join(BASE_DIR, "frontend", "media")
+MEDIA_URL= "/media/"
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 LEAGUECONFIG = None
 CONFIGPATH = os.path.join((BASE_DIR), "config.json")
@@ -144,4 +148,9 @@ CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
 SIMSOFTWARE = (
     ('rFactor 2', 'rFactor 2'),
+)
+
+TEXTBLOCKCONTEXT = (
+    ('about', 'About page'),
+    ('rule', 'Reglement'),
 )

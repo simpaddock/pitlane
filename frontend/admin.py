@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Rule,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from .models import TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
@@ -20,12 +20,6 @@ class TeamEntryAdmin(admin.ModelAdmin):
   def get_queryset(self, request):
     qs = super(TeamEntryAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
-
-class RuleAdmin(admin.ModelAdmin):
-  def get_queryset(self, request):
-    qs = super(RuleAdmin, self).get_queryset(request)
-    return qs.filter(season__isRunning=True)
-
 
 class RaceResultAdmin(admin.ModelAdmin):
   readonly_fields = ('results',)
@@ -77,7 +71,7 @@ admin.site.register(DriverRaceResultInfo)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
 admin.site.register(Incident, IncidentAdmin)
-admin.site.register(Rule,RuleAdmin)
+admin.site.register(TextBlock)
 admin.site.register(Registration, RegistrationAdmin)
 
 @receiver(post_save)

@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from frontend import views
-
+from django.conf.urls import include, url
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -31,10 +33,12 @@ urlpatterns = [
     path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
     path('racebanner/<int:id>/', views.get_raceBanner, name='get_raceBanner'),
     path('signup/', views.signUp, name='signup'),
+    path('rules/', views.get_rules, name='get_rules'),
     path('incidentreport/', views.incidentReport, name='incident'),
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams, name='season'),
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),
     path('api/entries/<int:id>', views.get_raceData, name='get_raceData'),
-    path('control/<int:id>', views.get_overlayControl, name='get_raceData')
-] 
+    path('control/<int:id>', views.get_overlayControl, name='get_raceData'),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

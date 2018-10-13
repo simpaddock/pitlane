@@ -67,7 +67,7 @@
       </div>
       <div class="race-result-vehicle medium inline centered">
           {% if result.vehicleImage %}
-            <img class="car-vendor" src="/static/frontend/{{result.vehicleImage}}">
+            <img class="car-vendor" src="{{result.vehicleImage.url }}">
           {% endif %}
           <span>{{result.vehicle}}</span>
       </div>

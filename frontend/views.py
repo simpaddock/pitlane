@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from collections import OrderedDict
 from django.db import models
 from django.http import Http404
-from .models import Rule, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
+from .models import TextBlock, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 from json import dumps, loads
@@ -14,7 +14,7 @@ from .forms import *
 from requests import get
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
-from pitlane.settings import STATIC_ROOT, LEAGUECONFIG
+from pitlane.settings import STATIC_ROOT, LEAGUECONFIG, MEDIA_ROOT
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 LIST_DATA_RACE = "race"
@@ -94,7 +94,7 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_index(request):
   from datetime import datetime
   articles = NewsArticle.objects.all().order_by("date")
@@ -111,7 +111,7 @@ def get_index(request):
   if len(articles) > 0:
     newsflashArticle = articles[0]
     if newsflashArticle.mediaFile:
-      mediaFile = 'frontend/' + newsflashArticle.mediaFile.url
+      mediaFile = newsflashArticle.mediaFile.url
       isVideo =  "video" in filetype.guess(newsflashArticle.mediaFile.path).mime
   return renderWithCommonData(request, 'frontend/index.html', {
     "newsflashArticle": newsflashArticle,
@@ -121,7 +121,7 @@ def get_index(request):
     "newsArticles": newsArticles
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_news(request):
   articles = NewsArticle.objects.all().order_by("date")
   paginator = Paginator(articles, 5)
@@ -130,7 +130,7 @@ def get_news(request):
     "articles": paginator.get_page(page)
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
@@ -141,6 +141,7 @@ def get_about(request):
   seasonCount = Season.objects.all().count()
   dnfCount = DriverRaceResultInfo.objects.filter(value="DNF").count()
   dsqCount = DriverRaceResultInfo.objects.filter(value="DSQ").count()
+  textBlocks = TextBlock.objects.filter(context='about')
   return renderWithCommonData(request, 'frontend/about.html', {
     "established": established,
     "name": name,
@@ -151,18 +152,24 @@ def get_about(request):
     "seasonCount": seasonCount,
     "dnfCount": dnfCount,
     "dsqCount": dsqCount,
-    "rules": Rule.objects.all()
+    "textBlocks": textBlocks
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)  
+def get_rules(request):
+  return renderWithCommonData(request, 'frontend/rules.html', {
+    "rules": TextBlock.objects.filter(season__isRunning=True, context='rule')
+  })
+
+#@cache_page(60 * 15)
 def get_privacy(request):
   return renderWithCommonData(request, 'frontend/privacy.html', {})
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_imprint(request):
   return renderWithCommonData(request, 'frontend/imprint.html', {})
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_SingleNews(request, id:int):
   articles = NewsArticle.objects.all().filter(pk=id)
   paginator = Paginator(articles, 5)
@@ -184,7 +191,7 @@ class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         return str(o)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonList(request):
   seasonList = Season.objects.all()
   races = {}
@@ -349,7 +356,7 @@ def getDriversStandings(id: int):
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
@@ -370,7 +377,7 @@ def get_raceDetail(request, id: int):
     "commentatorInfo": raceResult.commentatorInfo 
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
@@ -386,10 +393,10 @@ def get_seasonStandingsTeams(request, id: int):
     "season": season
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_raceBanner(request, id: int):
   race = Race.objects.filter(pk=id).get()
-  schedule = Rule.objects.filter(title="Race Schedule", season_id=race.season.pk).first()
+  schedule = TextBlock.objects.filter(title="Race Schedule", season_id=race.season.pk).first()
   if schedule is None: # we need a schedule...
     raise Http404()
   data = {
@@ -405,7 +412,7 @@ def get_raceBanner(request, id: int):
   draw = ImageDraw.Draw(img)
   for block in blocks:
     if block["type"].lower() == "image":
-      blockImage = Image.open(STATIC_ROOT + block["path"], 'r')
+      blockImage = Image.open(MEDIA_ROOT + block["path"], 'r')
       wasResized = False
       if block["filter"] is not None:
         blockImage = blockImage.convert(block["filter"])
@@ -429,7 +436,7 @@ def get_raceBanner(request, id: int):
   img.save(response, "PNG")
   return response
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
