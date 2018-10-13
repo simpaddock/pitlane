@@ -32,6 +32,7 @@ urlpatterns = [
     path('about/', views.get_about, name='about'),
     path('privacy/', views.get_privacy, name='privacy'),
     path('imprint/', views.get_imprint, name='imprint'),
+    path('calendar/<int:id>/', views.get_iCalender, name='get_iCalender'),
     path('news/<int:id>/', views.get_SingleNews, name='singleNews'),
     path('racebanner/<int:id>/', views.get_raceBanner, name='get_raceBanner'),
     path('signup/', views.signUp, name='signup'),

@@ -16,6 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from pitlane.settings import STATIC_ROOT, LEAGUECONFIG, MEDIA_ROOT
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from icalendar import Calendar, Event
+import pytz
 
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
@@ -94,7 +96,7 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
-##@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_index(request):
   from datetime import datetime
   articles = NewsArticle.objects.all().order_by("date")
@@ -482,6 +484,23 @@ def incidentReport(request):
     "form": form
   })
 
+def get_iCalender(request, id: int):
+  tz = pytz.timezone(LEAGUECONFIG["timezone"])
+  calendar = Calendar()
+  calendar.add('prodid', '-//SimPaddock//')
+  calendar.add('version', '2.0')
+  season = Season.objects.filter(pk=id).first()
+  races = Race.objects.filter(season_id=season.id)
+  for race in races:
+    event = Event()
+    event.add("DTSTART", race.startDate.replace(tzinfo=tz))
+    event.add("DTEND", race.endDate.replace(tzinfo=tz))
+    event.add("SUMMARY", race.name)
+    event.add("LOCATION", LEAGUECONFIG["name"])
+    calendar.add_component(event)
+  response =HttpResponse(calendar.to_ical(), content_type="text/calendar")
+  response['Content-Disposition'] = 'attachment; filename="{0}.ics"'.format(season.name)
+  return response
 
 # JSON API Endpoints
 

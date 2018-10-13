@@ -311,7 +311,6 @@ class TextBlock(models.Model):
     return strip_tags(self.text.replace("\r",""))
 
 
-
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")
   number =models.IntegerField()
