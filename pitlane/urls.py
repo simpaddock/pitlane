@@ -19,6 +19,7 @@ from frontend import views
 from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 
 urlpatterns = [
@@ -40,5 +41,8 @@ urlpatterns = [
     path('races/<int:id>/', views.get_raceDetail, name='raceDetail'),
     path('api/entries/<int:id>', views.get_raceData, name='get_raceData'),
     path('control/<int:id>', views.get_overlayControl, name='get_raceData'),
-    url(r'^ckeditor/', include('ckeditor_uploader.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})
+] 
+

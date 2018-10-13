@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'oof2syr2*ayurpd#6l9!cvonck442n&g(td-jab!ths0ekbonn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # for test purposes..
 ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
@@ -134,6 +134,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "frontend", "static")
+
 MEDIA_ROOT = os.path.join(BASE_DIR, "frontend", "media")
 MEDIA_URL= "/media/"
 
