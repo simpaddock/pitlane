@@ -94,7 +94,7 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_index(request):
   from datetime import datetime
   articles = NewsArticle.objects.all().order_by("date")

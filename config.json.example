@@ -11,6 +11,9 @@
     "imprint": "",
     "gdpr": ""
   },
+  "socialButtons": {
+    "fontawesomeclass": "linkcontent"
+  },
   "bannerConfig":[{
     "type": "image",
     "path":  "/frontend/bg.jpg",

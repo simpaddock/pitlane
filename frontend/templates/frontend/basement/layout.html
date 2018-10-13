@@ -30,6 +30,11 @@
     <a href="/privacy">Privacy</a>
     <a href="/imprint">Imprint</a>
   </div>
+  <div class="social-links">
+    {% for class, button in config.socialButtons.items %}
+     <a target="_blank" href="{{button}}"><i class="{{class}}"></i></a>
+    {% endfor %}
+  </div>
   <script>
     // EU Cookie foo
     function DismissCookieWarning(){

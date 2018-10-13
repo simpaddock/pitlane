@@ -261,7 +261,7 @@ class DriverEntry(models.Model):
   driver = models.ForeignKey(Driver, on_delete=models.DO_NOTHING, default=None)
   driverNumber = models.IntegerField()
   teamEntry = models.ForeignKey(TeamEntry, on_delete=models.DO_NOTHING, default=None)
-  driverNumberFormat = RichTextField()
+  driverNumberFormat = models.TextField()
   def __str__(self):
     return "#{0}: {1}, {2}: {3}".format(self.driverNumber, self.driver.lastName, self.driver.firstName, self.teamEntry.team.name)
 
