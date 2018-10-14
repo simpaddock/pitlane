@@ -83,8 +83,8 @@ def get_robots(request):
 def getCurrentCup():
   cup =  Season.objects.filter(isRunning=True).first()
   if cup is not None:
-    # next race
-    nextRace = Race.objects.filter(season_id=cup.id).order_by("-startDate").first()
+    # next race -> independ of the cup
+    nextRace = Race.objects.filter(season__isRunning=True).order_by("-startDate").first()
     cup.nextRace = nextRace
   return cup
 
