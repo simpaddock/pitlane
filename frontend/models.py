@@ -66,6 +66,9 @@ class Race(models.Model):
   track = models.ForeignKey (Track, on_delete=models.DO_NOTHING, default=None)
   def __str__(self):
     return "{0}: {1}".format(self.season.name, self.name)
+  @property
+  def banner(self):
+    return mark_safe("""<a target="blank" href="/racebanner/{}">Race Banner</a>""".format(self.id)) 
 
 class RaceOverlayControlSet(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
@@ -324,7 +327,7 @@ class Registration(models.Model):
     return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ") on Server: " + str(self.wasUploaded)
   @property
   def downloadLink(self):
-    return mark_safe("""<a target="blank" href="/static/frontend/{}">Download skin file</a>""".format(self.skinFile.url)) 
+    return mark_safe("""<a target="blank" href="{}">Download skin file</a>""".format(self.skinFile.url)) 
   def clean(self):
     if not self.gdprAccept:
       raise ValidationError("You need to accept the GDPR that we can continue.")

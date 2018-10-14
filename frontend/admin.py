@@ -26,7 +26,8 @@ class RaceResultAdmin(admin.ModelAdmin):
   def get_queryset(self, request):
     qs = super(RaceResultAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
-
+class RaceAdmin(admin.ModelAdmin):
+  readonly_fields = ('banner',)
 class DriverRaceResultAdmin(admin.ModelAdmin):
   actions = ['disqualify', 'undisqualify', 'undisqualify_dnf']
   def get_queryset(self, request):
@@ -58,7 +59,7 @@ class IncidentAdmin(admin.ModelAdmin):
     return qs.filter(race__season__isRunning=True)
 
 admin.site.register(Track)
-admin.site.register(Race)
+admin.site.register(Race, RaceAdmin)
 admin.site.register(Driver)
 admin.site.register(Team)
 admin.site.register(DriverEntry, DriverEntryAdmin)
