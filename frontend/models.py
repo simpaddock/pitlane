@@ -65,7 +65,7 @@ class Race(models.Model):
   endDate = models.DateTimeField()
   track = models.ForeignKey (Track, on_delete=models.DO_NOTHING, default=None)
   def __str__(self):
-    return "{0}: {1} in {2}".format(self.startDate, self.name, self.track)
+    return "{0}: {1}".format(self.season.name, self.name)
 
 class RaceOverlayControlSet(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
@@ -291,13 +291,13 @@ class NewsArticle(models.Model):
 
 class Incident(models.Model):
   timeCode = models.FloatField()
-  opponentCar = models.CharField(default="", max_length=100, verbose_name="Opponent car")
-  ownCar =  models.CharField(default="", max_length=100, verbose_name="Own car")
+  opponentCar = models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None, related_name="opponent")
+  ownCar =   models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None)
   description =  models.TextField(default="", max_length=1000, verbose_name="Description")
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
-  result =  models.TextField(default="", max_length=100)
+  result =  RichTextUploadingField(default="")
   def __str__(self):
-    return "{0}: {1} vs {1}: {2}".format(self.race.name, self.ownCar, self.opponentCar, self.result)
+    return "{0}: {1} vs {2}, decided: {3}".format(self.race.name, self.ownCar, self.opponentCar, len(self.result) > 0)
 
 class TextBlock(models.Model):
   title = models.CharField(default="", max_length=100)

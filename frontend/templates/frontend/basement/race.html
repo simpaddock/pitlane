@@ -37,13 +37,17 @@
     <span class="race-meta-entry">
         <i class="fas fa-image"></i><a target="_blank" href="/racebanner/{{ race.id }}">Race banner</a>
     </span>
+    {% if incidentsCount > 0  %}
+        <span class="race-meta-entry">
+            <i class="fas fa-gavel"></i><a target="_blank" href="/incidents/{{ race.id }}">Incidents</a>
+        </span>
+    {% endif %}
   </div>
   {% if resultList|length == 0  %}
     No results yet!
   {% endif %}
   {% for result in resultList %}
   <div class="race-result-row">
-      
       <div class="result-absolute-align">
         <div class="medal medal-{{ result.position }} medal-{{result.finishstatus|lower}}">
             

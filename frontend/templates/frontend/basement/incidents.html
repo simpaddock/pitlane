@@ -1,0 +1,10 @@
+{% extends baseLayout %}
+{% load static %}
+{% block content %}
+  <h2>Incidents {{ race.name }}</h2>
+  {% for incident in incidents %}
+    <h3>{{ incident.ownCar }} vs {{ incident.opponentCar }}</h3>
+    <pre>Timecode: {{ incident.timeCode }}</pre>
+    {{ incident.result | safe }}
+  {% endfor %}
+{% endblock %}
