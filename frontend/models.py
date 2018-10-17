@@ -78,7 +78,6 @@ class RaceOverlayControlSet(models.Model):
 
 class RaceResult(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
-  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   resultSoftware = models.CharField(max_length=30,choices=SIMSOFTWARE,default='rFactor 2')
   resultFile = models.FileField(default=None, blank=True, upload_to='uploads/results/')
   streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
@@ -97,7 +96,7 @@ class RaceResult(models.Model):
       return resultText
     return ""
   def __str__(self):
-    return str(self.race.endDate) + ": " + self.race.name + " - " + self.season.name 
+    return str(self.race.endDate) + ": " + self.race.name + " - " + self.race.season.name 
   def save(self, *args, **kwargs):
     super(RaceResult, self).save(*args, **kwargs)
 
@@ -112,11 +111,18 @@ class RaceResult(models.Model):
     trackLength = float(xml.getElementsByTagName('TrackLength')[0].childNodes[0].nodeValue)
     drivers = xml.getElementsByTagName('Driver')
     
-    
-    for driverRaceResult in DriverRaceResult.objects.filter(raceResult_id=self.id):
-      DriverRaceResultInfo.objects.filter(driverRaceResult_id=driverRaceResult.id).delete()
-      driverRaceResult.delete()
+    #precompute the max laps count over the complete grid
     maxLaps = 0
+    for driver in drivers:
+      runLaps = 0
+      for node in driver.childNodes:
+        if "Element" in str(type(node)):
+          key = node.tagName
+          if key == "Lap":
+            runLaps  = runLaps + 1
+      if runLaps > maxLaps:
+        maxLaps = runLaps 
+    
     for driver in drivers:
       rawData = {}
       runLaps = 0
@@ -147,9 +153,8 @@ class RaceResult(models.Model):
         9: 2,
         10: 1
       }
+
       if int(rawData["Position"]) in pointMap:
-        if int(rawData["Position"]) == 1:
-          maxLaps = runLaps
         if runLaps > 0 and maxLaps > 0:
           percentage = 100/(maxLaps/runLaps)
         else:
@@ -179,15 +184,15 @@ class RaceResult(models.Model):
       
       team = Team.objects.get(name=teamName) 
       
-      if TeamEntry.objects.filter(season_id=self.season.id, team_id=team.id).count() == 0:
+      if TeamEntry.objects.filter(season_id=self.race.season.id, team_id=team.id).count() == 0:
         # team is existing -> get new entry if needed
         newTeamEntry = TeamEntry()
         newTeamEntry.team = Team.objects.all().filter(name=teamName).get()
         newTeamEntry.vehicle = vehicle
-        newTeamEntry.season = self.season
+        newTeamEntry.season = self.race.season
         newTeamEntry.save()
 
-      teamEntry = TeamEntry.objects.filter(season_id=self.season.id, team=team).get()
+      teamEntry = TeamEntry.objects.filter(season_id=self.race.season.id, team=team).get()
       # 2. find Driver
       nameParts = rawData["Name"].split(" ")
       firstName = nameParts[0]
@@ -219,7 +224,7 @@ class RaceResult(models.Model):
       """
       driverEntry = None
       for t in test:
-        if t.driver == driver and t.teamEntry.season == self.season:
+        if t.driver == driver and t.teamEntry.season == self.race.season:
          driverEntry = t
          break
 
@@ -267,17 +272,24 @@ class DriverEntry(models.Model):
   driverNumberFormat = models.TextField()
   def __str__(self):
     return "#{0}: {1}, {2}: {3}".format(self.driverNumber, self.driver.lastName, self.driver.firstName, self.teamEntry.team.name)
+    
+  def clean(self):
+    if DriverEntry.objects.filter(teamEntry__season=self.teamEntry.season, driverNumber=self.driverNumber).count() != 0:
+      raise ValidationError("An entry with that number already exists")
+
 
 class DriverRaceResult(models.Model):
-  raceResult = models.ForeignKey(RaceResult, on_delete=models.DO_NOTHING, default=None)
+  raceResult = models.ForeignKey(RaceResult, on_delete=models.CASCADE, default=None)
   driverEntry = models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None)
   def __str__(self):
     position = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="position").first()
     status = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="finishstatus").first()
+    if position is None or status is None:
+      return "{0} {1}@{2} ({3}): N/A".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,  self.raceResult.race.startDate)
     return "{0} {1}@{2} ({3}): {4}. ({5})".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,  self.raceResult.race.startDate, position.value, status.value)
 
 class DriverRaceResultInfo(models.Model):
-  driverRaceResult = models.ForeignKey(DriverRaceResult, on_delete=models.DO_NOTHING, default=None)
+  driverRaceResult = models.ForeignKey(DriverRaceResult, on_delete=models.CASCADE, default=None)
   name = models.CharField(max_length=100)
   value = models.CharField(max_length=100)
   infoType = models.CharField(max_length=100)

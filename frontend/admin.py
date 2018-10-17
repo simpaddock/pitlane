@@ -25,14 +25,23 @@ class RaceResultAdmin(admin.ModelAdmin):
   readonly_fields = ('results',)
   def get_queryset(self, request):
     qs = super(RaceResultAdmin, self).get_queryset(request)
-    return qs.filter(season__isRunning=True)
+    return qs.filter(race__season__isRunning=True)
+
+  def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+      field = super(RaceResultAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+      if db_field.name == 'race':
+        field.queryset = field.queryset.filter(season__isRunning=True).order_by("startDate")
+
+      return field
+
+
 class RaceAdmin(admin.ModelAdmin):
   readonly_fields = ('banner',)
 class DriverRaceResultAdmin(admin.ModelAdmin):
   actions = ['disqualify', 'undisqualify', 'undisqualify_dnf']
   def get_queryset(self, request):
     qs = super(DriverRaceResultAdmin, self).get_queryset(request)
-    return qs.filter(raceResult__season__isRunning=True)
+    return qs.filter(raceResult__race__season__isRunning=True)
 
   def disqualify(modeladmin, request, queryset):
     for driver in queryset:
@@ -68,7 +77,7 @@ admin.site.register(RaceResult, RaceResultAdmin)
 admin.site.register(DriverRaceResult,DriverRaceResultAdmin)
 admin.site.register(Season)
 admin.site.register(DriverRaceResultInfo)
-#admin.site.register(RaceOverlayControlSet)
+admin.site.register(RaceOverlayControlSet)
 admin.site.register(NewsArticle)
 admin.site.register(Country)
 admin.site.register(Incident, IncidentAdmin)

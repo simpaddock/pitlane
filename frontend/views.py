@@ -96,7 +96,7 @@ def renderWithCommonData(request, template, context):
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_index(request):
   from datetime import datetime
   articles = NewsArticle.objects.all().order_by("date")
@@ -123,7 +123,7 @@ def get_index(request):
     "newsArticles": newsArticles
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_news(request):
   articles = NewsArticle.objects.all().order_by("date")
   paginator = Paginator(articles, 5)
@@ -133,7 +133,7 @@ def get_news(request):
     "isInSingleMode": False
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
@@ -158,21 +158,21 @@ def get_about(request):
     "textBlocks": textBlocks
   })
 
-@cache_page(60 * 15)  
+#@cache_page(60 * 15)  
 def get_rules(request):
   return renderWithCommonData(request, 'frontend/rules.html', {
     "rules": TextBlock.objects.filter(season__isRunning=True, context='rule')
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_privacy(request):
   return renderWithCommonData(request, 'frontend/privacy.html', {})
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_imprint(request):
   return renderWithCommonData(request, 'frontend/imprint.html', {})
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_SingleNews(request, id:int):
   articles = NewsArticle.objects.all().filter(pk=id)
   paginator = Paginator(articles, 5)
@@ -195,7 +195,7 @@ class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         return str(o)
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonList(request):
   seasonList = Season.objects.all()
   races = {}
@@ -286,18 +286,19 @@ def getRaceResult(id: int):
   viewList = []
   for result in completeResults:
     viewData = OrderedDict()
+    viewData["position"] = 999
+    viewData["points"] = 0
+    viewData["finishstatus"]  = ""
     for columnName, columnPath in COLUMNS["race"].items():
       if columnPath is None:  # None means "search in additional fields"
         for info in result["additionalInfos"]:
           if info.name.lower() == columnName:
             viewData[columnName] = info.value
-        if columnName not in viewData:
-          viewData[columnName] = "-"
       else:
         viewData[columnName] = getChildValue(result, columnPath)
     viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
     # Alter the results if a driver was disqualified (after) the race booking
-    if viewData["finishstatus"] == "dsq":
+    if "finishstatus" in viewData and viewData["finishstatus"] == "dsq":
       viewData["position"] = 999
       viewData["points"] = 0
     viewList.append(viewData)
@@ -342,7 +343,8 @@ def getTeamStandings(id: int):
 def getDriversStandings(id: int):
   races = Race.objects.filter(season_id = id).order_by('startDate') # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
   viewList = {}
-  for race in races:
+  raceCount = races.count()
+  for raceIndex, race in enumerate(races):
     results = getRaceResult(race.id)
     for driver in results:
       driverId = driver["id"]
@@ -351,11 +353,11 @@ def getDriversStandings(id: int):
         for columnName, columnValue in COLUMNS["drivers"].items():
           viewList[driverId][columnName] = driver[columnValue]
         viewList[driverId]["sum"] = 0   
-        viewList[driverId]["points"] = []
-        viewList[driverId]["finishstates"] = []
+        viewList[driverId]["points"] = [0]*raceCount
+        viewList[driverId]["finishstates"] = ["-"]*raceCount
       
-      viewList[driverId]["points"].append(int(driver["points"]))
-      viewList[driverId]["finishstates"].append(driver["finishstatus"])
+      viewList[driverId]["points"][raceIndex] = int(driver["points"])
+      viewList[driverId]["finishstates"][raceIndex]  = driver["finishstatus"]
       viewList[driverId]["sum"] = reduce(lambda x,y: x+y, viewList[driverId]["points"])
   viewList = list(viewList.values())
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
@@ -369,7 +371,7 @@ def get_incidents(request, id: int):
     "incidents": incidents,
     "incidentsPendingCount": incidentsPendingCount
   })
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
@@ -392,7 +394,7 @@ def get_raceDetail(request, id: int):
     "incidentsCount": incidentsCount
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
@@ -408,7 +410,7 @@ def get_seasonStandingsTeams(request, id: int):
     "season": season
   })
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_raceBanner(request, id: int):
   race = Race.objects.filter(pk=id).get()
   schedule = TextBlock.objects.filter(title="Race Schedule", season_id=race.season.pk).first()
@@ -451,7 +453,7 @@ def get_raceBanner(request, id: int):
   img.save(response, "PNG")
   return response
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
@@ -494,7 +496,7 @@ def incidentReport(request):
   return renderWithCommonData(request, 'frontend/incident.html', {
     "form": form
   })
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def get_iCalender(request, id: int):
   tz = pytz.timezone(LEAGUECONFIG["timezone"])
   calendar = Calendar()

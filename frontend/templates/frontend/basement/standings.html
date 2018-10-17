@@ -58,11 +58,11 @@
                 {% with racePoints=points %}
                   {% if isDriverStandings and racePoints == 0 %}
                     {% with state=result.finishstates|index:forloop.counter0 %}
-                    {% if state == 'Finished Normally'%}
-                      {{ racePoints }}
-                    {% else %}
-                      {{ state }}
-                    {% endif %}
+                      {% if state == 'Finished Normally'%}
+                        {{ racePoints }}
+                      {% else %}
+                        {{ state }}
+                      {% endif %}
                     {% endwith %}
                   {% else %}
                     {% if racePoints is not None %}
