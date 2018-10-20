@@ -1,6 +1,5 @@
 {% extends baseLayout %}
 {% load static %}
-<h1>fajsklfjasklfjklsjklf</h1>
 {% if isInSingleMode %}
 {% block ogp %}
     <meta property="og:title" content="{{ config.name }}: {{ articles.0.title }}" />
@@ -21,6 +20,8 @@
       {{ article.text | safe}}
     {% endfor %}
   </div>
+  
+{% if not isInSingleMode %}
   <div class="pagination">
       <span class="step-links">
           {% if articles.has_previous %}
@@ -38,4 +39,5 @@
           {% endif %}
       </span>
   </div>
+{% endif %}
 {% endblock %}

@@ -3,10 +3,10 @@
 
 body{
   font: 100% $font-stack;
-  background-color: $primary-color;
+  background-color: #000;
   color: $color;
   margin-left: 20%;
-  margin-top: 2em;
+  margin-top: 1em;
   width: 60%;
 }
 .background-image{
@@ -15,7 +15,7 @@ body{
   left: 0;
   top: 0;
   z-index: -1;
-  filter: grayscale(1.0);
+  filter: grayscale(100%) opacity(70%);
   height: 100%;
   width:100%;
 }

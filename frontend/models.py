@@ -59,7 +59,7 @@ class TeamEntry(models.Model):
     return "{0}@{1}: {2}".format(self.team.name, self.season.name, self.vehicle)
 
 class Race(models.Model):
-  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
+  season = models.ForeignKey(Season, on_delete=models.CASCADE, default=None)
   name = models.CharField(max_length=100)
   startDate = models.DateTimeField()
   endDate = models.DateTimeField()
@@ -299,6 +299,7 @@ class DriverRaceResultInfo(models.Model):
 class NewsArticle(models.Model):
   title =models.CharField(max_length=200)
   text = RichTextUploadingField()
+  teaser = models.TextField(max_length=200,blank=True, default=None,null=True)
   date = models.DateTimeField()
   mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/news/')
   def __str__(self):

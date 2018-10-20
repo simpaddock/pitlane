@@ -3,7 +3,7 @@
 {% block content %}
   {% if running is not None and events.count != 0%}
   <div class="inline-widget timeline-widget">
-    <h1>{{ running.name }}</h1>
+    <h1 class="current-cup-header">{{ running.name }}</h1>
     <ul class="timeline">
       {%for event in events %}
       <li>
@@ -12,32 +12,35 @@
             <a href="/races/{{event.id}}/" class="flag">{{ event.name }}</a>
           </div>
           <img class="event-flag" title="{{race.name}}" src="/media/{{ event.track.country.flag }}">
-          <div class="desc">{{ event.startDate }}</div>
+          <div class="desc">{{ event.startDate|date:config.nextRaceFormat }}</div>
         </div>
       </li>
       {% endfor %}
     </ul>
   </div>
   {% endif %}
-  <div class="inline-widget news-widget">
-      <h1>Latest news</h1>
-      {% if newsflashArticle is not None%}
-        {% if newsflashArticle.mediaFile %}
-          {% if isVideo %}
-          <video src="{{ mediaFile }}" autoplay="autoplay" muted="muted" loop="loop" class="video-teaser"></video>
-          {% else %}
-          <img src="{{ mediaFile }}" class="video-teaser">
-          {% endif %}
-        {% endif %}
-      {% endif %}
+  <div class="inline-widget news-widget {% if running is None or events.count == 0 %}fullwidth-widget{% endif %}">
       {%for article in newsArticles %}
-        <a href="/news/{{article.id}}/"><h2>{{ article.title }}</h2></a>
-        <p>
-          {{newsflashArticle.date }}
-        </p>
-        <p class="news-text">
-          {{ article.text |slice:"0:100" | striptags  }}...
-        </p>
+        <div class="article">
+          {% if article.mediaFile %}
+          <div class="article-column-40 news-media">
+            {% if "mp4" in article.mediaFile.url %}
+            <video src="{{ article.mediaFile.url }}" autoplay="autoplay" muted="muted" loop="loop" class="video-teaser"></video>
+            {% else %}
+            <img src="{{ article.mediaFile.url }}" class="video-teaser">
+            {% endif %}
+          </div>
+          {% endif %}
+          <div class="{% if article.mediaFile %}article-column-40{% endif %}news-text">
+            <b><a href="/news/{{article.id}}/">{{ article.title }} | {{ article.date|date:config.articleFormat  }}</b>
+            {% if article.teaser %}
+              <span> {{ article.teaser }} </span>
+            {% else %}
+              {{ article.text |slice:"0:100" | striptags  }}...
+            {% endif %}
+            <i></i>
+          </div>
+        </div>
       {% endfor %}
     </div>
   <div>
