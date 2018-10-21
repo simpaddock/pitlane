@@ -1,8 +1,7 @@
-{% extends baseLayout %}
-{% load static %}
-{% block content %}
+{% extends baseLayout %} {% load static %} {% block content %}
+<div class="row">
   {% if running is not None and events.count != 0%}
-  <div class="inline-widget timeline-widget">
+  <div class="timeline-container">
     <h1 class="current-cup-header">{{ running.name }}</h1>
     <ul class="timeline">
       {%for event in events %}
@@ -19,31 +18,23 @@
     </ul>
   </div>
   {% endif %}
-  <div class="inline-widget news-widget {% if running is None or events.count == 0 %}fullwidth-widget{% endif %}">
-      {%for article in newsArticles %}
-        <div class="article">
-          {% if article.mediaFile %}
-          <div class="article-column-40 news-media">
-            {% if "mp4" in article.mediaFile.url %}
-            <video src="{{ article.mediaFile.url }}" autoplay="autoplay" muted="muted" loop="loop" class="video-teaser"></video>
-            {% else %}
-            <img src="{{ article.mediaFile.url }}" class="video-teaser">
-            {% endif %}
-          </div>
-          {% endif %}
-          <div class="{% if article.mediaFile %}article-column-40{% endif %}news-text">
-            <b><a href="/news/{{article.id}}/">{{ article.title }} | {{ article.date|date:config.articleFormat  }}</b>
-            {% if article.teaser %}
-              <span> {{ article.teaser }} </span>
-            {% else %}
-              {{ article.text |slice:"0:100" | striptags  }}...
-            {% endif %}
-            <i></i>
-          </div>
-        </div>
-      {% endfor %}
+  <div class="articles">
+    <h1>{{ config.name }}</h1>
+    {% for article in newsArticles %}
+    <a href="/news/{{article.id}}">
+    <div class="article">
+      {% if article.mediaFile %}
+      <img class="article-image" src="{{article.mediaFile.url}}">
+      <h2 class="article-title">
+        <span>{{ article.title }}</span>
+      </h2>
+      <h2 class="article-meta">
+        <span>{{ article.date }}</span>
+      </h2>
+      {% endif %}
     </div>
-  <div>
-
+    </a>
+    {% endfor %}
   </div>
+</div>
 {% endblock %}

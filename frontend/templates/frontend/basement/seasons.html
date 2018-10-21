@@ -10,7 +10,6 @@
         <a :href="'/seasons/'+season.id+'/drivers/'">[[ season.drivers.length  ]] drivers</a>,
         <a :href="'/seasons/'+season.id+'/teams/'">[[ season.teams.length  ]] teams</a>
         <a target="_blank" :href="'/calendar/'+season.id+'/'" title="Calendar"> <i class="fas fa-calendar season-calendar"></i></a>
-
     </div>
   </div>
   <div id="map" style="height: 630px;width: 100%"></div>
@@ -67,9 +66,9 @@
               popup2 = new L.Popup({
                 "className": 'map-popup'
               });
-              console.log(racesOnTrack)
               popup2.setLatLng(new L.LatLng(racesOnTrack[0].track.long, racesOnTrack[0].track.lat));
               var content  = ""
+              var flag = racesOnTrack[0].track.country.flag
               var marker = L.marker(new L.LatLng(racesOnTrack[0].track.long, racesOnTrack[0].track.lat)).bindPopup(popup2)
               marker.addTo(this.mapInstance )
               var popupText = ""

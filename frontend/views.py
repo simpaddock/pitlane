@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from icalendar import Calendar, Event
 import pytz
 from datetime import datetime, date, time
-
+from urllib.parse import urljoin
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
@@ -102,13 +102,12 @@ def renderWithCommonData(request, template, context):
 def get_index(request):
   races = Race.objects.all().filter(season=getCurrentCup()).order_by("-startDate")
   newsArticles = NewsArticle.objects.all().order_by("-date")[:5]
-
-  events = []
-  events = races
-
+  
+  textBlocks = TextBlock.objects.filter(context='landing')
   return renderWithCommonData(request, 'frontend/index.html', {
-    "events": events,
-    "newsArticles": newsArticles
+    "events": races,
+    "newsArticles": newsArticles,
+    "textBlocks": textBlocks
   })
 
 #@cache_page(60 * 15)
@@ -164,10 +163,51 @@ def get_imprint(request):
 def get_SingleNews(request, id:int):
   articles = NewsArticle.objects.all().filter(pk=id)
   paginator = Paginator(articles, 5)
-  page = request.GET.get('page')
+  page = request.GET.get('page'),
+  url = urljoin(LEAGUECONFIG["url"], '/news/', articles[0].id)
+  title = articles[0].title
+  shareButtons = [
+    {
+      "name": "Twitter",
+      "icon": "fab fa-twitter-square",
+      "url": "https://twitter.com/intent/tweet?url=" + url + '&text=' + title
+    },
+    {
+      "name": "Facebook",
+      "icon": "fab fa-facebook-square",
+      "url": "http://www.facebook.com/sharer.php?u=" + url
+    },
+    {
+      "name": "reddit",
+      "icon": "fab fa-reddit-square",
+      "url": "https://reddit.com/submit?url=" + url + '&title=' + title
+    },
+    {
+      "name": "reddit",
+      "icon": "fab fa-get-pocket",
+      "url": "https://getpocket.com/edit?url=" +url
+    },
+    {
+      "name": "reddit",
+      "icon": "fab fa-flipboard",
+      "url": "https://share.flipboard.com/bookmarklet/popout?v=2&title=" + title + '&url=' + url
+    },
+    {
+      "name": "pinterest",
+      "icon": "fab fa-pinterest",
+      "url": "http://pinterest.com/pin/create/button/?url=" + url
+    },
+    {
+      "name": "RSS",
+      "icon": "fas fa-rss",
+      "url": "/feed"
+    }
+  ]
   return renderWithCommonData(request, 'frontend/news.html', {
     "articles": paginator.get_page(page),
-    "isInSingleMode": True
+    "isInSingleMode": True,
+    "shareButtons": shareButtons,
+    "title": title
   })
 
 def getSeasonDrivers(seasonId: int) -> list:
@@ -381,15 +421,18 @@ def get_raceDetail(request, id: int):
     "commentatorInfo": raceResult.commentatorInfo,
     "incidentsCount": incidentsCount
   })
-
+def isSeasonFinished(season):
+  races = Race.objects.filter(season=season).order_by('startDate') 
+  return not season.isRunning or season.round == races.count()
 #@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
   season = Season.objects.all().filter(pk=id).get()
   titleAttachment = ""
-  if not season.isRunning:
+  if isSeasonFinished(season):
     titleAttachment = " - Final results"
+
   return renderWithCommonData(request, 'frontend/standings.html', {
     "resultList":  enumerate(resultList),
     "isDriverStandings": False,
@@ -447,7 +490,7 @@ def get_seasonStandingsDrivers(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   season = Season.objects.all().filter(pk=id).get()
   titleAttachment = ""
-  if not season.isRunning:
+  if isSeasonFinished(season):
     titleAttachment = " - Final results"
   return renderWithCommonData(request, 'frontend/standings.html', {
     "resultList": enumerate(resultList),

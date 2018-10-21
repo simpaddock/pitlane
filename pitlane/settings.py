@@ -154,4 +154,5 @@ SIMSOFTWARE = (
 TEXTBLOCKCONTEXT = (
     ('about', 'About page'),
     ('rule', 'Reglement'),
+    ('landing', 'Landing page'),
 )

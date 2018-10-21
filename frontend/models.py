@@ -29,6 +29,9 @@ class Season(models.Model):
   isRunning = models.BooleanField(default=True)
   def __str__(self):
     return self.name
+  @property
+  def round(self):
+    return RaceResult.objects.filter(race__season=self.pk).count()
 
 class Team(models.Model):
   name = models.CharField(max_length=100)

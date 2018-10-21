@@ -3,6 +3,8 @@
   name: 'name of the league',
   "theme": "basement",
   "dateFormat": "%Y-%m-%d %H:%M:%S",
+  "nextRaceFormat": "d M Y",
+  "articleFormat": "d.m.Y",
   "pitlane": "forumlinkornull",
   "url": "homepage",
   "established": "yearofleaguestart",

@@ -1,43 +1,41 @@
-{% extends baseLayout %}
-{% load static %}
-{% if isInSingleMode %}
-{% block ogp %}
-    <meta property="og:title" content="{{ config.name }}: {{ articles.0.title }}" />
-    <meta property="og:url" content="{{config.url }}/news/{{articles.0.id}}/" />
-    {% if articles.0.mediaFile %}
-        <meta property="og:image" content="{{articles.0.mediaFile.url}}" />
-    {% else %}
-        <meta property="og:image" content="{{config.logo }}" />
-    {% endif %}
-{% endblock %}   
-{% endif %}
-{{ article.title }}
-{% block content %}
-  <div class="news-article-content">
+{% extends baseLayout %} {% load static %} {% if isInSingleMode %} {% block ogp %}
+<meta property="og:title" content="{{ config.name }}: {{ articles.0.title }}" />
+<meta property="og:url" content="{{config.url }}/news/{{articles.0.id}}/" /> {% if articles.0.mediaFile %}
+<meta property="og:image" content="{{articles.0.mediaFile.url}}" /> {% else %}
+<meta property="og:image" content="{{config.logo }}" /> {% endif %} {% endblock %} {% endif %} {{ article.title }} {% block content %}
+<div class="news-article-content">
     {% for article in articles %}
-      <a href="/news/{{article.id}}/"><h1>{{ article.title }}</h1></a>
-      {{ article.date }}
-      {{ article.text | safe}}
+    <a href="/news/{{article.id}}/">
+        <h1>{{ article.title }}</h1>
+    </a>
+    {{ article.text | safe}} <b>{{ article.date|date:config.articleFormat }}</b> 
+    {% if isInSingleMode %}
+    {% block pagetitle %}: {{ title }}{% endblock %}
+    <div class="share-links">
+        {% for button in shareButtons %}
+            <a href="{{ button.url }}" title="share on {{ button.name }}">
+                <i class="{{ button.icon }}"></i>
+            </a>
+        {% endfor %}
+    </div>
+    {% endif %} 
     {% endfor %}
-  </div>
-  
+</div>
+
 {% if not isInSingleMode %}
-  <div class="pagination">
-      <span class="step-links">
-          {% if articles.has_previous %}
-              <a href="?page=1">&laquo; first</a>
-              <a href="?page={{ articles.previous_page_number }}">previous</a>
-          {% endif %}
-  
-          <span class="current">
-              Page {{ articles.number }} of {{ articles.paginator.num_pages }}.
-          </span>
-  
-          {% if articles.has_next %}
-              <a href="?page={{ articles.next_page_number }}">next</a>
-              <a href="?page={{ articles.paginator.num_pages }}">last &raquo;</a>
-          {% endif %}
-      </span>
-  </div>
-{% endif %}
-{% endblock %}
+<div class="pagination">
+    <span class="step-links">
+        {% if articles.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ articles.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ articles.number }} of {{ articles.paginator.num_pages }}.
+        </span>
+        {% if articles.has_next %}
+        <a href="?page={{ articles.next_page_number }}">next</a>
+        <a href="?page={{ articles.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %} {% endblock %}
