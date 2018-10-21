@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 import random
 import string
 from django.utils.html import strip_tags
+from datetime import datetime
 class Country(models.Model):
   name = models.CharField(max_length=100)
   flag = models.FileField(default=None, blank=True, upload_to='uploads/flags/')
@@ -27,6 +28,7 @@ class Track(models.Model):
 class Season(models.Model):
   name = models.CharField(max_length=100)
   isRunning = models.BooleanField(default=True)
+  isOpen = models.BooleanField(default=True)
   def __str__(self):
     return self.name
   @property
@@ -333,12 +335,14 @@ class TextBlock(models.Model):
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")
   number =models.IntegerField()
+  teamName =models.CharField(blank=False, max_length=200, default="")
   skinFile = models.FileField(default=None, blank=False, upload_to='uploads/registration/',verbose_name="Skin file")
   season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
   wasUploaded = models.BooleanField(default=False, blank=False)
   gdprAccept = models.BooleanField(default=False, blank=False, verbose_name="I consent the GDPR compilant processing of my submission data")
   copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
   token = models.CharField(max_length=10, default="",blank=True)
+  ignoreReason = RichTextUploadingField(default="", blank=True)
   def __str__(self):
     return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ") on Server: " + str(self.wasUploaded)
   @property
@@ -360,9 +364,38 @@ class Registration(models.Model):
           # update other entry
           otherCarWithThatNumber.skinFile = self.skinFile
           otherCarWithThatNumber.wasUploaded = False
-          otherCarWithThatNumber.save()
+          otherCarWithThatNumber.save() 
           self.token = otherCarWithThatNumber.token
           raise ValidationError("The old registration was updated.")
-    self.token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+    if self.token =="":
+      self.token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+  def save(self, *args, **kwargs):
+    super(Registration, self).save(*args, **kwargs)
+    states = RegistrationStatus.objects.filter(registration=self).order_by("date")
+    if states.count() == 0: # initial submission
+      newStatus = RegistrationStatus()
+      newStatus.registration = self
+      newStatus.text = "We received your submission of car #{0} for season {1}. Filename: <a target=\"blank\" href=\"/media/{2}\">{2}</a>".format(self.number, self.season, self.skinFile) 
+      newStatus.save()
+    else:
+      if self.ignoreReason != "":
+        newStatus = RegistrationStatus()
+        newStatus.registration = self
+        newStatus.text = "Your submission for car #{0} will be ignored. Reason: {1}".format(self.number, self.ignoreReason)
+        newStatus.save()
+      else:
+        newStatus = RegistrationStatus()
+        newStatus.registration = self
+        newStatus.text = "Your submission state changed. Car #{0}, on Server: {1}".format(self.number, self.wasUploaded)
+        if self.wasUploaded:
+          newStatus.text = newStatus.text + ". You can consider your submission as finished."
+        newStatus.save()
     
 
+
+class RegistrationStatus(models.Model):
+  registration = models.ForeignKey(Registration, on_delete=models.CASCADE, default=None, related_name="Registration")
+  text = models.TextField(max_length=500, blank=False, null=False)
+  date = models.DateTimeField(default=datetime.now)
+  def __str__(self):
+    return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.text)

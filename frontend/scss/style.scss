@@ -34,6 +34,16 @@ h1{
   text-transform: uppercase;
   color: #00aeef;
 }
+label{
+  width: 20%;
+  display: inline-block;
+}
+.errorlist{
+  padding: 1em;
+  padding-left: 1em;
+  list-style: none;
+  font-weight: bold;
+}
 @import 'navbar.scss';
 @import 'seasons.scss'; // seasons-page
 @import 'results.scss'; // results-page

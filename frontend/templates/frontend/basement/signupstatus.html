@@ -1,0 +1,21 @@
+{% extends baseLayout %} {% spaceless %} {% block content %}
+
+{% if data is not None %}
+<h1>signup status #{{ token }}</h1>
+<div class="status">
+  {% for state in data %}
+  <p>
+    {{ state | safe }}
+  </p>
+  {%endfor %}
+</div>
+
+
+{% else %}
+<h1>Check signup status</h1>
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Submit">
+</form>
+
+{% endif %} {% endblock %} {% endspaceless %}

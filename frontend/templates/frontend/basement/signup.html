@@ -32,12 +32,23 @@
   <p>
     Feel free to <a href="/imprint/">contact u</a>s if you have any questions.
   </p>
+  <p>
+    You can check your submissions state on the <a href="/signupstatus">signup status page</a>.
+  </p>
   <input type="submit" value="Submit">
 </form>
 
 
 {% else %}
-Thank you for your submission. Your token is {{ token }}. Keep that.
+<p>
+  Thank you for your submission.
+</p>
+<p>
+  Your token is {{ token }}. Keep that.
+</p>
+<p>
+  You can check your submissions state on the <a href="/signupstatus">signup status page</a>.
+</p>
 {% endif %}
 {% endblock %}
 {% endspaceless %}

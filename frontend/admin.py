@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from .models import RegistrationStatus, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
@@ -86,6 +86,7 @@ admin.site.register(Country)
 admin.site.register(Incident, IncidentAdmin)
 admin.site.register(TextBlock)
 admin.site.register(Registration, RegistrationAdmin)
+admin.site.register(RegistrationStatus)
 
 @receiver(post_save)
 def clear_the_cache(**kwargs):

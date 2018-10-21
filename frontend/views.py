@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from collections import OrderedDict
 from django.db import models
 from django.http import Http404
-from .models import TextBlock, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
+from .models import RegistrationStatus, TextBlock, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team, RaceOverlayControlSet
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 from json import dumps, loads
@@ -515,7 +515,20 @@ def signUp(request):
     "form": form,
     "token": token
   })
-
+def signUpStatus(request):
+  form = SignUpStatusForm()
+  data = None
+  token = None
+  if request.POST:
+    form = SignUpStatusForm(request.POST)
+    if form.is_valid():
+      token = form.cleaned_data['token']
+      data = RegistrationStatus.objects.filter(registration__token=token).order_by("date")
+  return renderWithCommonData(request, 'frontend/signupstatus.html', {
+    "form": form,
+    "data": data,
+    "token": token
+  })
 def incidentReport(request):
   form = IncidentForm()
   if request.POST:

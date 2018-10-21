@@ -37,6 +37,7 @@ urlpatterns = [
     path('racebanner/<int:id>/', views.get_raceBanner, name='get_raceBanner'),
     path('incidents/<int:id>/', views.get_incidents, name='get_incidents'),
     path('signup/', views.signUp, name='signup'),
+    path('signupstatus/', views.signUpStatus, name='signupstatus'),
     path('rules/', views.get_rules, name='get_rules'),
     path('incidentreport/', views.incidentReport, name='incident'),
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers, name='season'),

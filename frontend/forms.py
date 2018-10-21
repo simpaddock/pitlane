@@ -4,11 +4,14 @@ from .models import Registration, Incident, Race, Season, DriverEntry
 class RegistrationForm(forms.ModelForm): 
   class Meta:
     model = Registration
-    fields = ['email', 'skinFile', 'number', 'season', 'token', 'gdprAccept', 'copyrightAccept']
+    fields = ['email', 'teamName', 'skinFile', 'number', 'season', 'token', 'gdprAccept', 'copyrightAccept']
   def __init__(self, *args, **kwargs):
     super(RegistrationForm, self).__init__(*args, **kwargs)
     if self.instance:
-        self.fields['season'].queryset = Season.objects.filter(isRunning=True)
+        self.fields['season'].queryset = Season.objects.filter(isRunning=True,isOpen=True)
+
+class SignUpStatusForm(forms.Form):
+  token = forms.CharField(label='Token', max_length=100)
 
 class IncidentForm(forms.ModelForm): 
   class Meta:
