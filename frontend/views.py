@@ -101,7 +101,7 @@ def renderWithCommonData(request, template, context):
 #@cache_page(60 * 15)
 def get_index(request):
   races = Race.objects.all().filter(season=getCurrentCup()).order_by("-startDate")
-  newsArticles = NewsArticle.objects.all().order_by("-date")[:5]
+  newsArticles = NewsArticle.objects.all().order_by("-date")[:8]
   
   textBlocks = TextBlock.objects.filter(context='landing')
   return renderWithCommonData(request, 'frontend/index.html', {
@@ -161,10 +161,10 @@ def get_imprint(request):
 
 #@cache_page(60 * 15)
 def get_SingleNews(request, id:int):
-  articles = NewsArticle.objects.all().filter(pk=id)
+  articles = list(NewsArticle.objects.all().filter(pk=id))
   paginator = Paginator(articles, 5)
   page = request.GET.get('page'),
-  url = urljoin(LEAGUECONFIG["url"], '/news/', articles[0].id)
+  url = urljoin(LEAGUECONFIG["url"], '/news/'+ str(articles[0].id)) # ",/" does not work 
   title = articles[0].title
   shareButtons = [
     {
