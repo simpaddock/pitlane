@@ -7,16 +7,13 @@
   z-index: 9999;
   position: absolute;
   top: 0px;
-  left: -3em;
+  left: -3.3em;
   top: -0.5em;
 }
 /* ================ The Timeline ================ */
 
 .timeline {
   position: relative;
-  width: 176px;
-  margin-top: 20px;
-  list-style-type: none;
 }
 
 .timeline:before {
@@ -39,7 +36,7 @@
 }
 
 .timeline li {
-  padding: 1em 0;
+  padding-bottom: 1em;
 }
 
 .timeline li:after {
@@ -50,17 +47,12 @@
   visibility: hidden;
 }
 
-.direction-l {
-  position: relative;
-  width: 300px;
-  float: left;
-  text-align: right;
-}
 
 .direction-r {
   position: relative;
-  width: 150px;
+  width: 100%;
   float: right;
+  left: 2em;
 }
 
 .flag-wrapper {
@@ -78,11 +70,6 @@
   text-align: left;
 }
 
-.direction-l .flag {
-  -webkit-box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-  -moz-box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-  box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-}
 
 .direction-r .flag {
   -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
@@ -134,9 +121,6 @@
 	z-index: 14;
 }
 
-.direction-l .time-wrapper {
-	float: none;
-}
 
 .direction-r .time-wrapper {
 	float: none;

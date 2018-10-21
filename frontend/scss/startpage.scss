@@ -10,14 +10,24 @@
   display: inline-flex;
 }
 .article h2.article-title{
-  position: absolute; 
-  bottom: 10px; 
-  left: 0; 
-  width: 100%; 
+  position: absolute;
+  bottom: -2pt;
+  left: 0;
+  width: 187px;
+  font-size: 10pt;
+  overflow-wrap: break-word;
+  padding-left: 0.5em;
+  color: white;
+  background: black;
+  background: rgba(0, 0, 0, 0.7);
+  padding-right: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  letter-spacing: 0.5px;
 }
 .article h2.article-meta{
   position: absolute;
-  top: -14px;
+  top: -10px;
   left: 0;
   width: 100%;
 }
@@ -28,15 +38,23 @@
   padding: 10px; 
   font-size: 9pt;
 }
-.article .article-image{
-  max-height: 300px;
-  max-width: 300px;
+.article:not(:first-child) .article-image  {
+  max-height: 150px;
+  max-width: 200px;
+  min-height: 150px;
+  margin-bottom: 0.5em;
+  margin-right: 10px;
+  width: 620px;
+}
+.article:first-of-type .article-image  {
+  max-height: 600px;
+  max-width: 620px;
   min-height: 200px;
-  margin-right: 1em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
+  margin-right: 10px;
 }
 .timeline-container{
   float: left;
-  width: 300px;
+  width: 28.3%;
   margin-right: 1em;
 }

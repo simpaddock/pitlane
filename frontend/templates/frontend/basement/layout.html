@@ -75,8 +75,8 @@
 
     <div class="running-comp">
       {% if running.nextRace %} NEXT
-      <span class="comp-name">{{ running.nextRace.season.name }}</span>
-      <a class="next-race" href="/races/{{running.nextRace.id}}">{{ running.nextRace.startDate|date:config.nextRaceFormat }}: {{ running.nextRace.name }}</a>
+      <span class="comp-name">{{ running.nextRace.season.name }} | {{ running.nextRace.startDate|date:config.nextRaceFormat }}</span>
+      <a class="next-race" href="/races/{{running.nextRace.id}}">{{ running.nextRace.name }}</a>
       {% endif %}
     </div>
   </div>
