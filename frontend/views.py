@@ -83,7 +83,7 @@ def get_robots(request):
   return HttpResponse("foo", content_type='text/plain')
 
 def getCurrentCup():
-  nextRace = Race.objects.filter(season__isRunning=True, endDate__date__gt=date.today()).order_by("-startDate").first()
+  nextRace = Race.objects.filter(season__isRunning=True, endDate__gt=datetime.now()).order_by("-startDate").first()
   if nextRace is None:
     return None
   
