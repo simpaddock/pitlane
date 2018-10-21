@@ -1,0 +1,21 @@
+.eu-cookies{
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background: #ff6c00;
+  color:white;
+  z-index: 99999;
+  text-align: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.legal-links{
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 99999;
+}
+.legal-links a:not(:last-child){
+  padding-right: 0.5em;
+}

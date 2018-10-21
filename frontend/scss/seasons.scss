@@ -53,11 +53,11 @@
   display: block;
   margin-bottom: 0.5em;
 }
-.race-detail{
-  margin-top: -0.7em;
-  margin-left: -1em;
-  width: 100px;
-  margin-bottom: -0.5em;
+.race-link{
+  margin-top: 1em;
+}
+.leaflet-popup{
+  width: 220px;
 }
 .leaflet-popup-content-wrapper{
   background: $navigation-button-backgroundcolor !important;
@@ -71,4 +71,7 @@
 }
 .season-calendar{
   margin-left: 0.2em;
+}
+.map-marker{
+  background: url(/static/frontend/images/marker-icon.png)
 }

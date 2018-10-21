@@ -35,8 +35,11 @@ h1{
   color: #00aeef;
 }
 @import 'navbar.scss';
-@import 'index.scss'; // startpage
 @import 'seasons.scss'; // seasons-page
 @import 'results.scss'; // results-page
 @import 'race.scss'; // race result-page
 @import 'sociallinks.scss'; 
+@import 'mobile.scss'; 
+@import 'startpage.scss'; 
+@import 'timeline.scss'; 
+@import 'legal.scss';

@@ -1,0 +1,42 @@
+
+.articles{
+  min-width: 60%;
+}
+.articles h1{
+  margin-top: 0em;
+}
+.article{
+  position: relative; 
+  display: inline-flex;
+}
+.article h2.article-title{
+  position: absolute; 
+  bottom: 10px; 
+  left: 0; 
+  width: 100%; 
+}
+.article h2.article-meta{
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 100%;
+}
+.article h2 span { 
+  color: white; 
+  background: rgb(0, 0, 0); /* fallback color */
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px; 
+  font-size: 9pt;
+}
+.article .article-image{
+  max-height: 300px;
+  max-width: 300px;
+  min-height: 200px;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+.timeline-container{
+  float: left;
+  width: 300px;
+  margin-right: 1em;
+}

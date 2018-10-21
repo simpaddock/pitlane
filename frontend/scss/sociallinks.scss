@@ -12,9 +12,30 @@
 .fa-rss{
   color:orange;
 }
-.fa-twitter{
+.fa-twitter, .fa-twitter-square{
   color: #1da1f2;
 }
-.fa-facebook-f{
+.fa-facebook-f, .fa-facebook-square{
   color:#3b5998;
+}
+.fa-flipboard{
+  color: #c00
+}
+.fa-get-pocket{
+  color: #ef4056
+}
+.fa-reddit-square{
+  color: #ff4500
+}
+.fa-pinterest{
+  color: #bd081c
+}
+.share-links{
+  margin-top: 1em;
+  width: 100%;
+  padding-top: 1em;
+}
+.share-links a i {
+  margin-right: 0.5em;
+  font-size: 15pt;
 }
