@@ -84,17 +84,17 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'pitlane.wsgi.application'
 
+LEAGUECONFIG = None
+CONFIGPATH = os.path.join((BASE_DIR), "config.json")
+with open(CONFIGPATH,"r") as config:
+    LEAGUECONFIG = loads(config.read())
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': LEAGUECONFIG["database"]
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -139,11 +139,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "frontend", "media")
 MEDIA_URL= "/media/"
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
-
-LEAGUECONFIG = None
-CONFIGPATH = os.path.join((BASE_DIR), "config.json")
-with open(CONFIGPATH,"r") as config:
-    LEAGUECONFIG = loads(config.read())
 
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
