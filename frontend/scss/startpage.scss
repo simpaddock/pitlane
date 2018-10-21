@@ -25,12 +25,6 @@
   padding-bottom: 0.5em;
   letter-spacing: 0.5px;
 }
-.article h2.article-meta{
-  position: absolute;
-  top: -10px;
-  left: 0;
-  width: 100%;
-}
 .article h2 span { 
   color: white; 
   background: rgb(0, 0, 0); /* fallback color */
@@ -48,7 +42,7 @@
 }
 .article:first-of-type .article-image  {
   max-height: 600px;
-  max-width: 620px;
+  width: 620px;
   min-height: 200px;
   margin-bottom: 0.5em;
   margin-right: 10px;

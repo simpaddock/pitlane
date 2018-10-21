@@ -38,6 +38,13 @@ label{
   width: 20%;
   display: inline-block;
 }
+h1 small{ // mostly for article overview
+  font-size: small !important;
+  color: white;
+  font: 100% Electrolize, sans-serif !important;
+  font-size: 100%;
+  font-size: 10pt !important;
+}
 .errorlist{
   padding: 1em;
   padding-left: 1em;
