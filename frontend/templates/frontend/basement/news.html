@@ -1,11 +1,6 @@
-{% extends baseLayout %} {% load static %} {% if isInSingleMode %}
-{% block pagetitle %}: {{ title }}{% endblock %}
-{% block ogp %}
-<meta property="og:title" content="{{ config.name }}: {{ articles.0.title }}" />
-<meta property="og:url" content="{{config.url }}/news/{{articles.0.id}}/" /> {% if articles.0.mediaFile %}
-<meta property="og:image" content="{{articles.0.mediaFile.url}}" /> {% else %}
-<meta property="og:image" content="{{config.logo }}" /> {% endif %} {% endblock %} {% endif %} {{ article.title }} {% block content %}
-{% if not isInSingleMode %}
+{% extends baseLayout %} 
+{% load static %}
+{% block content %}
 <div class="pagination">
     <span class="step-links">
         {% if articles.has_previous %}
@@ -21,29 +16,18 @@
         {% endif %}
     </span>
 </div>
-{% endif %}
 <div class="news-article-content">
     {% for article in articles %}
-    {% if isInSingleMode %}
-    <a href="/news/{{article.id}}/">
-        <h1>{{ article.title }}</h1>
-    </a>
-    {{ article.text | safe}} 
-    <b>{{ article.date|date:config.articleFormat }}</b> 
-    <div class="share-links">
-        {% for button in shareButtons %}
-            <a href="{{ button.url }}" title="share on {{ button.name }}">
-                <i class="{{ button.icon }}"></i>
-            </a>
-        {% endfor %}
+    <div class="article no-featured">
+        <a href="/news/{{article.id}}">
+        {% if article.mediaFile %}
+        <img class="article-image" src="{{article.mediaFile.url}}">
+        <h2 class="article-title">
+            {{ article.title }}
+        </h2>
+        {% endif %}
+        </a>
     </div>
-    {% else %}    
-    <a href="/news/{{article.id}}/">
-        <h2>{{ article.title }} <small>{{ article.date|date:config.articleFormat }}</small> </h2>
-        {{ article.text | striptags | slice:":200"}} 
-    </a>
-    {% endif %} 
     {% endfor %}
 </div>
 {% endblock %}
-

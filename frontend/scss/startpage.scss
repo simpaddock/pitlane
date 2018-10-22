@@ -32,7 +32,7 @@
   padding: 10px; 
   font-size: 9pt;
 }
-.article:not(:first-child) .article-image  {
+.article:not(:first-child) .article-image,.no-featured .article-image  {
   max-height: 150px;
   max-width: 200px;
   min-height: 150px;
@@ -40,12 +40,19 @@
   margin-right: 10px;
   width: 620px;
 }
-.article:first-of-type .article-image  {
+.article:first-of-type:not(.no-featured) .article-image  {
   max-height: 600px;
   width: 620px;
   min-height: 200px;
   margin-bottom: 0.5em;
   margin-right: 10px;
+}
+.pagination{
+  margin-bottom: 1em;
+  text-align: center;
+}
+.news-article-content{
+  width: 100%;
 }
 .timeline-container{
   float: left;

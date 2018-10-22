@@ -1,0 +1,644 @@
+/* electrolize-regular - latin */
+@font-face {
+  font-family: 'Electrolize';
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/electrolize-v6-latin-regular.eot");
+  /* IE9 Compat Modes */
+  src: local("Electrolize"), local("Electrolize-Regular"), url("fonts/electrolize-v6-latin-regular.eot?#iefix") format("embedded-opentype"), url("fonts/electrolize-v6-latin-regular.woff2") format("woff2"), url("fonts/electrolize-v6-latin-regular.woff") format("woff"), url("fonts/electrolize-v6-latin-regular.ttf") format("truetype"), url("fonts/electrolize-v6-latin-regular.svg#Electrolize") format("svg");
+  /* Legacy iOS */ }
+
+/* oswald-regular - latin */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/oswald-v16-latin-regular.eot");
+  /* IE9 Compat Modes */
+  src: local("Oswald Regular"), local("Oswald-Regular"), url("fonts/oswald-v16-latin-regular.eot?#iefix") format("embedded-opentype"), url("fonts/oswald-v16-latin-regular.woff2") format("woff2"), url("fonts/oswald-v16-latin-regular.woff") format("woff"), url("fonts/oswald-v16-latin-regular.ttf") format("truetype"), url("fonts/oswald-v16-latin-regular.svg#Oswald") format("svg");
+  /* Legacy iOS */ }
+
+/* oswald-500 - latin */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 500;
+  src: url("fonts/oswald-v16-latin-500.eot");
+  /* IE9 Compat Modes */
+  src: local("Oswald Medium"), local("Oswald-Medium"), url("fonts/oswald-v16-latin-500.eot?#iefix") format("embedded-opentype"), url("fonts/oswald-v16-latin-500.woff2") format("woff2"), url("fonts/oswald-v16-latin-500.woff") format("woff"), url("fonts/oswald-v16-latin-500.ttf") format("truetype"), url("fonts/oswald-v16-latin-500.svg#Oswald") format("svg");
+  /* Legacy iOS */ }
+
+/* oswald-600 - latin */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 600;
+  src: url("fonts/oswald-v16-latin-600.eot");
+  /* IE9 Compat Modes */
+  src: local("Oswald SemiBold"), local("Oswald-SemiBold"), url("fonts/oswald-v16-latin-600.eot?#iefix") format("embedded-opentype"), url("fonts/oswald-v16-latin-600.woff2") format("woff2"), url("fonts/oswald-v16-latin-600.woff") format("woff"), url("fonts/oswald-v16-latin-600.ttf") format("truetype"), url("fonts/oswald-v16-latin-600.svg#Oswald") format("svg");
+  /* Legacy iOS */ }
+
+/* oswald-700 - latin */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 700;
+  src: url("fonts/oswald-v16-latin-700.eot");
+  /* IE9 Compat Modes */
+  src: local("Oswald Bold"), local("Oswald-Bold"), url("fonts/oswald-v16-latin-700.eot?#iefix") format("embedded-opentype"), url("fonts/oswald-v16-latin-700.woff2") format("woff2"), url("fonts/oswald-v16-latin-700.woff") format("woff"), url("fonts/oswald-v16-latin-700.ttf") format("truetype"), url("fonts/oswald-v16-latin-700.svg#Oswald") format("svg");
+  /* Legacy iOS */ }
+
+body {
+  font: 100% Electrolize, sans-serif;
+  background-color: #000;
+  color: #D5D8DB;
+  margin-left: 20%;
+  margin-top: 1em;
+  width: 60%; }
+
+.background-image {
+  background-image: url(/media/uploads/league/bg.jpg) !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  filter: grayscale(100%) opacity(70%);
+  height: 100%;
+  width: 100%; }
+
+a {
+  text-decoration: none;
+  color: white; }
+
+.body-content {
+  margin-top: 2em; }
+
+h1 {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00aeef; }
+
+label {
+  width: 20%;
+  display: inline-block; }
+
+h1 small {
+  font-size: small !important;
+  color: white;
+  font: 100% Electrolize, sans-serif !important;
+  font-size: 100%;
+  font-size: 10pt !important; }
+
+.errorlist {
+  padding: 1em;
+  padding-left: 1em;
+  list-style: none;
+  font-weight: bold; }
+
+.navigation .logo {
+  width: 100px;
+  float: left;
+  margin-right: 1em;
+  filter: brightness(100%) drop-shadow(0px 0px 5px white); }
+
+.navigation .navigation-button {
+  background: #323737;
+  display: inline-block;
+  padding: 1em;
+  color: #999B9D;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-left: -4px;
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.1em; }
+
+.navigation .navigation-button:hover {
+  background-color: #7b8787;
+  background-color: #4d4f50; }
+
+.navigation .navigation-button-highlight {
+  background-color: #00AEEF;
+  color: white;
+  font-weight: bold; }
+
+.running-comp {
+  display: inline-block;
+  margin-left: 0.5em;
+  position: absolute; }
+
+.comp-name {
+  display: block; }
+
+.next-race {
+  display: block; }
+
+.current-cup-header {
+  word-wrap: break-word;
+  margin-top: 0em; }
+
+.season-race {
+  display: table; }
+
+.season-race * {
+  display: table-cell; }
+
+.season-race-flag {
+  width: 4em; }
+
+.season a {
+  margin-left: 0.2em; }
+
+.seasons {
+  position: absolute;
+  z-index: 1000000;
+  height: auto;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em; }
+
+.season {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-right: 1em;
+  padding-left: 1em;
+  cursor: pointer; }
+
+.selected-season {
+  background-color: #00AEEF; }
+
+.season-is-running {
+  color: red;
+  animation: dot-blink 5s linear infinite; }
+
+@keyframes dot-blink {
+  50% {
+    opacity: 0; } }
+
+.map-flag {
+  width: 24px;
+  height: 12px;
+  padding-right: 0.1em; }
+
+.map-popup {
+  border-radius: 0px;
+  background: #323737;
+  color: #999B9D; }
+
+.race-date {
+  font-style: italic;
+  font-size: smaller;
+  display: block;
+  margin-bottom: 0.5em; }
+
+.race-link {
+  margin-top: 1em; }
+
+.leaflet-popup {
+  width: 220px; }
+
+.leaflet-popup-content-wrapper {
+  background: #323737 !important;
+  color: #999B9D !important; }
+
+.leaflet-popup-tip {
+  background: #999B9D !important; }
+
+.leaflet-control-container > .leaflet-left {
+  display: none; }
+
+.season-calendar {
+  margin-left: 0.2em; }
+
+.map-marker {
+  background: url(/static/frontend/images/marker-icon.png); }
+
+.result {
+  background: #232323;
+  color: white;
+  margin-bottom: 1em;
+  display: block; }
+
+.medal {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 3.99em 4em 0 0;
+  border-color: #00AEEF transparent transparent transparent; }
+
+.medal-1 {
+  border-color: gold transparent transparent transparent;
+  color: black; }
+
+.medal-2 {
+  border-color: silver transparent transparent transparent;
+  color: black; }
+
+.medal-3 {
+  border-color: #CD7F32 transparent transparent transparent;
+  color: white; }
+
+.medal-dns {
+  border-color: #5F8F0E transparent transparent transparent; }
+
+.medal-dnf {
+  border-color: #870e0e transparent transparent transparent; }
+
+.medal-dsq {
+  border-color: black transparent transparent transparent; }
+
+.position {
+  position: relative;
+  top: -2.7em;
+  left: 0.5em;
+  font-size: 13pt; }
+
+.result-cell {
+  display: inline-block;
+  height: 100%;
+  height: 50px;
+  margin-right: 1em;
+  line-height: 50px; }
+
+.result > *:nth-of-type(2) {
+  margin-left: 3.5em; }
+
+.result-str {
+  min-width: 80px; }
+
+.result-image > img {
+  height: 50%;
+  position: relative;
+  top: 0.4em; }
+
+.result-params {
+  font-size: 9pt;
+  text-overflow: ellipsis;
+  font-family: Monospace;
+  width: 100px; }
+
+.result-longstr {
+  min-width: 120px; }
+
+.result-int {
+  width: 12px; }
+
+.result-raw {
+  width: 200px; }
+
+.result-time {
+  width: 70px; }
+
+.result-float {
+  width: 40px; }
+
+.result-absolute-align {
+  position: absolute; }
+
+.dnf {
+  color: red;
+  text-transform: uppercase;
+  font-weight: bold; }
+
+.race-result-row {
+  width: 100%;
+  background: #232323;
+  color: white;
+  height: 4em;
+  margin-bottom: 0.5em; }
+
+.inline {
+  width: 20%;
+  display: inline-block;
+  padding-right: 1em; }
+
+.centered {
+  text-align: center;
+  position: relative;
+  top: -1em; }
+
+.medium {
+  width: 7%; }
+
+.small {
+  width: 4%; }
+
+.race-result-driver {
+  margin-left: 60px;
+  padding: 0.5em; }
+
+.race-result-driver-names {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.race-result-driver-names span:first-child {
+  padding-right: 4px; }
+
+.race-result-driver-names span:last-child {
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em; }
+
+.race-result-driver-team {
+  font-size: small;
+  padding-top: 0.5em;
+  letter-spacing: 0.08em; }
+
+.race-result-team-logo {
+  position: relative;
+  top: -1em;
+  left: 3.5em;
+  vertical-align: middle;
+  width: 35px;
+  margin-right: 0.5em; }
+
+.race-result-number {
+  width: 1%; }
+
+.race-result-vehicle {
+  width: 18%; }
+
+.race-result-avg {
+  width: 10%; }
+
+.race-result-finishstatus {
+  width: 5%; }
+
+.race-name {
+  display: block;
+  font-size: xx-small;
+  font-family: Electrolize; }
+
+.race-flag {
+  height: 2em; }
+
+.race-result-race-points {
+  width: 4%;
+  position: relative;
+  height: 100%;
+  top: -0.0em;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase; }
+
+.race-result-points {
+  width: 4%; }
+
+.race-result-sum {
+  color: #00aeef; }
+
+.race-meta-entry {
+  display: block;
+  margin-bottom: 0.5em; }
+
+.race-meta-entry i {
+  padding-right: 1em; }
+
+.race-meta {
+  margin-bottom: 1em; }
+
+.car-vendor {
+  vertical-align: middle;
+  padding-right: 0.4em;
+  filter: invert(100%);
+  height: 20px; }
+
+.social-links {
+  position: fixed;
+  top: 1em;
+  left: 1em; }
+
+.social-links a {
+  margin-right: 1em; }
+
+.social-links a i {
+  font-size: 15pt; }
+
+.fa-rss {
+  color: orange; }
+
+.fa-twitter, .fa-twitter-square {
+  color: #1da1f2; }
+
+.fa-facebook-f, .fa-facebook-square {
+  color: #3b5998; }
+
+.fa-flipboard {
+  color: #c00; }
+
+.fa-get-pocket {
+  color: #ef4056; }
+
+.fa-reddit-square {
+  color: #ff4500; }
+
+.fa-pinterest {
+  color: #bd081c; }
+
+.fa-youtube {
+  color: #ff0000; }
+
+.share-links {
+  display: inline;
+  margin-left: 0.5em;
+  border-left: 1px solid white;
+  vertical-align: middle;
+  padding-left: 0.5em; }
+
+.share-links a i {
+  margin-right: 0.5em;
+  font-size: 15pt; }
+
+.articles {
+  min-width: 60%; }
+
+.articles h1 {
+  margin-top: 0em; }
+
+.article {
+  position: relative;
+  display: inline-flex; }
+
+.article h2.article-title {
+  position: absolute;
+  bottom: -2pt;
+  left: 0;
+  width: 187px;
+  font-size: 10pt;
+  overflow-wrap: break-word;
+  padding-left: 0.5em;
+  color: white;
+  background: black;
+  background: rgba(0, 0, 0, 0.7);
+  padding-right: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  letter-spacing: 0.5px; }
+
+.article h2 span {
+  color: white;
+  background: black;
+  /* fallback color */
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  font-size: 9pt; }
+
+.article:not(:first-child) .article-image, .no-featured .article-image {
+  max-height: 150px;
+  max-width: 200px;
+  min-height: 150px;
+  margin-bottom: 0.5em;
+  margin-right: 10px;
+  width: 620px; }
+
+.article:first-of-type:not(.no-featured) .article-image {
+  max-height: 600px;
+  width: 620px;
+  min-height: 200px;
+  margin-bottom: 0.5em;
+  margin-right: 10px; }
+
+.pagination {
+  margin-bottom: 1em;
+  text-align: center; }
+
+.news-article-content {
+  width: 100%; }
+
+.timeline-container {
+  float: left;
+  width: 28.3%;
+  margin-right: 1em; }
+
+.event-flag {
+  height: 2em;
+  z-index: 9999;
+  position: absolute;
+  top: 0px;
+  left: -3.3em;
+  top: -0.5em; }
+
+/* ================ The Timeline ================ */
+.timeline {
+  position: relative; }
+
+.timeline:before {
+  position: absolute;
+  top: 0;
+  content: ' ';
+  display: block;
+  width: 6px;
+  height: 100%;
+  margin-left: -3px;
+  background: #505050;
+  background: -moz-linear-gradient(top, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1e5799), color-stop(100%, #7db9e8));
+  background: -webkit-linear-gradient(top, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
+  background: -o-linear-gradient(top, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
+  background: -ms-linear-gradient(top, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
+  background: linear-gradient(to bottom, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
+  z-index: 5; }
+
+.timeline li {
+  padding-bottom: 1em; }
+
+.timeline li:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
+.direction-r {
+  position: relative;
+  width: 100%;
+  float: right;
+  left: 2em; }
+
+.flag-wrapper {
+  position: relative;
+  display: inline-block;
+  text-align: center; }
+
+.flag {
+  position: relative;
+  display: inline;
+  font-weight: 600;
+  text-align: left; }
+
+.direction-r .flag {
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15); }
+
+.desc {
+  margin: 1em 0.75em 0 0;
+  font-size: 0.77777em;
+  font-style: italic;
+  line-height: 1.5em; }
+
+/* ================ Timeline Media Queries ================ */
+@media screen and (max-width: 660px) {
+  .timeline {
+    width: 100%;
+    padding: 4em 0 1em 0; }
+  .timeline li {
+    padding: 2em 0; }
+  .direction-r {
+    float: none;
+    width: 100%;
+    text-align: center; }
+  .flag-wrapper {
+    text-align: center; }
+  .flag {
+    background: white;
+    z-index: 15; }
+  .time-wrapper {
+    display: block;
+    position: relative;
+    margin: 4px 0 0 0;
+    z-index: 14; }
+  .direction-r .time-wrapper {
+    float: none; }
+  .desc {
+    position: relative;
+    margin: 1em 0 0 0;
+    padding: 1em;
+    background: whitesmoke;
+    -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+    z-index: 15; }
+  .direction-l .desc,
+  .direction-r .desc {
+    position: relative;
+    margin: 1em 1em 0 1em;
+    padding: 1em;
+    z-index: 15; } }
+
+@media screen and (min-width: 400px) and (max-width: 660px) {
+  .direction-l .desc,
+  .direction-r .desc {
+    margin: 1em 4em 0 4em; } }
+
+.eu-cookies {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background: #ff6c00;
+  color: white;
+  z-index: 99999;
+  text-align: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em; }
+
+.legal-links {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 99999; }
+
+.legal-links a:not(:last-child) {
+  padding-right: 0.5em; }

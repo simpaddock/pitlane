@@ -34,9 +34,11 @@
   color: #ff0000;
 }
 .share-links{
-  margin-top: 1em;
-  width: 100%;
-  padding-top: 1em;
+  display: inline;
+  margin-left: 0.5em;
+  border-left: 1px solid white;
+  vertical-align: middle;
+  padding-left: 0.5em;
 }
 .share-links a i {
   margin-right: 0.5em;
