@@ -61,7 +61,7 @@
       <img src="{{ config.logo }}" class="logo">
     </a>
     {% for route_key, route_value in routes.items %} {% if "http" in route_key %}
-    <a href="{{ route_key }}" class="navigation-button">
+    <a href="{{ route_key }}" target="_blank" class="navigation-button">
       {{ route_value }}
     </a>
     {% else %}
