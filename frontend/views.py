@@ -502,6 +502,7 @@ def get_seasonStandingsDrivers(request, id: int):
 def signUp(request):
   form = RegistrationForm()
   token = None
+
   if request.POST:
     form = RegistrationForm(request.POST,request.FILES)
     if form.is_valid():
@@ -518,15 +519,39 @@ def signUpStatus(request):
   form = SignUpStatusForm()
   data = None
   token = None
+  steps = OrderedDict()
+  stepsTexts = [
+    "1. SignUp",
+    "2. We review",
+    "3. Livery get's uploaded",
+    "4. You are ready to race"
+  ]
   if request.POST:
     form = SignUpStatusForm(request.POST)
     if form.is_valid():
       token = form.cleaned_data['token']
       data = RegistrationStatus.objects.filter(registration__token=token).order_by("date")
+      steps[stepsTexts[0]] = True 
+      for i in range(1,4):
+        steps[stepsTexts[i]] = None
+
+      if data.count() > 1: # there is more than one registration status
+        steps[stepsTexts[1]] = True
+        if data.filter(registration__wasUploaded=True, registration__ignoreReason="").count() > 1: # the 
+          for i in range(1,4):
+            steps[stepsTexts[i]] = True 
+        if data.exclude(registration__ignoreReason="").count() > 1: # the submission was ignored
+          steps[stepsTexts[1]] = True
+          steps[stepsTexts[2]] = False
+          steps[stepsTexts[3]] = False  
+
+        
+      
   return renderWithCommonData(request, 'frontend/signupstatus.html', {
     "form": form,
     "data": data,
-    "token": token
+    "token": token,
+    "steps": steps
   })
 def incidentReport(request):
   form = IncidentForm()

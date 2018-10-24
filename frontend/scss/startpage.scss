@@ -11,7 +11,7 @@
 }
 .article h2.article-title{
   position: absolute;
-  bottom: -2pt;
+  bottom: 0pt;
   left: 0;
   width: 187px;
   font-size: 10pt;
@@ -33,19 +33,18 @@
   font-size: 9pt;
 }
 .article:not(:first-child) .article-image,.no-featured .article-image  {
-  max-height: 150px;
-  max-width: 200px;
-  min-height: 150px;
+  width: 200px;
+  height: 150px;
   margin-bottom: 0.5em;
   margin-right: 10px;
-  width: 620px;
+  object-fit: cover;
 }
 .article:first-of-type:not(.no-featured) .article-image  {
-  max-height: 600px;
   width: 620px;
-  min-height: 200px;
+  height: 242px;
   margin-bottom: 0.5em;
   margin-right: 10px;
+  object-fit: cover;
 }
 .pagination{
   margin-bottom: 1em;

@@ -1,7 +1,18 @@
-{% extends baseLayout %} {% spaceless %} {% block content %}
-
-{% if data is not None %}
+{% extends baseLayout %} {% spaceless %} {% block content %} {% if data is not None %}
 <h1>signup status #{{ token }}</h1>
+
+<ul class="progress-indicator">
+  {% for step, isOkay in steps.items %}
+
+  <li class="{% if isOkay == False %}danger{% elif isOkay == True %}completed{% endif %} ">
+    <span class="bubble"></span>
+    {% if isOkay == True %}
+    <i class="fa fa-check-circle"></i>
+    {% endif %} {{ step }} {{ okay }}
+  </li>
+  {%endfor %}
+</ul>
+
 <div class="status">
   {% for state in data %}
   <p>
