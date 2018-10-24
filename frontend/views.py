@@ -531,7 +531,10 @@ def signUpStatus(request):
     if form.is_valid():
       token = form.cleaned_data['token']
       data = RegistrationStatus.objects.filter(registration__token=token).order_by("date")
-      steps[stepsTexts[0]] = True 
+      if data.count() > 0:
+        steps[stepsTexts[0]] = True 
+      else:
+        steps[stepsTexts[0]] = False 
       for i in range(1,4):
         steps[stepsTexts[i]] = None
 
