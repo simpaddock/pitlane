@@ -70,23 +70,25 @@ class IncidentAdmin(admin.ModelAdmin):
     qs = super(IncidentAdmin, self).get_queryset(request)
     return qs.filter(race__season__isRunning=True)
 
-admin.site.register(Track)
-admin.site.register(Race, RaceAdmin)
-admin.site.register(Driver)
-admin.site.register(Team)
-admin.site.register(DriverEntry, DriverEntryAdmin)
-admin.site.register(TeamEntry, TeamEntryAdmin)
-admin.site.register(RaceResult, RaceResultAdmin)
-admin.site.register(DriverRaceResult,DriverRaceResultAdmin)
-admin.site.register(Season)
-admin.site.register(DriverRaceResultInfo)
-admin.site.register(RaceOverlayControlSet)
-admin.site.register(NewsArticle)
-admin.site.register(Country)
-admin.site.register(Incident, IncidentAdmin)
-admin.site.register(TextBlock)
-admin.site.register(Registration, RegistrationAdmin)
-admin.site.register(RegistrationStatus)
+[admin.site.register(*models) for models in [
+  (Track,),
+  (Race, RaceAdmin),
+  (Driver,),
+  (Team,),
+  (DriverEntry, DriverEntryAdmin),
+  (TeamEntry, TeamEntryAdmin),
+  (RaceResult, RaceResultAdmin),
+  (DriverRaceResult,DriverRaceResultAdmin),
+  (Season,),
+  (DriverRaceResultInfo,),
+  (RaceOverlayControlSet,),
+  (NewsArticle,),
+  (Country,),
+  (Incident, IncidentAdmin),
+  (TextBlock,),
+  (Registration, RegistrationAdmin),
+  (RegistrationStatus,),
+]]
 
 @receiver(post_save)
 def clear_the_cache(**kwargs):
