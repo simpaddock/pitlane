@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* electrolize-regular - latin */
 @font-face {
   font-family: 'Electrolize';
@@ -72,6 +73,9 @@ a {
 
 .body-content {
   margin-top: 2em; }
+
+p a::before {
+  content: "» "; }
 
 h1 {
   font-family: 'Oswald', sans-serif;

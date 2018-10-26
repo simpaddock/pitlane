@@ -124,24 +124,10 @@ def get_news(request):
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
-  established = LEAGUECONFIG["established"]
-  raceCount = Race.objects.all().count()
-  teamCount = Team.objects.all().count()
-  driverCount = Driver.objects.all().count()
-  seasonCount = Season.objects.all().count()
-  dnfCount = DriverRaceResultInfo.objects.filter(value="DNF").count()
-  dsqCount = DriverRaceResultInfo.objects.filter(value="DSQ").count()
   textBlocks = TextBlock.objects.filter(context='about')
   return renderWithCommonData(request, 'frontend/about.html', {
-    "established": established,
     "name": name,
     "logo": logo,
-    "raceCount": raceCount,
-    "teamCount": teamCount,
-    "driverCount": driverCount,
-    "seasonCount": seasonCount,
-    "dnfCount": dnfCount,
-    "dsqCount": dsqCount,
     "textBlocks": textBlocks
   })
 

@@ -28,6 +28,9 @@ a{
 .body-content{
   margin-top: 2em;
 }
+p a::before{
+  content: "» "
+}
 h1{
   font-family: 'Oswald', sans-serif;
   letter-spacing: 0.04em;
