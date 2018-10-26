@@ -102,7 +102,7 @@ def renderWithCommonData(request, template, context):
 #@cache_page(60 * 15)
 def get_index(request):
   races = Race.objects.all().filter(season=getCurrentCup()).order_by("startDate")
-  newsArticles = NewsArticle.objects.all().order_by("-date")[:7]
+  newsArticles = NewsArticle.objects.all().order_by("-date")[:10]
   
   textBlocks = TextBlock.objects.filter(context='landing')
   return renderWithCommonData(request, 'frontend/index.html', {
