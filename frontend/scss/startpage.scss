@@ -42,7 +42,6 @@
 }
 .article:first-of-type:not(.no-featured) .article-image  {
   width: 620px;
-  height: 242px;
   margin-bottom: 0.5em;
   margin-right: 10px;
   object-fit: scale-down;
@@ -54,7 +53,10 @@
   text-align: center;
 }
 .news-article-content{
-  width: 100%;
+  width: 84%;
+}
+.news-article-body{
+  line-height: 2;
 }
 .timeline-container{
   float: left;

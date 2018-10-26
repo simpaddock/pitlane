@@ -19,6 +19,8 @@
       {% endfor %}
     </div>
   </div>
-  {{ article.text | safe}} {% endfor %}
+  <div class="news-article-body">
+    {{ article.text | safe}} {% endfor %}
+  </div>
 </div>
 {% endblock %}
