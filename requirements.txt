@@ -4,7 +4,7 @@ django-js-asset==1.1.0
 djangorestframework==3.8.2
 filetype==1.0.1
 django-cors-headers==2.4.0
-requests==2.19.1
+requests==2.20.0
 Pillow==5.2.0
 icalendar==4.0.3
 pytz==2018.5
