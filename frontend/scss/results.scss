@@ -9,29 +9,29 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 3.99em 4em 0 0;
+  border-width: 4em 4em 0 0;
   border-color: $highlight-button transparent transparent transparent;
 }
 .medal-1{
-  border-color: gold transparent transparent transparent;
+  border-color: gold transparent transparent transparent !important;
   color: black;
 }
 .medal-2{
-  border-color: silver transparent transparent transparent;
+  border-color: silver transparent transparent transparent !important;
   color: black;
 }
 .medal-3{
-  border-color: #CD7F32 transparent transparent transparent;
+  border-color: #CD7F32 transparent transparent transparent !important;
   color: white;
 }
 .medal-dns{
-  border-color: #5F8F0E transparent transparent transparent;
+  border-color: #5F8F0E transparent transparent transparent !important;
 }
 .medal-dnf{
-  border-color: #870e0e transparent transparent transparent;
+  border-color: #870e0e transparent transparent transparent !important;
 }
 .medal-dsq{
-  border-color: black transparent transparent transparent;
+  border-color: black transparent transparent transparent !important;
 }
 .position{
   position: relative;

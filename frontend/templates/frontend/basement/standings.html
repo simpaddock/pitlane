@@ -19,7 +19,8 @@
   {% spaceless %}
   {% for key, result in resultList %}
   
-  <div class="race-result-row">
+  <div class="race-result-row medal-{{ key | add:1 }}">
+    <div class="race-result-row-background">
       <div class="result-absolute-align">
         <div class="medal medal-{{ key | add:1 }}">
             <span class="position">{{ key | add:1 }}</span>
@@ -88,7 +89,7 @@
       </div>
 
   </div>
-
+</div>
   {% endfor %}
   {% endspaceless %}
 {% endblock %}

@@ -1,9 +1,11 @@
 .race-result-row{
   width: 100%;
-  background: $result-background;
   color: $result-color;
   height: 4em;
-  margin-bottom: 0.5em;
+  border-top-width: 3px;
+  border-top-style: solid;
+  border-top-color: #00aeef;
+  margin-bottom: 1.5em;
 }
 .inline{
   width: 20%;
