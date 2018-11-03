@@ -486,6 +486,9 @@ def get_seasonStandingsDrivers(request, id: int):
   })
 
 def signUp(request):
+  if LEAGUECONFIG["staticSignup"]:
+    textBlocks = TextBlock.objects.filter(context='signup')
+    return renderWithCommonData(request, 'frontend/signup.html', { "textBlocks": textBlocks})
   form = RegistrationForm()
   token = None
 

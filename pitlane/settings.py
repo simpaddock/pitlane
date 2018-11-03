@@ -150,4 +150,5 @@ TEXTBLOCKCONTEXT = (
     ('about', 'About page'),
     ('rule', 'Reglement'),
     ('landing', 'Landing page'),
+    ('signup', 'SignUp'),
 )
