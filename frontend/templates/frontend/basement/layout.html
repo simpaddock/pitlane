@@ -16,6 +16,9 @@
   <meta property="og:title" content="{{ config.name }}" />
   <meta property="og:url" content="{{config.url }}" />
   <meta property="og:image" content="{{config.logo }}" /> {% endblock %}
+  
+  <meta data-embetty-server="/embed">
+  <script async src="{% static 'frontend/embetty.js' %}"></script>
 </head>
 
 <body>

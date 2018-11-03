@@ -13,6 +13,16 @@
     "imprint": "",
     "gdpr": ""
   },
+  "staticSignup": false,
+  "embettyUrl": "http://localhost:3000/",
+  "database": {
+    "ENGINE": "django.db.backends.mysql",
+    "NAME": "",
+    "USER": "",
+    "PASSWORD": "",
+    "HOST": "localhost",
+    "PORT": "3306"
+  },
   "socialButtons": {
     "fontawesomeclass": "linkcontent"
   },

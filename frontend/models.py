@@ -69,6 +69,8 @@ class Race(models.Model):
   startDate = models.DateTimeField()
   endDate = models.DateTimeField()
   track = models.ForeignKey (Track, on_delete=models.DO_NOTHING, default=None)
+  streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
+  commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
   def __str__(self):
     return "{0}: {1}".format(self.season.name, self.name)
   @property
@@ -85,8 +87,6 @@ class RaceResult(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
   resultSoftware = models.CharField(max_length=30,choices=SIMSOFTWARE,default='rFactor 2')
   resultFile = models.FileField(default=None, blank=True, upload_to='uploads/results/')
-  streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
-  commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
   @property
   def results(self):
     if self.resultFile is not None:

@@ -23,3 +23,7 @@ def indexOrDNS(list, i):
   if i >= len(list):
     return "DNS"
   return list[int(i)]
+
+@register.filter
+def getYoutubeId(url):
+  return url.replace("https://www.youtube.com/watch?v=","")

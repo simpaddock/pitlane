@@ -40,8 +40,11 @@
         </span>
     {% endif %}
   </div>
-  {% if resultList|length == 0  %}
+  {% if resultList|length == 0 and embedData == False %}
     No results yet!
+  {% endif %}
+  {% if resultList|length == 0 and "www.youtube.com/watch?v=" in streamLink %}
+    <embetty-video video-id="{{ streamLink | getYoutubeId}}" start-at="97" type="youtube"></embetty-video>
   {% endif %}
   {% for result in resultList %}
   <div class="race-result-row medal-{{ result.position }} medal-{{result.finishstatus|lower}}" >

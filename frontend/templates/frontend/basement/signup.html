@@ -2,6 +2,16 @@
 {% spaceless %}
 {% block content %}
 <h1>signup</h1>
+
+{% if config.staticSignup %}
+
+{% for block in textBlocks %}
+<b>{{ block.title }} </b>
+<p>
+  {{ block.text | safe}}
+</p>
+{% endfor %}
+{% else %}
 {% if token is None %}
 <div class="remarks">
   <ol>
@@ -52,5 +62,7 @@
   You can check your submissions state on the <a href="/signupstatus">signup status page</a>.
 </p>
 {% endif %}
+{% endif %}
+
 {% endblock %}
 {% endspaceless %}

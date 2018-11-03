@@ -393,8 +393,8 @@ def get_raceDetail(request, id: int):
       "race": race,
       "resultList": None,
       "title":  race.name,
-      "streamLink": None,
-      "commentatorInfo": None
+      "streamLink": race.streamLink,
+      "commentatorInfo": race.commentatorInfo
     })
   raceResult = RaceResult.objects.all().filter(race_id=id).get()
   incidentsCount = Incident.objects.filter(race__season_id=race.season.id, race=race).count()
@@ -402,8 +402,8 @@ def get_raceDetail(request, id: int):
     "race": race,
     "resultList": resultList,
     "title":  race.name,
-    "streamLink": raceResult.streamLink,
-    "commentatorInfo": raceResult.commentatorInfo,
+    "streamLink": race.streamLink,
+    "commentatorInfo": race.commentatorInfo,
     "incidentsCount": incidentsCount
   })
 def isSeasonFinished(season):
@@ -577,69 +577,8 @@ def get_iCalender(request, id: int):
   response['Content-Disposition'] = 'attachment; filename="{0}.ics"'.format(season.name)
   return response
 
-# JSON API Endpoints
-
-
-def get_raceData(request, id: int):
-  race = Race.objects.get(pk=id)
-  entries = DriverEntry.objects.filter(teamEntry__season_id=race.season.id)
-  result = []
-  for entry in entries:
-    # get relevant infos only.
-    resultData = {
-      "driverNumber": entry.driverNumber,
-      "driverNumberFormat": entry.driverNumberFormat,
-      "teamName": entry.teamEntry.team.name,
-    }
-    result.append(resultData)
-  cameraControl = RaceOverlayControlSet.objects.filter(race_id=id).first()
-  if cameraControl is not None:
-    return JsonResponse({
-      "entries": result,
-      "controlSet": cameraControl.controlSet,
-      "slotId": cameraControl.slotId,
-      "cameraId":  cameraControl.cameraId,
-      "commandId": cameraControl.id
-    }, safe=False)
-  else:
-    return JsonResponse({
-      "entries": result,
-      "controlSet": -1,
-      "slotId": -1,
-      "cameraId":  -1,
-      "commandId": -1
-    }, safe=False)
-
-# Overlay control panel
-@csrf_exempt 
-def get_overlayControl(request, id: int):
-  if request.method  == "POST":
-    race = Race.objects.get(pk=id)
-    lastControlSet = RaceOverlayControlSet.objects.first()
-    
-    RaceOverlayControlSet.objects.filter(race_id=id).delete()
-    data = loads(request.body.decode("utf-8"))
-    overlay = RaceOverlayControlSet()
-    overlay.race = race
-    driver = data["driver"]
-    position = data["position"]
-    overlay.cameraId = int(data["cameraId"])
-    if driver is not None:
-      overlay.slotId = driver
-      overlay.controlSet = dumps({
-        "driver": driver
-      })
-    if position is not None:
-      overlay.slotId = position
-      overlay.controlSet = dumps({
-        "battle": position
-      })
-    if "pause" in data and data["pause"] == True:
-      overlay.slotId = -1
-      overlay.controlSet = dumps({
-        "pause": True
-      })
-    overlay.save()
-    return JsonResponse({})
-  else:
-    return HttpResponse("Nein")
+def embedYoutube(request,argument: str):
+  url = "{0}video/youtube/{1}".format(LEAGUECONFIG["embettyUrl"],argument)
+  r = get(url)
+  contentType = r.headers['content-type']
+  return HttpResponse(r.content, content_type=contentType)
