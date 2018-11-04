@@ -152,4 +152,6 @@ TEXTBLOCKCONTEXT = (
     ('rule', 'Reglement'),
     ('landing', 'Landing page'),
     ('signup', 'SignUp'),
+    ('dstandings', 'Driver standings (Preseason)'),
+    ('tstandings', 'Team standings (Preseason)'),
 )

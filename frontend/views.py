@@ -423,7 +423,8 @@ def get_seasonStandingsTeams(request, id: int):
     "isDriverStandings": False,
     "races": racesRaw,
     "title": "Team standing - " + season.name + titleAttachment,
-    "season": season
+    "season": season,
+    "textblocks": TextBlock.objects.filter(season_id=id, context="tstandings")
   })
 
 #@cache_page(60 * 15)
@@ -482,7 +483,8 @@ def get_seasonStandingsDrivers(request, id: int):
     "isDriverStandings": True,
     "races": racesRaw,
     "title": "Drivers standing - " + season.name + titleAttachment,
-    "season": season
+    "season": season,
+    "textBlocks": TextBlock.objects.filter(season_id=id, context="dstandings")
   })
 
 def signUp(request):

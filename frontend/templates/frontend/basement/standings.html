@@ -15,6 +15,11 @@
   <h1>{{ title }} </h1>
   {% if season.round == 0 %}
     The tournament has not started yet.
+    {% for block in textBlocks %}
+    <p>
+      {{ block.text | safe}}
+    </p>
+  {% endfor %}
   {% endif %}
   {% spaceless %}
   {% for key, result in resultList %}
