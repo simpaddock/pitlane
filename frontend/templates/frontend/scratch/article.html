@@ -1,0 +1,26 @@
+{% extends baseLayout %} {% load static %} {% block pagetitle %}: {{ title }}{% endblock %} {% block ogp %}
+<meta property="og:title" content="{{ config.name }}: {{ articles.0.title }}" />
+<meta property="og:url" content="{{config.url }}/news/{{articles.0.id}}/" /> {% if articles.0.mediaFile %}
+<meta property="og:image" content="{{articles.0.mediaFile.url}}" /> {% else %}
+<meta property="og:image" content="{{config.logo }}" /> {% endif %} {% endblock %} {{ article.title }} {% block content %}
+
+<div class="{% if not isInSingleMode %}news-article-content {% endif %} ">
+  {% for article in articles %}
+  <a href="/news/{{article.id}}/">
+    <h1>{{ article.title }}</h1>
+  </a>
+  <div class="article-meta">
+    <span>{{ article.date|date:config.articleFormat }}</span>
+    <div class="share-links">
+      {% for button in shareButtons %}
+      <a href="{{ button.url }}" title="share on {{ button.name }}">
+        <i class="{{ button.icon }}"></i>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="news-article-body">
+    {{ article.text | safe}} {% endfor %}
+  </div>
+</div>
+{% endblock %}

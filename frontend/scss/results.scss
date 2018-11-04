@@ -86,3 +86,19 @@
   text-transform: uppercase;
   font-weight: bold;
 }
+.race-result-driver-number{
+  display: inline-block;
+  margin-right: 10px;
+  background: white;
+  color: black;
+  padding: 0.2em;
+  border: 1px solid #00aeef;
+  width: 19px;
+  height: 19px;
+  text-align: center;
+  font-size: 10pt;
+  font-family: oswald;
+  font-weight: bolder;
+  letter-spacing: 1px;
+  top: -10px !important;
+}

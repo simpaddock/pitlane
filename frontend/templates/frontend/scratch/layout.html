@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <title>{{ config.name }}{% block pagetitle %}{% endblock %}</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="stylesheet" type="text/css" href="{% static 'frontend/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'frontend/style_scratch.css' %}">
   <link rel="stylesheet" href="{% static 'frontend/fa.css' %}">
   <link rel="icon" type="image/png" href="{{config.logo }}" sizes="32x32">
   <link rel="icon" type="image/png" href="{{config.logo }}" sizes="96x96">
@@ -16,6 +16,7 @@
   <meta property="og:title" content="{{ config.name }}" />
   <meta property="og:url" content="{{config.url }}" />
   <meta property="og:image" content="{{config.logo }}" /> {% endblock %}
+  
   <meta data-embetty-server="/embed">
   <script async src="{% static 'frontend/embetty.js' %}"></script>
 </head>

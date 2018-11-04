@@ -1,0 +1,32 @@
+{% extends baseLayout %} {% spaceless %} {% block content %} {% if data is not None %}
+<h1>signup status #{{ token }}</h1>
+
+<ul class="progress-indicator">
+  {% for step, isOkay in steps.items %}
+
+  <li class="{% if isOkay == False %}danger{% elif isOkay == True %}completed{% endif %} ">
+    <span class="bubble"></span>
+    {% if isOkay == True %}
+    <i class="fa fa-check-circle"></i>
+    {% endif %} {{ step }} {{ okay }}
+  </li>
+  {%endfor %}
+</ul>
+
+<div class="status">
+  {% for state in data %}
+  <p>
+    {{ state | safe }}
+  </p>
+  {%endfor %}
+</div>
+
+
+{% else %}
+<h1>Check signup status</h1>
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Submit">
+</form>
+
+{% endif %} {% endblock %} {% endspaceless %}

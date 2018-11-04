@@ -141,6 +141,7 @@ MEDIA_URL= "/media/"
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
 
 SIMSOFTWARE = (
     ('rFactor 2', 'rFactor 2'),

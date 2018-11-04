@@ -32,21 +32,13 @@
   padding: 10px; 
   font-size: 9pt;
 }
-.article:not(:first-child) .article-image,.no-featured .article-image  {
+.article .article-image,.no-featured .article-image  {
   width: 200px;
   height: 150px;
   margin-bottom: 0.5em;
   margin-right: 10px;
   object-fit: cover;
   object-position: top;
-}
-.article:first-of-type:not(.no-featured) .article-image  {
-  width: 620px;
-  margin-bottom: 0.5em;
-  margin-right: 10px;
-  object-fit: scale-down;
-  max-height: 500px;
-  background: #0000004d;
 }
 .pagination{
   margin-bottom: 1em;

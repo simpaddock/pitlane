@@ -40,6 +40,7 @@
        <div class="race-result-driver-team">
           {% if isDriverStandings %}
             <span>{{result.team}}</span>
+            <span>#{{result.number | safe }} </span>
           {% endif %}
           {% if not isDriverStandings %}
             {% if result.vehicleImage %}
@@ -48,16 +49,6 @@
             <span>{{result.vehicle}}</span>
           {% endif %}
         </div>
-      </div>
-      
-      {% if isDriverStandings %}
-      <div class="race-result-driver-number centered">
-        {{result.number | safe }}
-      </div>
-     {% endif %}
-     
-     <div class="race-result-points race-result-sum inline small centered">
-        <span>{{result.sum}}</span>
       </div>
       {% for race in races %}
         <div class="race-result-race-points inline medium centered">
@@ -93,6 +84,9 @@
       {% endfor %}
       
       
+      <div class="race-result-points race-result-sum inline small centered">
+        <span>{{result.sum}}</span>
+      </div>
 
   </div>
 </div>
