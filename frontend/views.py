@@ -424,7 +424,7 @@ def get_seasonStandingsTeams(request, id: int):
     "races": racesRaw,
     "title": "Team standing - " + season.name + titleAttachment,
     "season": season,
-    "textblocks": TextBlock.objects.filter(season_id=id, context="tstandings")
+    "textBlocks": TextBlock.objects.filter(season_id=id, context="tstandings")
   })
 
 #@cache_page(60 * 15)
