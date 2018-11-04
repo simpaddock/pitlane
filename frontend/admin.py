@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import RegistrationStatus, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
+from .models import Upload, RegistrationStatus, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle, RaceOverlayControlSet
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
@@ -86,6 +86,7 @@ class IncidentAdmin(admin.ModelAdmin):
   (Country,),
   (Incident, IncidentAdmin),
   (TextBlock,),
+  (Upload,),
   (Registration, RegistrationAdmin),
   (RegistrationStatus,),
 ]]

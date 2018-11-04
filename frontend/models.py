@@ -11,6 +11,8 @@ import random
 import string
 from django.utils.html import strip_tags
 from datetime import datetime
+from os import unlink
+from os.path import isfile
 class Country(models.Model):
   name = models.CharField(max_length=100)
   flag = models.FileField(default=None, blank=True, upload_to='uploads/flags/')
@@ -398,3 +400,13 @@ class RegistrationStatus(models.Model):
   date = models.DateTimeField(default=datetime.now)
   def __str__(self):
     return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.text)
+
+class Upload(models.Model):
+  name = models.CharField(default="", max_length=200,null=True)
+  filePath = models.FileField(blank=True, default=None, null=True, upload_to='uploads/files')
+  def delete(self):
+    if self.filePath and isfile(self.filePath.path):
+      unlink(self.filePath.path)
+    super(Upload, self).delete()
+  def __str__(self):
+    return self.name
