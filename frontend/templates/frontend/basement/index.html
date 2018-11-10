@@ -3,6 +3,11 @@
   {% if running is not None and events.count != 0%}
   <div class="timeline-container">
     <h1 class="current-cup-header">{{ running.name }}</h1>
+    <p class="server">
+      <span class="server-time-text">Server time </span>
+      <span class="server-time" id="server-time">{{ now }}</span>
+      <span class="server-timezone">Timezone: {{ config.timezone }}</span>
+    </p>
     <ul class="timeline">
       {%for event in events %}
       <li>
@@ -35,4 +40,14 @@
     </div>
   </div>
 </div>
+<script>
+  var dateDOM = document.getElementById("server-time")
+  var initialDate = dateDOM.innerText
+  var currentMilliseconds = parseFloat(initialDate)
+  window.setInterval(function(){
+    currentMilliseconds += 1000
+    var newDate = new Date(currentMilliseconds)
+    dateDOM.innerText = newDate.toUTCString()
+  }, 1000)
+</script>
 {% endblock %}
