@@ -80,7 +80,8 @@ def getRoutes():
   return routes
 
 def get_robots(request):
-  return HttpResponse("foo", content_type='text/plain')
+  text = "User-agent: *\nDisallow: /imprint/\nDisallow: /privacy/"
+  return HttpResponse(text, content_type='text/plain')
 
 def getCurrentCup():
   nextRace = Race.objects.filter(season__isRunning=True, endDate__gt=datetime.now()).order_by("startDate").first()
