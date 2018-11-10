@@ -449,7 +449,8 @@ h1 small {
   margin-right: 1em; }
 
 .social-links a i {
-  font-size: 15pt; }
+  font-size: 15pt;
+  color: #fff; }
 
 .fa-rss {
   color: orange; }
