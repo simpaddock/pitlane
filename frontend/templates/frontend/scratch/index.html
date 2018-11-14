@@ -1,15 +1,40 @@
 {% extends baseLayout %} {% load static %} {% block content %}
-<div class="row">
-  <div class="articles-container">
-    <div class="articles">
+<div class="columns">
+  <div class="column col-3">
+    {% if running is not None and events.count != 0%}
+    <div class="timeline-container">
+      <h1 class="current-cup-header">{{ running.name }}</h1>
+      <p class="server">
+        <span class="server-time-text">Server time </span>
+        <span class="server-time" id="server-time">{{ now }}</span>
+        <span class="server-timezone">Timezone: {{ config.timezone }}</span>
+      </p>
+      <ul class="timeline">
+        {%for event in events %}
+        <li>
+          <div class="direction-r">
+            <div class="flag-wrapper">
+              <a href="/races/{{event.id}}/" class="flag">{{ event.name }}</a>
+            </div>
+            <img class="event-flag" title="{{race.name}}" src="/media/{{ event.track.country.flag }}">
+            <div class="desc">{{ event.track.name }} | {{ event.startDate|date:config.nextRaceFormat }}</div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+  <div class="column col-6">
+    <div class="columns">
       {% for article in newsArticles %}
-      <div class="article">
+      <div class="column col-4">
         <a href="/news/{{article.id}}">
           {% if article.mediaFile %}
           <img class="article-image" src="{{article.mediaFile.url}}">
-          <h2 class="article-title">
+          <p class="article-title">
             {{ article.title }}
-          </h2>
+          </p>
           {% endif %}
         </a>
       </div>

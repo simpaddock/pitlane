@@ -1,0 +1,16 @@
+.social-links, .legal-links{
+  position: fixed;
+  top: 1em;
+}
+.legal-links{
+  right: 1em;
+}
+
+.social-links a i, .legal-links a{
+  color:white;
+  margin-right: 1em;
+}
+
+.social-links a i{
+  font-size: 15pt;
+}

@@ -1,0 +1,13 @@
+body{
+  color: white;
+  background: black;
+}
+//main content
+.main{
+  margin-top: 1em;
+}
+
+@import 'links.scss';
+@import 'navigation.scss';
+@import 'timeline.scss';
+@import 'articles.scss';
