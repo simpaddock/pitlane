@@ -596,6 +596,7 @@ def embedYoutube(request,argument: str):
 
 def sparkline(data, figsize=(4, 0.25), **kwags):
   data = list(data)
+  # based on https://markhneedham.com/blog/2017/09/23/python-3-create-sparklines-using-matplotlib/
 
   fig, ax = plt.subplots(1, 1, figsize=figsize, **kwags)
   ax.plot(data)
