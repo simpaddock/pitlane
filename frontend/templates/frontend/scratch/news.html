@@ -16,18 +16,18 @@
         {% endif %}
     </span>
 </div>
-<div class="news-article-content">
+<div class="column col-12">
+    <div class="columns">
     {% for article in articles %}
-    <div class="article no-featured">
-        <a href="/news/{{article.id}}">
-        {% if article.mediaFile %}
-        <img class="article-image" src="{{article.mediaFile.url}}">
-        <h2 class="article-title">
-            {{ article.title }}
-        </h2>
-        {% endif %}
-        </a>
+    <div class="column col-4 col-xs-12 article">
+      {% if article.mediaFile %}
+      <img class="article-image" src="{{article.mediaFile.url}}">
+      <a href="/news/{{article.id}}" class="article-title">
+        {{ article.title }}
+      </a>
+      {% endif %}
     </div>
     {% endfor %}
+    </div>
 </div>
 {% endblock %}

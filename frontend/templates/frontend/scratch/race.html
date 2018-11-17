@@ -47,6 +47,62 @@
     <embetty-video video-id="{{ streamLink | getYoutubeId}}" start-at="97" type="youtube"></embetty-video>
   {% endif %}
   {% for result in resultList %}
+  <div class="columns col-12 result-row medal-{{ result.position}} medal-{{result.finishstatus|lower}}">
+    <div class="medal medal-{{ result.position }} medal-{{result.finishstatus|lower}}">
+        <span class="position">
+            {% if result.position != "999" and result.finishstatus == "Finished Normally" %}
+                {{ result.position }}
+            {% endif %}
+        </span>
+    </div>    
+    <div class="column col-2 col-xs-10">
+        <div class="columns half-top-margin">
+            <div class="col-12">
+                <span>{{result.firstName}}</span>
+                <span class="driver-name">{{result.lastName}}</span>
+            </div>
+            <div class="col-12">
+                <span>{{result.team}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="column col-2 full-top-margin columns  entry-meta-container hide-xs">
+        <div class="column col-6">
+            <div class="driver-number">{{result.number | safe }} </div>
+        </div>
+        <div class="column col-6">
+            {{result.points}} P
+        </div>
+    </div>
+    <div class="column col-7 columns hide-xs">
+        <div class="column col-3 full-top-margin columns  entry-meta-container hide-xs centered">
+            {% if result.vehicleImage %}
+                <img class="car-vendor" src="{{result.vehicleImage.url }}">
+            {% endif %}
+            <span>{{result.vehicle}}</span>
+        </div>
+        <div class="column col-1 full-top-margin columns  entry-meta-container hide-xs centered">
+            {{result.laps}} L
+        </div>
+        <div class="column col-2 full-top-margin columns  entry-meta-container hide-xs centered">
+            {{result.time | time}}
+        </div>
+        <div class="column col-1 full-top-margin columns  entry-meta-container hide-xs centered">
+            {{result.stops}} S
+        </div>
+        <div class="column col-2 full-top-margin columns  entry-meta-container hide-xs centered">
+            <span>{{result.avg}} km/h</span>
+        </div>
+        {% if result.finishstatus != "Finished Normally" %}
+            <div class="column col-2 full-top-margin columns  entry-meta-container hide-xs centered">
+                <span>{{result.finishstatus|upper}}</span>
+            </div>
+        {% endif %}
+    </div>
+   
+  </div>
+  {% endfor %}
+  {% for result in resultList %}
   <div class="race-result-row medal-{{ result.position }} medal-{{result.finishstatus|lower}}" >
       <div class="result-absolute-align">
         <div class="medal medal-{{ result.position }} medal-{{result.finishstatus|lower}}">

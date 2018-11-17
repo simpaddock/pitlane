@@ -18,40 +18,61 @@
   {% endif %}
   {% spaceless %}
   {% for key, result in resultList %}
-  
-  <div class="race-result-row medal-{{ key | add:1 }}">
-    <div class="race-result-row-background">
-      <div class="result-absolute-align">
-        <div class="medal medal-{{ key | add:1 }}">
-            <span class="position">{{ key | add:1 }}</span>
-        </div> 
-      </div>
-      <div class="race-result-driver inline">
-       <div class="race-result-driver-names">
-         {% if isDriverStandings %}
+  <div class="columns col-12 result-row medal-{{ key | add:1 }}">
+    <div class="medal medal-{{ key | add:1 }}">
+      <span class="position">
+          {{ key | add:1 }}
+      </span>
+    </div>
+    <div class="column col-2 col-xs-10">
+      {% if isDriverStandings %}
+      <div class="columns half-top-margin">
+        <div class="col-12">
           <span>{{result.firstName}}</span>
-          <span>{{result.lastName}}</span>
-         {% endif %}
-         
-         {% if not isDriverStandings %}
+          <span class="driver-name">{{result.lastName}}</span>
+        </div>
+        <div class="col-12">
           <span>{{result.team}}</span>
-         {% endif %}
-       </div>
-       <div class="race-result-driver-team">
-          {% if isDriverStandings %}
-            <span>{{result.team}}</span>
-            <span>#{{result.number | safe }} </span>
-          {% endif %}
-          {% if not isDriverStandings %}
+        </div>
+      </div>
+      {% endif %}
+       
+      {% if not isDriverStandings %}
+        <div class="columns half-top-margin">
+          <div class="col-12 team-name">
+            {{result.team}}
+          </div>
+          <div class="col-12">
             {% if result.vehicleImage %}
               <img class="car-vendor" src="/media/{{result.vehicleImage}}">
             {% endif %}
             <span>{{result.vehicle}}</span>
-          {% endif %}
+          </div>
         </div>
+      {% endif %}
+    </div>
+    {% if isDriverStandings %}
+    <div class="column col-1 full-top-margin columns  entry-meta-container hide-xs">
+      <div class="column col-6">
+        {% if isDriverStandings %}
+          <div class="driver-number">{{result.number | safe }} </div>
+        {% endif %}
       </div>
-      {% for race in races %}
-        <div class="race-result-race-points inline medium centered">
+      <div class="column col-6">
+        {{result.sum}}
+      </div>
+    </div>
+    {% endif %} 
+    {% if not isDriverStandings %}
+    <div class="column col-1 full-top-margin columns hide-xs">
+      <div class="column col-6">
+        {{result.sum}}
+      </div>
+    </div>
+    {% endif %}
+    <div class="column col-8 columns hide-xs">
+        {% for race in races %}
+        <div class="column full-top-margin race-result-container">
           <a href="/races/{{race.id}}/">
             <span class="race-name">
               <img class="race-flag" title="{{race.name}}" src="/media/{{ race.track.country.flag }}">
@@ -82,14 +103,9 @@
           </a>
         </div>
       {% endfor %}
-      
-      
-      <div class="race-result-points race-result-sum inline small centered">
-        <span>{{result.sum}}</span>
-      </div>
-
+    </div>
   </div>
-</div>
+  
   {% endfor %}
   {% endspaceless %}
 {% endblock %}

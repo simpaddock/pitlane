@@ -12,6 +12,72 @@ h1 {
   text-transform: uppercase;
   color: #00aeef; }
 
+.pagination {
+  text-align: center; }
+
+.fa-rss {
+  color: orange; }
+
+.fa-twitter, .fa-twitter-square {
+  color: #1da1f2; }
+
+.fa-facebook-f, .fa-facebook-square {
+  color: #3b5998; }
+
+.fa-flipboard {
+  color: #c00; }
+
+.fa-get-pocket {
+  color: #ef4056; }
+
+.fa-reddit-square {
+  color: #ff4500; }
+
+.fa-pinterest {
+  color: #bd081c; }
+
+.fa-youtube {
+  color: #ff0000; }
+
+.share-links {
+  display: inline;
+  margin-left: 0.5em;
+  border-left: 1px solid white;
+  vertical-align: middle;
+  padding-left: 0.5em; }
+
+.share-links a i {
+  margin-right: 0.5em;
+  font-size: 15pt; }
+
+.news-article-content {
+  width: 84%; }
+
+.news-article-body {
+  line-height: 2; }
+
+.background-image {
+  background-image: url(/media/uploads/league/bg.jpg) !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  filter: grayscale(100%) opacity(70%);
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover; }
+
+label {
+  width: 20%;
+  display: inline-block; }
+
+.remarks {
+  margin-bottom: 1em; }
+
+.centered {
+  text-align: center; }
+
 a {
   color: white !important; }
 
@@ -92,7 +158,7 @@ a {
 .mobile-logo {
   width: 5em; }
 
-.navigation-button, .tab-item {
+.navigation-button {
   background: #323737;
   background-color: #323737;
   background-color: #323737;
@@ -274,3 +340,118 @@ a {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   background: rgba(0, 0, 0, 0.7); }
+
+.season {
+  display: inline; }
+
+.season-header {
+  display: inline;
+  cursor: pointer; }
+
+.season-infos {
+  margin-bottom: 0.5em; }
+
+.medal-1 {
+  border-color: gold transparent transparent transparent !important;
+  color: black; }
+
+.medal-2 {
+  border-color: silver transparent transparent transparent !important;
+  color: black; }
+
+.medal-3 {
+  border-color: #CD7F32 transparent transparent transparent !important;
+  color: white; }
+
+.medal-dns {
+  border-color: #5F8F0E transparent transparent transparent !important; }
+
+.medal-dnf {
+  border-color: #870e0e transparent transparent transparent !important; }
+
+.medal-dsq {
+  border-color: black transparent transparent transparent !important; }
+
+.medal {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4em 4em 0 0;
+  border-color: #00AEEF transparent transparent transparent; }
+
+.position {
+  position: relative;
+  top: -2.7em;
+  left: 0.5em;
+  font-size: 13pt; }
+
+.result-row {
+  color: white;
+  height: 4em;
+  border-top-width: 3px;
+  border-top-style: solid;
+  border-top-color: #00aeef;
+  margin-bottom: 1.5em; }
+
+.half-top-margin {
+  margin-top: 0.5em; }
+
+.full-top-margin {
+  margin-top: 1.2em; }
+
+.driver-number {
+  display: inline-block;
+  margin-right: 10px;
+  background: white;
+  color: black;
+  padding: 0.2em;
+  border: 1px solid #00aeef;
+  width: auto;
+  height: 27px;
+  text-align: center;
+  font-size: 10pt;
+  font-family: oswald;
+  font-weight: bolder;
+  letter-spacing: 1px;
+  top: -10px !important; }
+
+.driver-name {
+  margin-left: 0.2em;
+  text-transform: uppercase;
+  font-weight: bold; }
+
+.race-name {
+  display: block; }
+
+.race-flag {
+  height: 1.4em; }
+
+.race-result-race-points {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase; }
+
+.race-result-container {
+  margin-top: 0.8em;
+  text-align: center; }
+
+.entry-meta-container {
+  margin-left: 1em; }
+
+.car-vendor {
+  vertical-align: middle;
+  padding-right: 0.4em;
+  filter: invert(100%);
+  height: 20px; }
+
+.team-name {
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em; }
+
+.race-meta-entry {
+  display: block;
+  margin-bottom: 0.5em; }
+
+.race-meta-entry i {
+  padding-right: 1em; }

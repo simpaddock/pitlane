@@ -1,0 +1,31 @@
+.season{
+  display: inline;
+}
+.season-header{
+  display: inline;
+  cursor: pointer;
+}
+.season-infos{
+  margin-bottom: 0.5em;
+}
+.medal-1{
+  border-color: gold transparent transparent transparent !important;
+  color: black;
+}
+.medal-2{
+  border-color: silver transparent transparent transparent !important;
+  color: black;
+}
+.medal-3{
+  border-color: #CD7F32 transparent transparent transparent !important;
+  color: white;
+}
+.medal-dns{
+  border-color: #5F8F0E transparent transparent transparent !important;
+}
+.medal-dnf{
+  border-color: #870e0e transparent transparent transparent !important;
+}
+.medal-dsq{
+  border-color: black transparent transparent transparent !important;
+}
