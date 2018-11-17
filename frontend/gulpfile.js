@@ -1,7 +1,8 @@
 var gulp = require('gulp'), sass = require('gulp-sass');
+const theme = "scratch"
 gulp.task('css', function () {
 	// take files with extension .scss from /scss folder
-	return gulp.src('./scss/style.scss')
+	return gulp.src('./scss/'+theme+'/style.scss')
 		.pipe(sass({}).on('error', sass.logError)
 		)
 		// return into css folder
@@ -11,7 +12,8 @@ gulp.task('css', function () {
 
 gulp.task('default', ['css'], function() {
 	// watch for CSS changes
-	gulp.watch('./scss/*.scss', function() {
+	gulp.watch('./scss/'+theme+'/*.scss', function() {
+	
 		 // run styles upon changes
 		 gulp.run('css');
 	});

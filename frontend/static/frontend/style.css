@@ -1,4 +1,24 @@
-@charset "UTF-8";
+body {
+  font-family: Electrolize, sans-serif;
+  background-color: #000;
+  color: white; }
+
+.top-margin {
+  margin-top: 1em; }
+
+h1 {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00aeef; }
+
+a {
+  color: white !important; }
+
+.tab, .panel {
+  border: none;
+  margin-top: 0.5em; }
+
 /* electrolize-regular - latin */
 @font-face {
   font-family: 'Electrolize';
@@ -49,70 +69,36 @@
   src: local("Oswald Bold"), local("Oswald-Bold"), url("fonts/oswald-v16-latin-700.eot?#iefix") format("embedded-opentype"), url("fonts/oswald-v16-latin-700.woff2") format("woff2"), url("fonts/oswald-v16-latin-700.woff") format("woff"), url("fonts/oswald-v16-latin-700.ttf") format("truetype"), url("fonts/oswald-v16-latin-700.svg#Oswald") format("svg");
   /* Legacy iOS */ }
 
-body {
-  font: 100% Electrolize, sans-serif;
-  background-color: #000;
-  color: #D5D8DB;
-  margin-left: 20%;
-  margin-top: 1em;
-  width: 60%; }
-
-.background-image {
-  background-image: url(/media/uploads/league/bg.jpg) !important;
+.social-links, .legal-links {
   position: fixed;
-  left: 0;
-  top: 0;
-  z-index: -1;
-  filter: grayscale(100%) opacity(70%);
-  height: 100%;
-  width: 100%;
-  background-repeat: no-repeat;
-  background-size: cover; }
+  top: 1em; }
 
-a {
-  text-decoration: none;
-  color: white; }
+.legal-links {
+  right: 1em; }
 
-.body-content {
-  margin-top: 2em; }
-
-p a::before {
-  content: "» "; }
-
-h1 {
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #00aeef; }
-
-label {
-  width: 20%;
-  display: inline-block; }
-
-h1 small {
-  font-size: small !important;
+.social-links a i, .legal-links a {
   color: white;
-  font: 100% Electrolize, sans-serif !important;
-  font-size: 100%;
-  font-size: 10pt !important; }
+  margin-right: 1em; }
 
-.errorlist {
-  padding: 1em;
-  padding-left: 1em;
-  list-style: none;
-  font-weight: bold; }
+.social-links a i {
+  font-size: 15pt; }
 
-.navigation .logo {
+.navigation-logo {
   width: 100px;
   float: left;
-  margin-right: 1em;
+  margin-right: 1.9em;
   filter: brightness(100%) drop-shadow(0px 0px 5px white); }
 
-.navigation .navigation-button {
+.mobile-logo {
+  width: 5em; }
+
+.navigation-button, .tab-item {
   background: #323737;
+  background-color: #323737;
+  background-color: #323737;
   display: inline-block;
   padding: 1em;
-  color: #999B9D;
+  color: #999B9D !important;
   text-decoration: none;
   text-transform: uppercase;
   margin-left: -4px;
@@ -123,429 +109,22 @@ h1 small {
   border-top-style: solid;
   border-top-color: #00aeef; }
 
-.navigation .navigation-button:hover {
-  background-color: #7b8787;
-  background-color: #4d4f50; }
+.navigation-button:hover {
+  background-color: #4d4f50;
+  text-decoration: none; }
 
-.navigation .navigation-button-highlight {
+.navigation-button-highlight {
   background-color: #00AEEF;
-  color: white;
+  color: white !important;
   font-weight: bold; }
 
-.running-comp {
-  display: inline-block;
-  margin-left: 0.5em;
-  position: absolute; }
+.running-cup {
+  margin-left: 1em; }
 
-.comp-name {
+.running-cup .cup-name {
   display: block; }
-
-.next-race {
-  display: block; }
-
-.current-cup-header {
-  word-wrap: break-word;
-  margin-top: 0em; }
-
-.season-race {
-  display: table; }
-
-.season-race * {
-  display: table-cell; }
-
-.season-race-flag {
-  width: 4em; }
-
-.season a {
-  margin-left: 0.2em; }
-
-.seasons {
-  position: absolute;
-  z-index: 1000000;
-  height: auto;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.08em; }
-
-.season {
-  padding-top: 1em;
-  padding-bottom: 1em;
-  padding-right: 1em;
-  padding-left: 1em;
-  cursor: pointer; }
-
-.selected-season {
-  background-color: #00AEEF; }
-
-.season-is-running {
-  color: red;
-  animation: dot-blink 5s linear infinite; }
-
-@keyframes dot-blink {
-  50% {
-    opacity: 0; } }
-
-.map-flag {
-  width: 24px;
-  height: 12px;
-  padding-right: 0.1em; }
-
-.map-popup {
-  border-radius: 0px;
-  background: #323737;
-  color: #999B9D; }
-
-.race-date {
-  font-style: italic;
-  font-size: smaller;
-  display: block;
-  margin-bottom: 0.5em; }
-
-.race-link {
-  margin-top: 1em; }
-
-.leaflet-popup {
-  width: 220px; }
-
-.leaflet-popup-content-wrapper {
-  background: #323737 !important;
-  color: #999B9D !important; }
-
-.leaflet-popup-tip {
-  background: #999B9D !important; }
-
-.leaflet-control-container > .leaflet-left {
-  display: none; }
-
-.season-calendar {
-  margin-left: 0.2em; }
-
-.map-marker {
-  background: url(/static/frontend/images/marker-icon.png); }
-
-.result {
-  background: #232323;
-  color: white;
-  margin-bottom: 1em;
-  display: block; }
-
-.medal {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 4em 4em 0 0;
-  border-color: #00AEEF transparent transparent transparent; }
-
-.medal-1 {
-  border-color: gold transparent transparent transparent !important;
-  color: black; }
-
-.medal-2 {
-  border-color: silver transparent transparent transparent !important;
-  color: black; }
-
-.medal-3 {
-  border-color: #CD7F32 transparent transparent transparent !important;
-  color: white; }
-
-.medal-dns {
-  border-color: #5F8F0E transparent transparent transparent !important; }
-
-.medal-dnf {
-  border-color: #870e0e transparent transparent transparent !important; }
-
-.medal-dsq {
-  border-color: black transparent transparent transparent !important; }
-
-.position {
-  position: relative;
-  top: -2.7em;
-  left: 0.5em;
-  font-size: 13pt; }
-
-.result-cell {
-  display: inline-block;
-  height: 100%;
-  height: 50px;
-  margin-right: 1em;
-  line-height: 50px; }
-
-.result > *:nth-of-type(2) {
-  margin-left: 3.5em; }
-
-.result-str {
-  min-width: 80px; }
-
-.result-image > img {
-  height: 50%;
-  position: relative;
-  top: 0.4em; }
-
-.result-params {
-  font-size: 9pt;
-  text-overflow: ellipsis;
-  font-family: Monospace;
-  width: 100px; }
-
-.result-longstr {
-  min-width: 120px; }
-
-.result-int {
-  width: 12px; }
-
-.result-raw {
-  width: 200px; }
-
-.result-time {
-  width: 70px; }
-
-.result-float {
-  width: 40px; }
-
-.result-absolute-align {
-  position: absolute; }
-
-.dnf {
-  color: red;
-  text-transform: uppercase;
-  font-weight: bold; }
-
-.race-result-driver-number {
-  display: inline-block;
-  margin-right: 10px;
-  background: white;
-  color: black;
-  padding: 0.2em;
-  border: 1px solid #00aeef;
-  width: 19px;
-  height: 19px;
-  text-align: center;
-  font-size: 10pt;
-  font-family: oswald;
-  font-weight: bolder;
-  letter-spacing: 1px;
-  top: -10px !important; }
-
-.race-result-row {
-  width: 100%;
-  color: white;
-  height: 4em;
-  border-top-width: 3px;
-  border-top-style: solid;
-  border-top-color: #00aeef;
-  margin-bottom: 1.5em; }
-
-.inline {
-  width: 20%;
-  display: inline-block;
-  padding-right: 1em; }
-
-.centered {
-  text-align: center;
-  position: relative;
-  top: -1em; }
-
-.medium {
-  width: 7%; }
-
-.small {
-  width: 4%; }
-
-.race-result-driver {
-  margin-left: 60px;
-  padding: 0.5em;
-  width: 18%; }
-
-.race-result-driver-names {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; }
-
-.race-result-driver-names span:first-child {
-  padding-right: 4px; }
-
-.race-result-driver-names span:last-child {
-  text-transform: uppercase;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.08em; }
-
-.race-result-driver-team {
-  font-size: small;
-  padding-top: 0.5em;
-  letter-spacing: 0.08em; }
-
-.race-result-team-logo {
-  position: relative;
-  top: -1em;
-  left: 3.5em;
-  vertical-align: middle;
-  width: 35px;
-  margin-right: 0.5em; }
-
-.race-result-number {
-  width: 1%; }
-
-.race-result-vehicle {
-  width: 18%; }
-
-.race-result-avg {
-  width: 10%; }
-
-.race-result-finishstatus {
-  width: 5%; }
-
-.race-name {
-  display: block;
-  font-size: xx-small;
-  font-family: Electrolize; }
-
-.race-flag {
-  height: 2em; }
-
-.race-result-race-points {
-  width: 4%;
-  position: relative;
-  height: 100%;
-  top: -0.0em;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase; }
-
-.race-result-points {
-  width: 4%; }
-
-.race-result-sum {
-  font-family: 'Oswald', sans-serif;
-  color: white;
-  top: -9px;
-  padding-right: 0px; }
-
-.race-meta-entry {
-  display: block;
-  margin-bottom: 0.5em; }
-
-.race-meta-entry i {
-  padding-right: 1em; }
-
-.race-meta {
-  margin-bottom: 1em; }
-
-.car-vendor {
-  vertical-align: middle;
-  padding-right: 0.4em;
-  filter: invert(100%);
-  height: 20px; }
-
-.race-centered {
-  text-align: center;
-  position: relative;
-  top: -0.7em; }
-
-.social-links {
-  position: fixed;
-  top: 1em;
-  left: 1em; }
-
-.social-links a {
-  margin-right: 1em; }
-
-.social-links a i {
-  font-size: 15pt;
-  color: #fff; }
-
-.fa-rss {
-  color: orange; }
-
-.fa-twitter, .fa-twitter-square {
-  color: #1da1f2; }
-
-.fa-facebook-f, .fa-facebook-square {
-  color: #3b5998; }
-
-.fa-flipboard {
-  color: #c00; }
-
-.fa-get-pocket {
-  color: #ef4056; }
-
-.fa-reddit-square {
-  color: #ff4500; }
-
-.fa-pinterest {
-  color: #bd081c; }
-
-.fa-youtube {
-  color: #ff0000; }
-
-.share-links {
-  display: inline;
-  margin-left: 0.5em;
-  border-left: 1px solid white;
-  vertical-align: middle;
-  padding-left: 0.5em; }
-
-.share-links a i {
-  margin-right: 0.5em;
-  font-size: 15pt; }
-
-.articles {
-  min-width: 60%; }
-
-.articles h1 {
-  margin-top: 0em; }
-
-.article {
-  position: relative;
-  display: inline-flex; }
-
-.article h2.article-title {
-  position: absolute;
-  bottom: 0pt;
-  left: 0;
-  width: 187px;
-  font-size: 10pt;
-  overflow-wrap: break-word;
-  padding-left: 0.5em;
-  color: white;
-  background: black;
-  background: rgba(0, 0, 0, 0.7);
-  padding-right: 0.5em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  letter-spacing: 0.5px; }
-
-.article h2 span {
-  color: white;
-  background: black;
-  /* fallback color */
-  background: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  font-size: 9pt; }
-
-.article .article-image, .no-featured .article-image {
-  width: 200px;
-  height: 150px;
-  margin-bottom: 0.5em;
-  margin-right: 10px;
-  object-fit: cover;
-  object-position: top; }
-
-.pagination {
-  margin-bottom: 1em;
-  text-align: center; }
-
-.news-article-content {
-  width: 84%; }
-
-.news-article-body {
-  line-height: 2; }
-
-.timeline-container {
-  float: left;
-  width: 28.3%;
-  margin-right: 1em; }
 
 .server {
-  padding-bottom: 2em;
   font-size: small; }
 
 .server-timezone {
@@ -561,7 +140,8 @@ h1 small {
 
 /* ================ The Timeline ================ */
 .timeline {
-  position: relative; }
+  position: relative;
+  line-height: 1.0; }
 
 .timeline:before {
   position: absolute;
@@ -580,9 +160,6 @@ h1 small {
   background: linear-gradient(to bottom, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
   z-index: 5; }
 
-.timeline li {
-  padding-bottom: 1em; }
-
 .timeline li:after {
   content: "";
   display: block;
@@ -594,7 +171,8 @@ h1 small {
   position: relative;
   width: 100%;
   float: right;
-  left: 2em; }
+  left: 2em;
+  top: -1em; }
 
 .flag-wrapper {
   position: relative;
@@ -662,181 +240,37 @@ h1 small {
   .direction-r .desc {
     margin: 1em 4em 0 4em; } }
 
-.eu-cookies {
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  background: #ff6c00;
-  color: white;
-  z-index: 99999;
-  text-align: center;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em; }
-
-.eu-cookies-dismiss {
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-  text-transform: uppercase; }
-
-.legal-links {
-  position: fixed;
-  top: 1em;
-  right: 1em;
-  z-index: 99999; }
-
-.legal-links a:not(:last-child) {
-  padding-right: 0.5em; }
-
-/* Copyright 2013-2015 etc Chris Tabor. See https://github.com/christabor/css-progress-wizard/blob/master/LICENSE for details. */
-.flexer, .progress-indicator {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex; }
-
-.no-flexer, .progress-indicator.stacked {
-  display: block; }
-
-.no-flexer-element {
-  -ms-flex: 0;
-  -webkit-flex: 0;
-  -moz-flex: 0;
-  flex: 0; }
-
-.flexer-element, .progress-indicator > li {
-  -ms-flex: 1;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  flex: 1; }
-
-.progress-indicator {
-  margin: 0;
-  padding: 0;
-  font-size: 80%;
-  text-transform: uppercase;
+.article {
+  position: relative;
   margin-bottom: 1em; }
-  .progress-indicator > li {
-    list-style: none;
-    text-align: center;
-    width: auto;
-    padding: 0;
-    margin: 0;
-    position: relative;
-    text-overflow: ellipsis;
-    color: #bbb;
-    display: block; }
-    .progress-indicator > li:hover {
-      color: #6f6f6f; }
-  .progress-indicator > li .bubble {
-    border-radius: 1000px;
-    width: 20px;
-    height: 20px;
-    background-color: #bbb;
-    display: block;
-    margin: 0 auto 0.5em auto;
-    border-bottom: 1px solid #888888; }
-  .progress-indicator > li .bubble:before,
-  .progress-indicator > li .bubble:after {
-    display: block;
-    position: absolute;
-    top: 9px;
-    width: 100%;
-    height: 3px;
-    content: '';
-    background-color: #bbb; }
-  .progress-indicator > li .bubble:before {
-    left: 0; }
-  .progress-indicator > li .bubble:after {
-    right: 0; }
-  .progress-indicator > li:first-child .bubble:before,
-  .progress-indicator > li:first-child .bubble:after {
-    width: 50%;
-    margin-left: 50%; }
-  .progress-indicator > li:last-child .bubble:before,
-  .progress-indicator > li:last-child .bubble:after {
-    width: 50%;
-    margin-right: 50%; }
-  .progress-indicator > li.completed {
-    color: #65d074; }
-    .progress-indicator > li.completed .bubble {
-      background-color: #65d074;
-      color: #65d074;
-      border-color: #247830; }
-      .progress-indicator > li.completed .bubble:before, .progress-indicator > li.completed .bubble:after {
-        background-color: #65d074;
-        border-color: #247830; }
-  .progress-indicator > li.active {
-    color: #337AB7; }
-    .progress-indicator > li.active .bubble {
-      background-color: #337AB7;
-      color: #337AB7;
-      border-color: #122a3f; }
-      .progress-indicator > li.active .bubble:before, .progress-indicator > li.active .bubble:after {
-        background-color: #337AB7;
-        border-color: #122a3f; }
-  .progress-indicator > li a:hover .bubble {
-    background-color: #5671d0;
-    color: #5671d0;
-    border-color: #1f306e; }
-    .progress-indicator > li a:hover .bubble:before, .progress-indicator > li a:hover .bubble:after {
-      background-color: #5671d0;
-      border-color: #1f306e; }
-  .progress-indicator > li.danger .bubble {
-    background-color: #d3140f;
-    color: #d3140f;
-    border-color: #440605; }
-    .progress-indicator > li.danger .bubble:before, .progress-indicator > li.danger .bubble:after {
-      background-color: #d3140f;
-      border-color: #440605; }
-  .progress-indicator > li.warning .bubble {
-    background-color: #edb10a;
-    color: #edb10a;
-    border-color: #5a4304; }
-    .progress-indicator > li.warning .bubble:before, .progress-indicator > li.warning .bubble:after {
-      background-color: #edb10a;
-      border-color: #5a4304; }
-  .progress-indicator > li.info .bubble {
-    background-color: #5b32d6;
-    color: #5b32d6;
-    border-color: #25135d; }
-    .progress-indicator > li.info .bubble:before, .progress-indicator > li.info .bubble:after {
-      background-color: #5b32d6;
-      border-color: #25135d; }
-  .progress-indicator.stacked > li {
-    text-indent: -10px;
-    text-align: center;
-    display: block; }
-  .progress-indicator.stacked > li .bubble:before,
-  .progress-indicator.stacked > li .bubble:after {
-    left: 50%;
-    margin-left: -1.5px;
-    width: 3px;
-    height: 100%; }
-  .progress-indicator.stacked .stacked-text {
-    position: relative;
-    z-index: 10;
-    top: 0;
-    margin-left: 60% !important;
-    width: 45% !important;
-    display: inline-block;
-    text-align: left;
-    line-height: 1.2em; }
-  .progress-indicator.stacked > li a {
-    border: none; }
-  .progress-indicator.stacked.nocenter > li .bubble {
-    margin-left: 0;
-    margin-right: 0; }
-  .progress-indicator.stacked.nocenter > li .bubble:before,
-  .progress-indicator.stacked.nocenter > li .bubble:after {
-    left: 10px; }
-  .progress-indicator.stacked.nocenter .stacked-text {
-    width: auto !important;
-    display: block;
-    margin-left: 40px !important; }
 
-@media handheld, screen and (max-width: 400px) {
-  .progress-indicator {
-    font-size: 60%; } }
+.article-image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
+  height: 200px; }
+
+.article-title:after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; }
+
+.article-title {
+  display: block;
+  position: absolute;
+  width: 100%;
+  color: #fff;
+  left: 0;
+  bottom: 0;
+  padding: 1em;
+  font-weight: 700;
+  z-index: 2;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.7); }

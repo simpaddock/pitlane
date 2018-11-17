@@ -42,12 +42,10 @@
 </div>
 <script>
   var dateDOM = document.getElementById("server-time")
-  var initialDate = dateDOM.innerText
-  var currentMilliseconds = parseFloat(initialDate)
+  var initialDate = new Date(dateDOM.innerText)
   window.setInterval(function(){
-    currentMilliseconds += 1000
-    var newDate = new Date(currentMilliseconds)
-    dateDOM.innerText = newDate.toUTCString()
+    initialDate.setSeconds(initialDate.getSeconds() + 1);
+    dateDOM.innerText = initialDate.toLocaleString({"timezone": "{{ config.timezone }}"})
   }, 1000)
 </script>
 {% endblock %}

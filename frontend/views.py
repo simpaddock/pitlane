@@ -75,7 +75,7 @@ def getRoutes():
   routes["about"] = "about"
   if LEAGUECONFIG["pitlane"] is not None:
     routes[LEAGUECONFIG["pitlane"]] = "Forum"
-  routes["rules"] = "Reglement"
+  routes["rules"] = "Rules"
   routes["incidentreport"] = "Incident report"
   return routes
 
@@ -101,7 +101,9 @@ def renderWithCommonData(request, template, context):
   return render(request, template, context)
 
 def get_index(request):
-  now = datetime.now(tz=pytz.timezone(LEAGUECONFIG["timezone"])).timestamp()*1000
+  tz = pytz.timezone(LEAGUECONFIG["timezone"])
+  gmt = datetime.now(tz)
+  now = str(gmt.replace(microsecond=0))
   races = Race.objects.all().filter(season=getCurrentCup()).order_by("startDate")
   newsArticles = NewsArticle.objects.all().order_by("-date")[:10]
   textBlocks = TextBlock.objects.filter(context='landing')

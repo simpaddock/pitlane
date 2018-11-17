@@ -1,12 +1,21 @@
 body{
+  font-family: Electrolize, sans-serif;;
+  background-color: #000;
   color: white;
-  background: black;
 }
 //main content
-.main{
+.top-margin{
   margin-top: 1em;
 }
+h1{
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00aeef;
+}
 
+@import 'reset.scss';
+@import 'fonts.scss';
 @import 'links.scss';
 @import 'navigation.scss';
 @import 'timeline.scss';

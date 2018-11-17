@@ -1,4 +1,12 @@
 
+.server {
+  font-size: small;
+}
+.server-timezone {
+  display: block;
+}
+
+
 //timeline
 //based on https://codepen.io/NilsWe/pen/FemfK/
 
@@ -14,6 +22,7 @@
 
 .timeline {
   position: relative;
+  line-height: 1.0;
 }
 
 .timeline:before {
@@ -34,11 +43,6 @@
   
   z-index: 5;
 }
-
-.timeline li {
-  padding-bottom: 1em;
-}
-
 .timeline li:after {
   content: "";
   display: block;
@@ -53,6 +57,7 @@
   width: 100%;
   float: right;
   left: 2em;
+  top: -1em;
 }
 
 .flag-wrapper {

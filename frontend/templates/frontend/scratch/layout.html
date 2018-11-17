@@ -25,9 +25,9 @@
 </head>
 
 <body>
-  <div class="container main">
+  <div class="container top-margin">
     <div class="columns">
-      <div class="column col-2">
+      <div class="column col-2 hide-xs">
         <div class="social-links">
           {% for class, button in config.socialButtons.items %}
           <a target="_blank" href="{{button}}">
@@ -36,7 +36,7 @@
           {% endfor %}
         </div>
       </div>
-      <div class="column col-8">
+      <div class="column col-8 col-xs-12">
         <header class="navbar hide-md">
           <section class="navbar-section">
             <a href="/">
@@ -45,7 +45,9 @@
             {% for route_key, route_value in routes.items %}
             <a href="{% if " http " in route_key %}{{ route_key }}{% else %}/{{ route_key }}/{% endif %} " class="navigation-button">{{ route_value }}</a>
             {% endfor %}
-
+            <a href="/signup" class="navigation-button navigation-button-highlight">
+              Sign up
+            </a>
             <div class="running-cup">
               {% if running.nextRace %} NEXT
               <span class="cup-name">{{ running.nextRace.season.name }} | {{ running.nextRace.startDate|date:config.nextRaceFormat }}</span>
@@ -54,24 +56,31 @@
             </div>
           </section>
         </header>
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Comments</div>
-          </div>
+        <!-- mobile Navigation -->
+        <div class="panel show-md">
           <div class="panel-nav">
-            <!-- navigation components: tabs, breadcrumbs or pagination -->
-          </div>
-          <div class="panel-body">
-            <!-- contents -->
-          </div>
-          <div class="panel-footer">
-            <!-- buttons or inputs -->
+            <ul class="tab tab-block">
+              {% for route_key, route_value in routes.items %}
+              <li class="tab-item"><a href="{% if " http " in route_key %}{{ route_key }}{% else %}/{{ route_key }}/{% endif %}">{{ route_value }}</a></li>
+              {% endfor %}
+              <li class="tab-item"><a href="/signup">Sign up</a></li>
+            </ul>
+            <ul class="tab tab-block">
+              {% for class, button in config.socialButtons.items %}
+              <li class="tab-item">
+                <a target="_blank" href="{{button}}">
+                  <i class="{{class}}"></i>
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
-
-        {% block content %} {% endblock %}
+        <div class="top-margin"></div>
+          {% block content %} {% endblock %}
+        </div>
       </div>
-      <div class="column col-2">
+      <div class="column hide-xs col-2">
         <div class="legal-links">
           <a href="/privacy">Privacy</a>
           <a href="/imprint">Imprint</a>
