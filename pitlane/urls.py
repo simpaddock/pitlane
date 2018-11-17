@@ -43,6 +43,7 @@ urlpatterns = [
     path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers),
     path('seasons/<int:id>/teams/', views.get_seasonStandingsTeams),
     path('races/<int:id>/', views.get_raceDetail),
+    path('driver/<int:id>/', views.getDriverStats),
     path('embed/video/youtube/<argument>/', views.embedYoutube),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),

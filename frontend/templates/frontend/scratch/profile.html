@@ -1,0 +1,24 @@
+{% extends baseLayout %} {% load static %} {% block content %}
+<h1>{{ title }}</h1>
+<div class="columns">
+  <div  class="column col-2">
+    Avg/best/worse: {{ avgPosition }}./{{ bestPosition }}./{{ worsePosition }}.
+  </div>  
+  <div  class="column col-10">
+    <img src="data:image/png;base64,{{pointsSparkline}}"/>
+  </div>  
+  <div  class="column col-2">
+    Non finished races: {{ dnfCount}}
+  </div>  
+  <div  class="column col-10">
+    <img src="data:image/png;base64,{{dnfSparkline}}"/>
+  </div>
+</div>
+{{ mostCommonPositionsCount }}
+<h2>Teams</h2>
+<ul>
+  {% for team in teams %}
+  <li>{{ team }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

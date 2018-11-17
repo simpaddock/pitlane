@@ -3,13 +3,15 @@
   var seasons = JSON.parse('{{ seasonsJSON |safe }}')
 </script>
 <div class="columns vue-seasons ">
-
-  <div class="column col-12" v-if="currentSeason !== null">
-    <span v-for="(season, season_key ) in seasons" :key="season_key" v-on:click.prevent="updateMap(season.id)">
+  <div class="column col-12">
+    <div>
+      Choose a championship
+    </div>
+    <span class="season-header-container" v-for="(season, season_key ) in seasons" :key="season_key" v-on:click.prevent="updateMap(season.id)">
       <h1 class="season-header" v-if="season.id === selectedSeason">[[ season.name ]] </h1>
-      <h2 class="season-header" v-else>[[ season.name ]] </h2>
+      <h3 class="season-header" v-else>[[ season.name ]] </h3>
     </span>
-    <div class="season-infos">
+    <div class="season-infos" v-if="currentSeason !== null">
       <span v-if="currentSeason.isRunning">Running </span>
       <span v-if="!currentSeason.isRunning">Finished </span> / 
       <a :href="'/seasons/'+currentSeason.id+'/drivers/'">[[ currentSeason.drivers.length ]] drivers</a> /
@@ -39,7 +41,7 @@
         'selectedSeason': null
       }
     },
-    created: function () {
+    mounted: function () {
       if (this.seasons.length > 0) {
         this.updateMap(this.seasons[0].id)
       }

@@ -27,10 +27,12 @@
     <div class="column col-2 col-xs-10">
       {% if isDriverStandings %}
       <div class="columns half-top-margin">
+        <a href="/driver/{{result.id}}">
         <div class="col-12">
           <span>{{result.firstName}}</span>
           <span class="driver-name">{{result.lastName}}</span>
         </div>
+        </a>
         <div class="col-12">
           <span>{{result.team}}</span>
         </div>

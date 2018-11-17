@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   font-family: Electrolize, sans-serif;
   background-color: #000;
@@ -348,7 +349,15 @@ a {
   display: inline;
   cursor: pointer; }
 
+.season-header-container:after {
+  content: " • ";
+  font-size: 20pt; }
+
+.season-header-container:last-of-type:after {
+  content: ''; }
+
 .season-infos {
+  margin-top: 0.5em;
   margin-bottom: 0.5em; }
 
 .medal-1 {
@@ -371,6 +380,23 @@ a {
 
 .medal-dsq {
   border-color: black transparent transparent transparent !important; }
+
+.leaflet-popup {
+  width: 220px; }
+
+.leaflet-popup-content-wrapper {
+  background: #323737 !important;
+  color: white !important;
+  border-radius: 0px !important;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: #00aeef; }
+
+.leaflet-popup-tip {
+  background: #323737 !important; }
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+  background: black !important; }
 
 .medal {
   width: 0;
@@ -455,3 +481,30 @@ a {
 
 .race-meta-entry i {
   padding-right: 1em; }
+
+.eu-cookies {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background: #ff6c00;
+  color: white;
+  z-index: 99999;
+  text-align: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em; }
+
+.eu-cookies-dismiss {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  text-transform: uppercase; }
+
+.legal-links {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 99999; }
+
+.legal-links a:not(:last-child) {
+  padding-right: 0.5em; }

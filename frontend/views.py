@@ -20,6 +20,11 @@ from icalendar import Calendar, Event
 import pytz
 from datetime import datetime, date, time
 from urllib.parse import urljoin
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
@@ -47,6 +52,7 @@ COLUMNS = {
     ('controlandaids', None),
   ]),
   "drivers": OrderedDict([
+    ('id', "id"), 
     ('firstName', "firstName"),
     ('lastName', "lastName"),
     ('team', "team"),
@@ -587,3 +593,58 @@ def embedYoutube(request,argument: str):
   r = get(url)
   contentType = r.headers['content-type']
   return HttpResponse(r.content, content_type=contentType)
+
+def sparkline(data, figsize=(4, 0.25), **kwags):
+  data = list(data)
+
+  fig, ax = plt.subplots(1, 1, figsize=figsize, **kwags)
+  ax.plot(data)
+  for k,v in ax.spines.items():
+      v.set_visible(False)
+  ax.set_xticks([])
+  ax.set_yticks([])
+
+  plt.plot(len(data) - 1, data[len(data) - 1], 'r.')
+
+  ax.fill_between(range(len(data)), data, len(data)*[min(data)], alpha=0.1)
+
+  img = BytesIO()
+  plt.savefig(img, transparent=True, bbox_inches='tight')
+  img.seek(0)
+  plt.close()
+
+  return base64.b64encode(img.read()).decode("UTF-8")
+
+def getDriverStats(request, id: int):
+  from statistics import mean
+  from math import floor
+  driver = Driver.objects.filter(id=id).get()
+  positions = list(map(int, DriverRaceResultInfo.objects.filter(driverRaceResult__driverEntry__driver_id=id,name='position').values_list('value', flat=True)))
+  points = list(map(int, DriverRaceResultInfo.objects.filter(driverRaceResult__driverEntry__driver_id=id,name='points').values_list('value', flat=True)))
+  nonOkayRacesRaw =  DriverRaceResultInfo.objects.filter(driverRaceResult__driverEntry__driver_id=id,name='finishstatus').values_list('value', flat=True)
+  raceResults =[]
+  for nonOkayRaceRaw  in nonOkayRacesRaw:
+    if "Normally" in nonOkayRaceRaw:
+      raceResults.append(0)
+    else:
+      raceResults.append(1)
+      
+  teamEntries = DriverEntry.objects.filter(driver_id=id).values_list('teamEntry__team',named=True)
+  teams = Team.objects.filter(pk__in=teamEntries)
+  title = "{0}, {1}".format(driver.lastName, driver.firstName)
+  return renderWithCommonData(request, 'frontend/profile.html', {
+    "title": title,
+    "avgPosition": floor(mean(positions)),
+    "worsePosition": max(positions),
+    "bestPosition": min(positions),
+    "teams": teams,
+    "pointsSparkline": sparkline(points),
+    "positionSparkline": sparkline(positions),
+    "dnfSparkline": sparkline(raceResults),
+    "dnfCount": raceResults.count(1),
+    "sparklines": [
+      sparkline(positions),
+      sparkline(points),
+      sparkline(raceResults)
+    ]
+  })

@@ -57,10 +57,12 @@
     </div>    
     <div class="column col-2 col-xs-10">
         <div class="columns half-top-margin">
-            <div class="col-12">
-                <span>{{result.firstName}}</span>
-                <span class="driver-name">{{result.lastName}}</span>
-            </div>
+            <a href="/driver/{{result.id}}">
+                <div class="col-12">
+                    <span>{{result.firstName}}</span>
+                    <span class="driver-name">{{result.lastName}}</span>
+                </div>
+            </a>
             <div class="col-12">
                 <span>{{result.team}}</span>
             </div>
@@ -101,63 +103,6 @@
     </div>
    
   </div>
-  {% endfor %}
-  {% for result in resultList %}
-  <div class="race-result-row medal-{{ result.position }} medal-{{result.finishstatus|lower}}" >
-      <div class="result-absolute-align">
-        <div class="medal medal-{{ result.position }} medal-{{result.finishstatus|lower}}">
-            
-            {% if result.position != "999" and result.finishstatus == "Finished Normally" %}
-            <span class="position">{{ result.position }}</span>
-            {% endif %}
-        </div> 
-      </div>
-      <div class="race-result-driver inline">
-       <div class="race-result-driver-names" title="{{result.firstName}} {{result.lastName}}">
-          <span>{{result.firstName}}</span>
-          <span>{{result.lastName}}</span>
-       </div>
-       <div class="race-result-driver-team">
-          <span title="{{result.team}}">{{result.team}}</span>
-          <span>#{{result.number | safe }}</span>
-        </div>
-      </div>
-
-      <div class="race-result-points inline medium centered">
-          <span>{{result.points}} P</span>
-      </div>
-      <div class="race-result-vehicle medium inline centered">
-          {% if result.vehicleImage %}
-            <img class="car-vendor" src="{{result.vehicleImage.url }}">
-          {% endif %}
-          <span>{{result.vehicle}}</span>
-      </div>
-      
-      <div class="race-result-laps inline small centered">
-          <span>{{result.laps}} L</span>
-      </div>
-      
-      <div class="race-result-time medium inline centered">
-          <span>{{result.time | time}}</span>
-      </div>
-
-      <div class="race-result-stops inline small centered">
-          <span>{{result.stops}} S</span>
-      </div>
-
-      <div class="race-result-avg inline centered">
-          <span>{{result.avg}} km/h</span>
-      </div>
-
-
-
-      {% if result.finishstatus != "Finished Normally" %}
-        <div class="race-result-avg inline centered">
-            <span>{{result.finishstatus|upper}}</span>
-        </div>
-      {% endif %}
-  </div>
-
   {% endfor %}
 {% endspaceless %}
 {% endblock %}
