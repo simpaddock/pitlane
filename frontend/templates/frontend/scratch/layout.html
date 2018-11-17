@@ -18,9 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <meta data-embetty-server="/embed">
   <script async src="{% static 'frontend/embetty.js' %}"></script>
-  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <link rel="stylesheet" href="{% static 'frontend/spectre.min.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'frontend/style.css' %}">
 </head>
 
@@ -61,7 +59,7 @@
           <div class="panel-nav">
             <ul class="tab tab-block">
               {% for route_key, route_value in routes.items %}
-              <li class="tab-item"><a href="{% if " http " in route_key %}{{ route_key }}{% else %}/{{ route_key }}/{% endif %}">{{ route_value }}</a></li>
+              <li class="tab-item"><a href="{% if "http" in route_key %}{{ route_key }}{% else %}/{{ route_key }}/{% endif %}">{{ route_value }}</a></li>
               {% endfor %}
               <li class="tab-item"><a href="/signup">Sign up</a></li>
             </ul>
