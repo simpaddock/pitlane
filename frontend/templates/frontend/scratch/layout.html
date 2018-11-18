@@ -41,7 +41,7 @@
               <img src="{{ config.logo }}" class="navigation-logo">
             </a>
             {% for route_key, route_value in routes.items %}
-            <a href="{% if " http " in route_key %}{{ route_key }}{% else %}/{{ route_key }}/{% endif %} " class="navigation-button">{{ route_value }}</a>
+            <a href="{% if "http" in route_key %}{{ route_key }}{% else %}/{{ route_key }}/{% endif %} " class="navigation-button">{{ route_value }}</a>
             {% endfor %}
             <a href="/signup" class="navigation-button navigation-button-highlight">
               Sign up
