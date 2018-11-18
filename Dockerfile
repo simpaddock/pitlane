@@ -6,4 +6,4 @@ ADD requirements.txt /code/
 RUN pip install -r requirements.txt
 ADD . /code/
 expose 8000
-CMD ["gunicorn", "pitlane.wsgi"]
+CMD ["gunicorn", "pitlane.wsgi", "--timeout", "600"]
