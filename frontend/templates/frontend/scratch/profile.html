@@ -1,24 +1,35 @@
-{% extends baseLayout %} {% load static %} {% block content %}
+{% extends baseLayout %} {% load static %} 
+{% load frontend_extras %} {% block content %}
 <h1>{{ title }}</h1>
-<div class="columns">
-  <div  class="column col-2">
-    Avg/best/worse: {{ avgPosition }}./{{ bestPosition }}./{{ worsePosition }}.
+
+<div class="columns remarks">
+  <div  class="column col-3">
+    Avg/best/worse: {{ avgPosition |position }}/{{ bestPosition |position  }}/{{ worsePosition |position  }}.
   </div>  
-  <div  class="column col-10">
+  <div  class="column col-9">
     <img src="data:image/png;base64,{{pointsSparkline}}"/>
   </div>  
-  <div  class="column col-2">
+  <div  class="column col-3">
     Non finished races: {{ dnfCount}}
   </div>  
-  <div  class="column col-10">
+  <div  class="column col-9">
     <img src="data:image/png;base64,{{dnfSparkline}}"/>
   </div>
+  <div  class="column col-3">
+    Attended races: {{ racesCount }}
+  </div>  
 </div>
-{{ mostCommonPositionsCount }}
+
 <h2>Teams</h2>
 <ul>
-  {% for team in teams %}
-  <li>{{ team }}</li>
+  {% for entry in driverEntries %}
+  <a href="/seasons/{{entry.teamEntry.season.id}}/teams/"><li>{{ entry}} ({{entry.teamEntry.season}})</li></a>
+  {% endfor %}
+</ul>
+<h2>Seasons</h2>
+<ul>
+  {% for season in seasons %}
+  <a href="/seasons/{{season.id}}/drivers/"><li>{{ season }}</li></a>
   {% endfor %}
 </ul>
 {% endblock %}

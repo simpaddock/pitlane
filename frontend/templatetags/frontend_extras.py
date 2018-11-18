@@ -27,3 +27,15 @@ def indexOrDNS(list, i):
 @register.filter
 def getYoutubeId(url):
   return url.replace("https://www.youtube.com/watch?v=","")
+
+@register.filter
+def position(number: int):
+  replacements = {
+    1: "1st",
+    2: "2nd",
+    3: "3rd"
+  }
+  if number in replacements:
+    return replacements[number]
+  else:
+    return "{0}th".format(number)

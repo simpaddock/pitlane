@@ -437,49 +437,6 @@ def get_seasonStandingsTeams(request, id: int):
   })
 
 #@cache_page(60 * 15)
-def get_raceBanner(request, id: int):
-  race = Race.objects.filter(pk=id).get()
-  schedule = TextBlock.objects.filter(title="Race Schedule", season_id=race.season.pk).first()
-  if schedule is None: # we need a schedule...
-    raise Http404()
-  data = {
-    "raceName": race.name,
-    "startDate": "Start " + race.startDate.strftime(LEAGUECONFIG["dateFormat"]),
-    "endDate": "End " + race.startDate.strftime(LEAGUECONFIG["dateFormat"]),
-    "schedule": schedule.plainText,
-    "url": LEAGUECONFIG["url"],
-  }
-  blocks = LEAGUECONFIG["bannerConfig"]
-  img = Image.new('RGBA', (1920, 1080), (0,0,0,0))
-  race = Race.objects.filter(pk=id).get()
-  draw = ImageDraw.Draw(img)
-  for block in blocks:
-    if block["type"].lower() == "image":
-      blockImage = Image.open(MEDIA_ROOT + block["path"], 'r')
-      wasResized = False
-      if block["filter"] is not None:
-        blockImage = blockImage.convert(block["filter"])
-      if block["size"] is not None:
-        blockImage = blockImage.resize(tuple(block["size"]))
-        wasResized = True
-      if wasResized:
-        img.paste(blockImage, tuple(block["position"]), blockImage) # only use the transparency map if the size was altered
-      else:
-        img.paste(blockImage, tuple(block["position"]))
-    if block["type"].lower() == "text":
-      text = data[block["text"]]
-      draw.text(tuple(block["position"]), text, font=ImageFont.truetype( size=int(block["fontSize"]), font=STATIC_ROOT + block["fontPath"]), fill=tuple(block["fontColor"]))
-    if block["type"].lower() == "multilinetext":
-      text = data[block["text"]]
-      draw.multiline_text(tuple(block["position"]), text, font=ImageFont.truetype( size=int(block["fontSize"]), font=STATIC_ROOT + block["fontPath"]), fill=tuple(block["fontColor"]))
-    
-
-      
-  response = HttpResponse(content_type="image/png")
-  img.save(response, "PNG")
-  return response
-
-#@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
@@ -620,6 +577,9 @@ def getDriverStats(request, id: int):
   from statistics import mean
   from math import floor
   driver = Driver.objects.filter(id=id).get()
+  races = DriverRaceResult.objects.filter(driverEntry__driver_id=id).count()
+  seasonsAttended = DriverEntry.objects.filter(driver_id=id).values_list('teamEntry__season',named=True)
+  
   positions = list(map(int, DriverRaceResultInfo.objects.filter(driverRaceResult__driverEntry__driver_id=id,name='position').values_list('value', flat=True)))
   points = list(map(int, DriverRaceResultInfo.objects.filter(driverRaceResult__driverEntry__driver_id=id,name='points').values_list('value', flat=True)))
   nonOkayRacesRaw =  DriverRaceResultInfo.objects.filter(driverRaceResult__driverEntry__driver_id=id,name='finishstatus').values_list('value', flat=True)
@@ -630,19 +590,22 @@ def getDriverStats(request, id: int):
     else:
       raceResults.append(1)
       
-  teamEntries = DriverEntry.objects.filter(driver_id=id).values_list('teamEntry__team',named=True)
-  teams = Team.objects.filter(pk__in=teamEntries)
+  driverEntries = DriverEntry.objects.filter(driver_id=id)
+  seasons = Season.objects.filter(pk__in=seasonsAttended)
   title = "{0}, {1}".format(driver.lastName, driver.firstName)
   return renderWithCommonData(request, 'frontend/profile.html', {
     "title": title,
     "avgPosition": floor(mean(positions)),
     "worsePosition": max(positions),
     "bestPosition": min(positions),
-    "teams": teams,
+    "driverEntries": driverEntries,
+    "seasons": seasons,
     "pointsSparkline": sparkline(points),
     "positionSparkline": sparkline(positions),
     "dnfSparkline": sparkline(raceResults),
     "dnfCount": raceResults.count(1),
+    "racesCount": races,
+    "driver": driver,
     "sparklines": [
       sparkline(positions),
       sparkline(points),
