@@ -3,12 +3,14 @@
   <div class="column col-3 hide-md">
     {% if running is not None and events.count != 0%}
     <div class="timeline-container">
-      <h1 class="current-cup-header">{{ running.name }}</h1>
-      <p class="server">
-        <span class="server-time-text">Server time </span>
-        <span class="server-time" id="server-time">{{ now }}</span>
-        <span class="server-timezone">Timezone: {{ config.timezone }}</span>
-      </p>
+      <h1 class="current-cup-header">{{ running.name }}</h1>  
+      {% if config.features.servertime %}
+        <p class="server">
+          <span class="server-time-text">Server time </span>
+          <span class="server-time" id="server-time">{{ now }}</span>
+          <span class="server-timezone">Timezone: {{ config.timezone }}</span>
+        </p>
+        {% endif %}
       <ul class="timeline">
         {%for event in events %}
         <li>

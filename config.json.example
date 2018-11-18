@@ -13,6 +13,9 @@
     "imprint": "",
     "gdpr": ""
   },
+  "features": {
+    "servertime": false
+  },
   "staticSignup": false,
   "embettyUrl": "http://localhost:3000/",
   "database": {
