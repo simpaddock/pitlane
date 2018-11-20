@@ -281,7 +281,7 @@ class DriverEntry(models.Model):
     return "#{0}: {1}, {2}: {3}".format(self.driverNumber, self.driver.lastName, self.driver.firstName, self.teamEntry.team.name)
     
   def clean(self):
-    if DriverEntry.objects.filter(teamEntry__season=self.teamEntry.season, driverNumber=self.driverNumber).count() != 0:
+    if DriverEntry.objects.filter(teamEntry__season=self.teamEntry.season, driverNumber=self.driverNumber).exclude(pk=self.id).count() != 0:
       raise ValidationError("An entry with that number already exists")
 
 
