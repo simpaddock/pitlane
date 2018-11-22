@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registration, Incident, Race, Season, DriverEntry
+from .models import Registration, Incident, Race, Season, DriverEntry, GenericPrivacyAccept
 
 class RegistrationForm(forms.ModelForm): 
   class Meta:
@@ -10,8 +10,12 @@ class RegistrationForm(forms.ModelForm):
     if self.instance:
         self.fields['season'].queryset = Season.objects.filter(isRunning=True,isOpen=True)
 
-class SignUpStatusForm(forms.Form):
-  token = forms.CharField(label='Token', max_length=100)
+class GenericPrivacyAcceptAcceptForm(forms.ModelForm): 
+  class Meta:
+    model = GenericPrivacyAccept
+    fields = ['email', 'givenName', 'familyName', 'privacyAccept']
+  def __init__(self, *args, **kwargs):
+    super(GenericPrivacyAcceptAcceptForm, self).__init__(*args, **kwargs)
 
 class IncidentForm(forms.ModelForm): 
   class Meta:

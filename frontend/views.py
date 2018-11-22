@@ -362,6 +362,7 @@ def getTeamStandings(id: int):
     viewList[teamIndex]["sum"] =teamPointSum
   return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
+
 def getDriversStandings(id: int):
   races = Race.objects.filter(season_id = id).order_by('startDate') # DriverRaceResult.objects.filter(driverEntry_id=driverEntry.id)
   viewList = {}
@@ -433,8 +434,12 @@ def get_seasonStandingsTeams(request, id: int):
     "races": racesRaw,
     "title": "Team standing - " + season.name + titleAttachment,
     "season": season,
-    "textBlocks": TextBlock.objects.filter(season_id=id, context="tstandings")
+    "textBlocks": TextBlock.objects.filter(season_id=id, context="tstandings"),
+    "containerWidth": getRaceContainerWidth(racesRaw.count())
   })
+  
+def getRaceContainerWidth(raceCount: int) -> float:
+  return 100/raceCount
 
 #@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
@@ -450,7 +455,8 @@ def get_seasonStandingsDrivers(request, id: int):
     "races": racesRaw,
     "title": "Drivers standing - " + season.name + titleAttachment,
     "season": season,
-    "textBlocks": TextBlock.objects.filter(season_id=id, context="dstandings")
+    "textBlocks": TextBlock.objects.filter(season_id=id, context="dstandings"),
+    "containerWidth": getRaceContainerWidth(racesRaw.count())
   })
 
 def signUp(request):
@@ -471,6 +477,33 @@ def signUp(request):
   return renderWithCommonData(request, 'frontend/signup.html', {
     "form": form,
     "token": token
+  })
+def getClientIP(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def privacyAccept(request):
+  if not LEAGUECONFIG["staticSignup"]:
+    raise Http404("Page does not exist")
+  form = GenericPrivacyAcceptAcceptForm()
+  submitted = False
+
+  if request.POST:
+    form = GenericPrivacyAcceptAcceptForm(request.POST,request.FILES)
+    if form.is_valid():
+      acceptData = form.save(commit=False)
+      acceptData.userAgent = request.META['HTTP_USER_AGENT']
+      acceptData.ipAddress = getClientIP(request)
+      acceptData.save()
+      submitted = True
+     
+  return renderWithCommonData(request, 'frontend/privacyaccept.html', {
+    "form": form,
+    "submitted": submitted
   })
 def signUpStatus(request):
   form = SignUpStatusForm()

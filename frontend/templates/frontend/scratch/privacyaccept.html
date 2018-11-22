@@ -1,0 +1,30 @@
+{% extends baseLayout %}
+{% spaceless %}
+{% block content %}
+<h1>Privacy accept</h1>
+{% if not submitted %}
+<p>
+  Due to legal regulations we need to obtain the agreement of any driver to mention them in the stream and to display them on the website itself.
+</p>
+<p>
+  Please use the same email address as used in your forum account. Thank you.
+</p>
+<p>
+  Please fill out the following form properly.
+</p>
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit">
+</form>
+<br>
+<p>
+  Feel free to <a href="/imprint/">contact u</a>s if you have any questions or if you request a data deletion.
+</p>
+{% else %}
+<p>
+  Thank you!
+</p>
+{% endif %}
+{% endblock %}
+{% endspaceless %}
