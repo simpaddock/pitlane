@@ -16,13 +16,6 @@ from json import loads
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'oof2syr2*ayurpd#6l9!cvonck442n&g(td-jab!ths0ekbonn'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -89,15 +82,11 @@ CONFIGPATH = os.path.join((BASE_DIR), "config.json")
 with open(CONFIGPATH,"r") as config:
     LEAGUECONFIG = loads(config.read())
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+SECRET_KEY = LEAGUECONFIG["secretKey"]
 
 DATABASES = {
     'default': LEAGUECONFIG["database"]
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
