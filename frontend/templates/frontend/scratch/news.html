@@ -1,8 +1,10 @@
 {% extends baseLayout %} 
 {% load static %}
+{% load thumbnail  %}
+{% load frontend_extras %}
 {% block content %}
 <div class="pagination">
-    <span class="step-links">
+    <div class="step-linksn column col-12">
         {% if articles.has_previous %}
         <a href="?page=1">&laquo; first</a>
         <a href="?page={{ articles.previous_page_number }}"> previous</a>
@@ -14,20 +16,12 @@
         <a href="?page={{ articles.next_page_number }}">next</a>
         <a href="?page={{ articles.paginator.num_pages }}"> last &raquo;</a>
         {% endif %}
-    </span>
-</div>
-<div class="column col-12">
-    <div class="columns">
-    {% for article in articles %}
-    <div class="column col-4 col-xs-12 article">
-      {% if article.mediaFile %}
-      <img class="article-image" src="{{article.mediaFile.url}}">
-      <a href="/news/{{article.id}}" class="article-title">
-        {{ article.title }}
-      </a>
-      {% endif %}
-    </div>
-    {% endfor %}
     </div>
 </div>
+
+{% for article in articles %}
+    <div>
+        <a href="/news/{{article.id}}"><div class="chip article-date">{{article.date|dateFormat}}</div>{{ article.title }}</a>
+    </div>
+{% endfor %}
 {% endblock %}
