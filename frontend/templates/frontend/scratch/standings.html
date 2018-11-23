@@ -5,10 +5,12 @@
 <meta property="og:title" content="{{ season.name }}: Driver standings" />
 <meta property="og:url" content="{{config.url }}/seasons/{{season.id}}/drivers/" />
 <meta property="og:image" content="{{config.logo }}" />
+<meta property="og:description" content="{{ season.name }}: Driver standings" />
 {% else %}
 <meta property="og:title" content="{{ season.name }}: Team standings" />
 <meta property="og:url" content="{{config.url }}/seasons/{{season.id}}/teams/" />
 <meta property="og:image" content="{{config.logo }}/" />
+<meta property="og:description" content="{{ season.name }}: Team standings" />
 {% endif %}
 {% endblock %}
 {% block content %}
