@@ -1,6 +1,7 @@
 {
   logo: 'pathtothelogo',
   name: 'name of the league',
+  "description": "description",
   "theme": "basement",
   "dateFormat": "%Y-%m-%d %H:%M:%S",
   "nextRaceFormat": "d M Y",
