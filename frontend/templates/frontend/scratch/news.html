@@ -2,6 +2,11 @@
 {% load static %}
 {% load thumbnail  %}
 {% load frontend_extras %}
+{% block ogp %}
+<meta property="og:title" content="{{ config.name }}: News" />
+<meta property="og:description" content="{{ config.name }}: News" />
+<meta property="og:url" content="{{config.url }}/news/" /> 
+{% endblock %}
 {% block content %}
 <div class="pagination">
     <div class="step-linksn column col-12">
