@@ -120,7 +120,7 @@ def get_index(request):
     "now": now
   })
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_news(request):
   articles = NewsArticle.objects.all().order_by("-date")
   paginator = Paginator(articles, 50)
@@ -129,7 +129,7 @@ def get_news(request):
     "articles": paginator.get_page(page)
   })
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
@@ -140,21 +140,21 @@ def get_about(request):
     "textBlocks": textBlocks
   })
 
-#@cache_page(60 * 15)  
+@cache_page(60 * 15)  
 def get_rules(request):
   return renderWithCommonData(request, 'frontend/rules.html', {
     "rules": TextBlock.objects.filter(season__isRunning=True, context='rule')
   })
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_privacy(request):
   return renderWithCommonData(request, 'frontend/privacy.html', {})
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_imprint(request):
   return renderWithCommonData(request, 'frontend/imprint.html', {})
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_SingleNews(request, id:int):
   articles = list(NewsArticle.objects.all().filter(pk=id))
   paginator = Paginator(articles, 5)
@@ -217,7 +217,7 @@ class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
         return str(o)
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_seasonList(request):
   seasonList = Season.objects.all().order_by("-isRunning")
   races = {}
@@ -394,7 +394,7 @@ def get_incidents(request, id: int):
     "incidents": incidents,
     "incidentsPendingCount": incidentsPendingCount
   })
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_raceDetail(request, id: int):
   race = Race.objects.all().filter(pk=id).get()
   resultList = getRaceResult(race.id)
@@ -419,7 +419,7 @@ def get_raceDetail(request, id: int):
 def isSeasonFinished(season):
   races = Race.objects.filter(season=season).order_by('startDate') 
   return not season.isRunning or season.round == races.count()
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_seasonStandingsTeams(request, id: int):
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
   resultList = getTeamStandings(id)
@@ -441,7 +441,7 @@ def get_seasonStandingsTeams(request, id: int):
 def getRaceContainerWidth(raceCount: int) -> float:
   return 100/raceCount
 
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_seasonStandingsDrivers(request, id: int):
   resultList = getDriversStandings(id)
   racesRaw = Race.objects.filter(season_id=id).order_by('startDate') 
@@ -557,7 +557,7 @@ def incidentReport(request):
   return renderWithCommonData(request, 'frontend/incident.html', {
     "form": form
   })
-#@cache_page(60 * 15)
+@cache_page(60 * 15)
 def get_iCalender(request, id: int):
   tz = pytz.timezone(LEAGUECONFIG["timezone"])
   calendar = Calendar()
