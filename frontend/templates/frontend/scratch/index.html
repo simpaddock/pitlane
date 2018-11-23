@@ -1,4 +1,4 @@
-{% extends baseLayout %} {% load static %} {% block content %}
+{% extends baseLayout %} {% load static %} {% load thumbnail  %} {% block content %}
 <div class="columns">
   <div class="column col-3 hide-md">
     {% if running is not None and events.count != 0%}
@@ -32,7 +32,10 @@
       {% for article in newsArticles %}
       <div class="column col-4 col-xs-12 article">
         {% if article.mediaFile %}
-        <img class="article-image" src="{{article.mediaFile.url}}">
+        {% thumbnail article.mediaFile "200x200" crop="top" as im %}
+          <img class="article-image" src="{{im.url}}">
+        {% endthumbnail %}
+      
         <a href="/news/{{article.id}}" class="article-title">
           {{ article.title }}
         </a>

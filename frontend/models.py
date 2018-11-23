@@ -301,7 +301,7 @@ class NewsArticle(models.Model):
   title =models.CharField(max_length=200)
   text = RichTextUploadingField()
   date = models.DateTimeField()
-  mediaFile = models.FileField(default=None, blank=True, upload_to='uploads/news/')
+  mediaFile = models.ImageField(default=None, blank=True, upload_to='uploads/news/')
   def __str__(self):
     return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)
 
