@@ -79,12 +79,6 @@ class Race(models.Model):
   def banner(self):
     return mark_safe("""<a target="blank" href="/racebanner/{}">Race Banner</a>""".format(self.id)) 
 
-class RaceOverlayControlSet(models.Model):
-  race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
-  controlSet = models.TextField() # Json, controls what to highlight currently
-  slotId = models.IntegerField(default=1)
-  cameraId = models.IntegerField(default=4)
-
 class RaceResult(models.Model):
   race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
   resultSoftware = models.CharField(max_length=30,choices=SIMSOFTWARE,default='rFactor 2')
