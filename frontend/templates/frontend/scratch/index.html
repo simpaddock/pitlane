@@ -32,14 +32,17 @@
       {% for article in newsArticles %}
       <div class="column col-4 col-xs-12 article">
         {% if article.mediaFile %}
-        {% thumbnail article.mediaFile "200x200" crop="top" as im %}
-          <img class="article-image" src="{{im.url}}">
-        {% endthumbnail %}
-      
+          {% thumbnail article.mediaFile "200x200" crop="top" as im %}
+            <img class="article-image" src="{{im.url}}">
+          {% endthumbnail %}
+        {% else %}
+          <img class="article-image" src="{{config.logo}}">
+        
+        {% endif %}
+        
         <a href="/news/{{article.id}}" class="article-title">
           {{ article.title }}
         </a>
-        {% endif %}
       </div>
       {% endfor %}
     </div>
