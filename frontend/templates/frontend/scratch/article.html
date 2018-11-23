@@ -19,8 +19,16 @@
       {% endfor %}
     </div>
   </div>
-  <div class="news-article-body">
-    {{ article.text | safe}} {% endfor %}
+  <div class="news-article-body columns">
+    
+    {% if article.mediaFile %}
+      <div class="column col-4 hide-xs">
+          <img class="article-full-image" src="{{ article.mediaFile.url }}">
+      </div>
+    {% endif %}
+    <div class="column col-8 article-fulltext col-xs-12">
+      {{ article.text | safe}} {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock %}
