@@ -19,6 +19,7 @@
   "staticSignup": false,
   "embettyUrl": "http://localhost:3000/",
   "secretKey": "secretkey",
+  "debug": false,
   "database": {
     "ENGINE": "django.db.backends.mysql",
     "NAME": "",

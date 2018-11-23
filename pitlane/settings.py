@@ -16,9 +16,6 @@ from json import loads
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 # for test purposes..
 ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
 
@@ -84,6 +81,8 @@ with open(CONFIGPATH,"r") as config:
 
 SECRET_KEY = LEAGUECONFIG["secretKey"]
 
+DEBUG = LEAGUECONFIG["debug"]
+
 DATABASES = {
     'default': LEAGUECONFIG["database"]
 }
@@ -109,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = LEAGUECONFIG["timezone"]
 
 USE_I18N = True
 
