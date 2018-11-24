@@ -19,12 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # for test purposes..
 ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'frontend_caches',
-    }
-}
+
 
 
 # Application definition
@@ -83,6 +78,19 @@ with open(CONFIGPATH,"r") as config:
 SECRET_KEY = LEAGUECONFIG["secretKey"]
 
 DEBUG = LEAGUECONFIG["debug"]
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'frontend_caches',
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 DATABASES = {
     'default': LEAGUECONFIG["database"]
