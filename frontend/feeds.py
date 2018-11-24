@@ -8,7 +8,7 @@ class LatestEntriesFeed(Feed):
     link = "/news/"
 
     def items(self):
-      return NewsArticle.objects.order_by('-date')[:5]
+      return NewsArticle.objects.filter(isDraft=False).order_by('-date')[:5]
 
     def item_title(self, item):
       return item.title
