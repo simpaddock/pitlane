@@ -233,7 +233,7 @@ def get_seasonList(request):
     
     seasonId = season.id
     # TODO: FIND A BETTER FUCKING WAY TO SERIALIZE
-    for race in Race.objects.all().filter(season_id=seasonId):
+    for race in Race.objects.all().filter(season_id=seasonId).order_by("startDate"):
       raceObj = model_to_dict(race)
       track = Track.objects.all().filter(pk=raceObj["track"]).get()
       country = track.country
