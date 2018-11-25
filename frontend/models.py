@@ -13,6 +13,7 @@ from django.utils.html import strip_tags
 from datetime import datetime
 from os import unlink
 from os.path import isfile
+from nameparser import HumanName
 class Country(models.Model):
   name = models.CharField(max_length=100)
   flag = models.FileField(default=None, blank=True, upload_to='uploads/flags/')
@@ -195,9 +196,9 @@ class RaceResult(models.Model):
 
       teamEntry = TeamEntry.objects.filter(season_id=self.race.season.id, team=team).get()
       # 2. find Driver
-      nameParts = rawData["Name"].split(" ")
-      firstName = nameParts[0]
-      lastName = nameParts[1]
+      name = HumanName(rawData["Name"])
+      firstName = name.first
+      lastName = name.last
       fittingDrivers = Driver.objects.all().filter(firstName=firstName,lastName=lastName)
       driver=None
       if fittingDrivers.count() == 0:
