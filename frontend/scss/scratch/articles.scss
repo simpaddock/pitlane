@@ -22,16 +22,19 @@
 .article-title {
   display: block;
   position: absolute;
-  width: 100%;
   color: #fff;
   left: 0;
   bottom: 0;
-  padding: 1em;
+  padding: 0.5em;
   font-weight: 700;
   z-index: 2;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   background:rgba(0, 0, 0, 0.7);
+  width: 69%;
+  margin-left: 0.6em;
+  font-size: small;
+  letter-spacing: 1px;
 }
 .article-date{
   background: #323737;
