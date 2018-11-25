@@ -21,7 +21,7 @@ class Country(models.Model):
 
 class Track(models.Model):
   name = models.CharField(max_length=100)
-  country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, default=None)
+  country = models.ForeignKey(Country, on_delete=models.CASCADE, default=None)
   long = models.FloatField(null=True, default=5)
   lat = models.FloatField(null=True, default=5)
   def __str__(self):
@@ -52,14 +52,14 @@ class Team(models.Model):
 class Driver(models.Model):
   firstName = models.CharField(max_length=100)
   lastName = models.CharField(max_length=100)
-  country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, default=None)
+  country = models.ForeignKey(Country, on_delete=models.CASCADE, default=None)
   image = models.FileField(default='logo.png', blank=True, upload_to='uploads/drivers/')
   def __str__(self):
     return "{0}, {1} ({2})".format(self.lastName, self.firstName, self.country.name)
 
 class TeamEntry(models.Model):
-  team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, default=None)
-  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
+  team = models.ForeignKey(Team, on_delete=models.CASCADE, default=None)
+  season = models.ForeignKey(Season, on_delete=models.CASCADE, default=None)
   vehicle = models.CharField(null=True, default=None, max_length=100)
   vehicleImage = models.FileField(default=None, null=True, blank=True, upload_to='uploads/vehicles')
   def __str__(self):
@@ -70,7 +70,7 @@ class Race(models.Model):
   name = models.CharField(max_length=100)
   startDate = models.DateTimeField()
   endDate = models.DateTimeField()
-  track = models.ForeignKey (Track, on_delete=models.DO_NOTHING, default=None)
+  track = models.ForeignKey (Track, on_delete=models.CASCADE, default=None)
   streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
   commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
   def __str__(self):
@@ -80,7 +80,7 @@ class Race(models.Model):
     return mark_safe("""<a target="blank" href="/racebanner/{}">Race Banner</a>""".format(self.id)) 
 
 class RaceResult(models.Model):
-  race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
+  race = models.ForeignKey(Race, on_delete=models.CASCADE, default=None)
   resultSoftware = models.CharField(max_length=30,choices=SIMSOFTWARE,default='rFactor 2')
   resultFile = models.FileField(default=None, blank=True, upload_to='uploads/results/')
   @property
@@ -267,9 +267,9 @@ class RaceResult(models.Model):
 
 
 class DriverEntry(models.Model):
-  driver = models.ForeignKey(Driver, on_delete=models.DO_NOTHING, default=None)
+  driver = models.ForeignKey(Driver, on_delete=models.CASCADE, default=None)
   driverNumber = models.IntegerField()
-  teamEntry = models.ForeignKey(TeamEntry, on_delete=models.DO_NOTHING, default=None)
+  teamEntry = models.ForeignKey(TeamEntry, on_delete=models.CASCADE, default=None)
   driverNumberFormat = models.TextField()
   def __str__(self):
     return "#{0}: {1}, {2}: {3}".format(self.driverNumber, self.driver.lastName, self.driver.firstName, self.teamEntry.team.name)
@@ -281,7 +281,7 @@ class DriverEntry(models.Model):
 
 class DriverRaceResult(models.Model):
   raceResult = models.ForeignKey(RaceResult, on_delete=models.CASCADE, default=None)
-  driverEntry = models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None)
+  driverEntry = models.ForeignKey(DriverEntry, on_delete=models.CASCADE, default=None)
   def __str__(self):
     position = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="position").first()
     status = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="finishstatus").first()
@@ -308,10 +308,10 @@ class NewsArticle(models.Model):
 
 class Incident(models.Model):
   timeCode = models.FloatField()
-  opponentCar = models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None, related_name="opponent")
-  ownCar =   models.ForeignKey(DriverEntry, on_delete=models.DO_NOTHING, default=None)
+  opponentCar = models.ForeignKey(DriverEntry, on_delete=models.CASCADE, default=None, related_name="opponent")
+  ownCar =   models.ForeignKey(DriverEntry, on_delete=models.CASCADE, default=None)
   description =  models.TextField(default="", max_length=1000, verbose_name="Description")
-  race = models.ForeignKey(Race, on_delete=models.DO_NOTHING, default=None)
+  race = models.ForeignKey(Race, on_delete=models.CASCADE, default=None)
   result =  RichTextUploadingField(default="")
   def __str__(self):
     return "{0}: {1} vs {2}, decided: {3}".format(self.race.name, self.ownCar, self.opponentCar, len(self.result) > 0)
@@ -319,7 +319,7 @@ class Incident(models.Model):
 class TextBlock(models.Model):
   title = models.CharField(default="", max_length=100)
   text =  RichTextUploadingField()
-  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, blank=True, null=True)
+  season = models.ForeignKey(Season, on_delete=models.CASCADE, blank=True, null=True)
   context = models.CharField(max_length=30,choices=TEXTBLOCKCONTEXT,default=TEXTBLOCKCONTEXT[0])
   def __str__(self):
     return "{0}".format(self.title)
@@ -346,7 +346,7 @@ class Registration(models.Model):
   number =models.IntegerField()
   teamName =models.CharField(blank=False, max_length=200, default="")
   skinFile = models.FileField(default=None, blank=True, upload_to='uploads/registration/',verbose_name="Skin file")
-  season = models.ForeignKey(Season, on_delete=models.DO_NOTHING, default=None)
+  season = models.ForeignKey(Season, on_delete=models.CASCADE, default=None)
   wasUploaded = models.BooleanField(default=False, blank=False)
   gdprAccept = models.BooleanField(default=False, blank=False, verbose_name="I consent the GDPR compilant processing of my submission data")
   copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
