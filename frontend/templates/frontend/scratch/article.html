@@ -1,4 +1,4 @@
-{% extends baseLayout %} {% load static %} {% block pagetitle %}: {{ title }}{% endblock %} {% block ogp %}
+{% extends baseLayout %} {% load static %}  {% load thumbnail  %} {% block pagetitle %}: {{ title }}{% endblock %} {% block ogp %}
 <meta property="og:title" content="{{ config.name }}: {{ articles.0.title }}" />
 <meta property="og:url" content="{{config.url }}/news/{{articles.0.id}}/" /> {% if articles.0.mediaFile %}
 <meta property="og:image" content="{{articles.0.mediaFile.url}}" /> {% else %}
@@ -23,7 +23,9 @@
     
     {% if article.mediaFile %}
       <div class="column col-4 hide-xs">
-          <img class="article-full-image" src="{{ article.mediaFile.url }}">
+          {% thumbnail article.mediaFile "350x610"  as im %}
+            <img class="article-full-image" src="{{ im.url }}">
+          {% endthumbnail %}
       </div>
     {% endif %}
     <div class="column col-8 article-fulltext col-xs-12">
