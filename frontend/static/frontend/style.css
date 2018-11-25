@@ -514,11 +514,15 @@ a {
   padding-top: 0.5em;
   padding-bottom: 0.5em; }
 
+.eu-cookies a {
+  text-decoration: underline; }
+
 .eu-cookies-dismiss {
   text-decoration: none;
   color: black;
   font-weight: bold;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  text-decoration: none !important; }
 
 .legal-links {
   position: fixed;
