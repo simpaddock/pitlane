@@ -110,3 +110,4 @@ config.json
 frontend/static/
 frontend/static/frontend/uploads/
 frontend/media/
+frontend/templates/frontend/scratch/
