@@ -304,7 +304,12 @@ class NewsArticle(models.Model):
   isDraft = models.BooleanField(default=False, blank=False, verbose_name="Is draft?")
   mediaFile = models.ImageField(default=None, blank=True, upload_to='uploads/news/')
   def __str__(self):
-    return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)
+    return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)  
+  def clean(self):
+    if "script" in self.text.lower():
+      raise ValidationError("Script tags are not allowed")
+
+
 
 class Incident(models.Model):
   timeCode = models.FloatField()
