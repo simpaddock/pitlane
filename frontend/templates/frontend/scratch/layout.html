@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>{{ config.name }}{% block pagetitle %}{% endblock %}</title>
+  <title>{{ config.name }}{% block pagetitle %}{% endblock %}{% if config.debug %}DEBUG{% endif %}</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" href="{% static 'frontend/fa.css' %}">
   <link rel="icon" type="image/png" href="{{config.logo }}" sizes="32x32">
