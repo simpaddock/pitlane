@@ -4,6 +4,9 @@ body {
   background-color: #000;
   color: white; }
 
+html {
+  overflow-y: scroll; }
+
 .top-margin {
   margin-top: 1em; }
 
