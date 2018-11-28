@@ -2,9 +2,7 @@
 body {
   font-family: Electrolize, sans-serif;
   background-color: #000;
-  color: white; }
-
-html {
+  color: white;
   overflow-y: scroll; }
 
 .top-margin {
