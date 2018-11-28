@@ -209,7 +209,8 @@ a {
 /* ================ The Timeline ================ */
 .timeline {
   position: relative;
-  line-height: 1.0; }
+  line-height: 1.0;
+  list-style: none; }
 
 .timeline:before {
   position: absolute;
@@ -240,25 +241,29 @@ a {
   width: 100%;
   float: right;
   left: 2em;
-  top: -1em; }
+  top: -1em;
+  margin-top: 2em; }
 
-.flag-wrapper {
+.timeline:first-child {
+  margin-top: 0em; }
+
+.race-flag-wrapper {
   position: relative;
   display: inline-block;
   text-align: center; }
 
-.flag {
+.race-flag {
   position: relative;
   display: inline;
   font-weight: 600;
   text-align: left; }
 
-.direction-r .flag {
+.direction-r .race-flag {
   -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15); }
 
-.desc {
+.event-desc {
   margin: 1em 0.75em 0 0;
   font-size: 0.77777em;
   font-style: italic;
@@ -268,17 +273,16 @@ a {
 @media screen and (max-width: 660px) {
   .timeline {
     width: 100%;
-    padding: 4em 0 1em 0; }
-  .timeline li {
-    padding: 2em 0; }
+    padding: 0em 0 1em 0; }
+  .timeline:before {
+    margin-left: 2.6em; }
   .direction-r {
     float: none;
     width: 100%;
+    left: 5em; }
+  .race-flag-wrapper {
     text-align: center; }
-  .flag-wrapper {
-    text-align: center; }
-  .flag {
-    background: white;
+  .race-flag {
     z-index: 15; }
   .time-wrapper {
     display: block;
@@ -286,27 +290,7 @@ a {
     margin: 4px 0 0 0;
     z-index: 14; }
   .direction-r .time-wrapper {
-    float: none; }
-  .desc {
-    position: relative;
-    margin: 1em 0 0 0;
-    padding: 1em;
-    background: whitesmoke;
-    -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-    z-index: 15; }
-  .direction-l .desc,
-  .direction-r .desc {
-    position: relative;
-    margin: 1em 1em 0 1em;
-    padding: 1em;
-    z-index: 15; } }
-
-@media screen and (min-width: 400px) and (max-width: 660px) {
-  .direction-l .desc,
-  .direction-r .desc {
-    margin: 1em 4em 0 4em; } }
+    float: none; } }
 
 .article {
   position: relative;
