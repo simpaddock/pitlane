@@ -50,6 +50,7 @@ COLUMNS = {
     ('points', None),
     ('finishstatus', None),
     ('controlandaids', None),
+    ('cartype', None), # actual car class from rFactor reported
   ]),
   "drivers": OrderedDict([
     ('id', "id"), 
@@ -287,7 +288,8 @@ def getRaceResult(id: int):
       "points": "0",
       "stops": "0",
       "position": "999",
-      "finishstatus": "DNS"
+      "finishstatus": "DNS",
+      "cartype": ""
     }
     if driver.driverNumber not in knownDrivers:
       infosToAppend = []
@@ -311,7 +313,9 @@ def getRaceResult(id: int):
     viewData["position"] = 999
     viewData["points"] = 0
     viewData["finishstatus"]  = ""
+    viewData["cartype"]  = ""
     for columnName, columnPath in COLUMNS["race"].items():
+      print(columnName)
       if columnPath is None:  # None means "search in additional fields"
         for info in result["additionalInfos"]:
           if info.name.lower() == columnName:
@@ -323,6 +327,8 @@ def getRaceResult(id: int):
     if "finishstatus" in viewData and viewData["finishstatus"] == "dsq":
       viewData["position"] = 999
       viewData["points"] = 0
+    if viewData["cartype"]:
+      viewData["vehicle"] = viewData["cartype"] # the actual cartype overwrites the team entry vehicle
     viewList.append(viewData)
   return sorted(viewList, key=lambda x: int(x["position"]), reverse=False)
 
@@ -406,7 +412,6 @@ def get_raceDetail(request, id: int):
       "streamLink": race.streamLink,
       "commentatorInfo": race.commentatorInfo
     })
-  raceResult = RaceResult.objects.all().filter(race_id=id).get()
   incidentsCount = Incident.objects.filter(race__season_id=race.season.id, race=race).count()
   return renderWithCommonData(request, 'frontend/race.html', {
     "race": race,
