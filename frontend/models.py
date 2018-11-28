@@ -2,6 +2,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db.models.functions import Cast
+from django.db import transaction
 from pitlane.settings import LEAGUECONFIG, SIMSOFTWARE, TEXTBLOCKCONTEXT
 from xml.dom import minidom
 import re
@@ -99,10 +100,9 @@ class RaceResult(models.Model):
     return ""
   def __str__(self):
     return str(self.race.endDate) + ": " + self.race.name + " - " + self.race.season.name 
+  @transaction.atomic
   def save(self, *args, **kwargs):
     super(RaceResult, self).save(*args, **kwargs)
-
-    
     # cleanup old data
     DriverRaceResultInfo.objects.filter(driverRaceResult__raceResult_id=self.id).delete()
     DriverRaceResult.objects.filter(raceResult_id=self.id).delete()
@@ -170,9 +170,8 @@ class RaceResult(models.Model):
         rawData["Points"] = 0
 
       # 1. Find Team
-      teamCarParts = rawData["VehName"].split("#")
-      teamName = teamCarParts[0].strip(" ")
-      carNumber = teamCarParts[1]
+      teamName = rawData["TeamName"]
+      carNumber = rawData["CarNumber"]
       vehicle = rawData["CarClass"]
       
       fittingTeams = Team.objects.all().filter(name=teamName)
@@ -196,10 +195,15 @@ class RaceResult(models.Model):
 
       teamEntry = TeamEntry.objects.filter(season_id=self.race.season.id, team=team).get()
       # 2. find Driver
+      # concat name parts if the driver is e. g. a spanish speaking human
       name = HumanName(rawData["Name"])
       firstName = name.first
-      lastName = name.last
+      if name.middle != "":
+        lastName = name.middle + " " + name.last
+      else:
+        lastName = name.last
       fittingDrivers = Driver.objects.all().filter(firstName=firstName,lastName=lastName)
+
       driver=None
       if fittingDrivers.count() == 0:
         # create new driver
@@ -208,6 +212,7 @@ class RaceResult(models.Model):
         driver.lastName = lastName
         driver.country = Country.objects.first()
         driver.save()
+        print("Created {0}, {1}".format(lastName, firstName))
       
       driver = Driver.objects.filter(firstName=firstName,lastName=lastName).get()
       if DriverEntry.objects.filter(driver_id=driver, teamEntry_id=teamEntry.id).count() == 0:
@@ -218,8 +223,8 @@ class RaceResult(models.Model):
         driverEntry.driverNumber = carNumber
         driverEntry.driverNumberFormat = "{0}"
         driverEntry.save()
-      
-      print(driver.id, driver, teamEntry)
+        print("--> New driver entry: {0} for {1}".format(carNumber, teamEntry))
+        
       test =DriverEntry.objects.all()
       """
       I may run into a bug here. Django does not return anything useful with filter()
@@ -241,9 +246,10 @@ class RaceResult(models.Model):
         "Time": "str",
         "ControlAndAids": "str",
         "Laps": "int",
-        "Points": "int"
+        "Points": "int",
+        "CarType": "str"
       }
-      for wantedKey in ["Stops", "Position", "FinishStatus", "Time","ControlAndAids", "Laps", "Points"]:
+      for wantedKey in ["Stops", "Position", "FinishStatus", "Time","ControlAndAids", "Laps", "Points","CarType"]:
         if wantedKey in rawData:
           driverRaceResultInfo = DriverRaceResultInfo()
           driverRaceResultInfo.driverRaceResult = driverRaceResult
@@ -262,7 +268,7 @@ class RaceResult(models.Model):
         driverRaceResultInfo.value = round(((trackLength/1000)*runLaps)/ (float(rawData["Time"])/60/60),2)
         driverRaceResultInfo.infoType = "str"
         driverRaceResultInfo.save()
-
+    #raise Exception("foo")
     # parse the xml input file
     # todo: put into separate file
 
