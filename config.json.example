@@ -17,6 +17,7 @@
   "features": {
     "servertime": false
   },
+  "dotd": true,
   "staticSignup": false,
   "embettyUrl": "http://localhost:3000/",
   "secretKey": "secretkey",

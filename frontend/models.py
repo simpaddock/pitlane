@@ -75,6 +75,7 @@ class Race(models.Model):
   track = models.ForeignKey (Track, on_delete=models.CASCADE, default=None)
   streamLink = models.CharField(max_length=200, default=None, blank=True,null=True)
   commentatorInfo = models.CharField(max_length=200, default=None, blank=True,null=True)
+  driverOfTheDayVote = models.BooleanField(default=False, blank=False, verbose_name="Driver of the day vote")
   def __str__(self):
     return "{0}: {1}".format(self.season.name, self.name)
   @property
@@ -440,3 +441,10 @@ class Upload(models.Model):
     super(Upload, self).delete()
   def __str__(self):
     return self.name
+
+class DriverOfTheDayVote(models.Model):
+  driver = models.ForeignKey(Driver, on_delete=models.CASCADE, default=None)
+  race = models.ForeignKey(Race, on_delete=models.CASCADE, default=None)
+  ipAddress = models.GenericIPAddressField()
+  def __str__(self):
+    return self.race.name + ": " + str(self.driver)

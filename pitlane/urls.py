@@ -36,6 +36,7 @@ urlpatterns = [
     path('news/<int:id>/', views.get_SingleNews),
     path('incidents/<int:id>/', views.get_incidents),
     path('signup/', views.signUp),
+    path('driveroftheday/', views.driverOfTheDayVote),
     path('privacyaccept/', views.privacyAccept), # is only enabled when using static signup
     path('signupstatus/', views.signUpStatus),
     path('rules/', views.get_rules),

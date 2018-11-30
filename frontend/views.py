@@ -5,6 +5,7 @@ from django.db import models
 from django.http import Http404
 from .models import RegistrationStatus, TextBlock, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
 from json import dumps, loads
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -512,6 +513,26 @@ def privacyAccept(request):
       submitted = True
      
   return renderWithCommonData(request, 'frontend/privacyaccept.html', {
+    "form": form,
+    "submitted": submitted
+  })
+
+def driverOfTheDayVote(request):
+  if not LEAGUECONFIG["dotd"]:
+    raise Http404()
+  form = DriverOfTheDayVoteForm()
+  submitted = False
+
+  if request.POST:
+    form = DriverOfTheDayVoteForm(request.POST,request.FILES)
+    if form.is_valid():
+      if DriverOfTheDayVote.objects.filter(ipAddress=getClientIP(request)).count() == 0:
+        vote = form.save(commit=False)
+        vote.ipAddress = getClientIP(request)
+        vote.save()
+        submitted = True
+     
+  return renderWithCommonData(request, 'frontend/driveroftheday.html', {
     "form": form,
     "submitted": submitted
   })
