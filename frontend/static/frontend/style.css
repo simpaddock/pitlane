@@ -1,4 +1,3 @@
-@charset "UTF-8";
 body {
   font-family: Electrolize, sans-serif;
   background-color: #000;
@@ -352,13 +351,20 @@ a {
 .season {
   display: inline; }
 
+.choose-season {
+  display: block;
+  color: #00aeef;
+  font-weight: bold;
+  font-family: oswald;
+  font-size: 16pt; }
+
+.selected-season {
+  font-weight: bold;
+  font-family: oswald; }
+
 .season-header {
   display: inline;
   cursor: pointer; }
-
-.season-header-container:after {
-  content: " • ";
-  font-size: 20pt; }
 
 .season-header-container:last-of-type:after {
   content: ''; }
