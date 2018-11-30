@@ -57,7 +57,7 @@ class Driver(models.Model):
   country = models.ForeignKey(Country, on_delete=models.CASCADE, default=None)
   image = models.FileField(default='logo.png', blank=True, upload_to='uploads/drivers/')
   def __str__(self):
-    return "{0}, {1} ({2})".format(self.lastName, self.firstName, self.country.name)
+    return "{0}, {1}".format(self.lastName, self.firstName)
 
 class TeamEntry(models.Model):
   team = models.ForeignKey(Team, on_delete=models.CASCADE, default=None)
