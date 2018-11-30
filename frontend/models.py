@@ -289,12 +289,22 @@ class DriverEntry(models.Model):
 class DriverRaceResult(models.Model):
   raceResult = models.ForeignKey(RaceResult, on_delete=models.CASCADE, default=None)
   driverEntry = models.ForeignKey(DriverEntry, on_delete=models.CASCADE, default=None)
+  @property
+  def resultDetails(self):
+    infos = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id).order_by("name")
+    resultDetailsHtml = ""
+    for info in infos:
+      resultDetailsHtml = resultDetailsHtml + "<a href='/admin/frontend/driverraceresultinfo/{0}/change/'>{1}</a><br>".format(info.id, str(info))
+    return mark_safe(resultDetailsHtml) 
   def __str__(self):
     position = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="position").first()
-    status = DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="finishstatus").first()
-    if position is None or status is None:
-      return "{0} {1}@{2} ({3}): N/A".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,  self.raceResult.race.startDate)
-    return "{0} {1}@{2} ({3}): {4}. ({5})".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,  self.raceResult.race.startDate, position.value, status.value)
+    hasBonusPoints =  DriverRaceResultInfo.objects.filter(driverRaceResult_id=self.id, name="bonuspoints").count() > 0
+    if position is None:
+      return "{0} {1}@{2}".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name)
+    if not hasBonusPoints:
+      return "{0} {1}@{2} {3}.".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,position.value)
+    else:
+      return "{0} {1}@{2} {3}. (Bonus points)".format(self.driverEntry.driver.firstName,self.driverEntry.driver.lastName, self.raceResult.race.name,position.value)
 
 class DriverRaceResultInfo(models.Model):
   driverRaceResult = models.ForeignKey(DriverRaceResult, on_delete=models.CASCADE, default=None)
@@ -302,7 +312,7 @@ class DriverRaceResultInfo(models.Model):
   value = models.CharField(max_length=100)
   infoType = models.CharField(max_length=100)
   def __str__(self):
-    return self.name + ":" + str(self.value)
+    return self.name + ": " + str(self.value)
 
 class NewsArticle(models.Model):
   title =models.CharField(max_length=200)

@@ -50,6 +50,7 @@ COLUMNS = {
     ('points', None),
     ('finishstatus', None),
     ('controlandaids', None),
+    ('bonuspoints', None),
     ('cartype', None), # actual car class from rFactor reported
   ]),
   "drivers": OrderedDict([
@@ -279,7 +280,6 @@ def getRaceResult(id: int):
         "additionalInfos": infos,
         "position": 0
       })
-
   # get all drivers to append DNS entries
   drivers = DriverEntry.objects.filter(teamEntry__season__id=seasonId)
   for driver in drivers:
@@ -314,12 +314,16 @@ def getRaceResult(id: int):
     viewData["points"] = 0
     viewData["finishstatus"]  = ""
     viewData["cartype"]  = ""
+    viewData["bonuspoints"] = 0
     for columnName, columnPath in COLUMNS["race"].items():
-      print(columnName)
       if columnPath is None:  # None means "search in additional fields"
         for info in result["additionalInfos"]:
           if info.name.lower() == columnName:
-            viewData[columnName] = info.value
+            valueToAdd = info.value
+            if columnName in ["bonuspoints"]: # only sum bonus points together
+              viewData[columnName] = viewData[columnName] + int(valueToAdd)
+            else:
+              viewData[columnName] = valueToAdd
       else:
         viewData[columnName] = getChildValue(result, columnPath)
     viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
@@ -329,6 +333,7 @@ def getRaceResult(id: int):
       viewData["points"] = 0
     if viewData["cartype"]:
       viewData["vehicle"] = viewData["cartype"] # the actual cartype overwrites the team entry vehicle
+    viewData["sumPointsRace"] = int(viewData["points"]) + int(viewData["bonuspoints"]) # add bonus points
     viewList.append(viewData)
   return sorted(viewList, key=lambda x: int(x["position"]), reverse=False)
 
@@ -385,7 +390,7 @@ def getDriversStandings(id: int):
         viewList[driverId]["points"] = [0]*raceCount
         viewList[driverId]["finishstates"] = ["-"]*raceCount
       
-      viewList[driverId]["points"][raceIndex] = int(driver["points"])
+      viewList[driverId]["points"][raceIndex] = int(driver["sumPointsRace"]) # contains bonus points also
       viewList[driverId]["finishstates"][raceIndex]  = driver["finishstatus"]
       viewList[driverId]["sum"] = reduce(lambda x,y: x+y, viewList[driverId]["points"])
   viewList = list(viewList.values())

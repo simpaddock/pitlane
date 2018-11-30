@@ -41,7 +41,8 @@ class RaceAdmin(admin.ModelAdmin):
     qs = super(RaceAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
 class DriverRaceResultAdmin(admin.ModelAdmin):
-  actions = ['disqualify', 'undisqualify', 'undisqualify_dnf']
+  readonly_fields = ('resultDetails',) 
+  actions = ['disqualify', 'undisqualify', 'undisqualify_dnf', 'addBonusPoint', 'removeBonusPoint']
   def get_queryset(self, request):
     qs = super(DriverRaceResultAdmin, self).get_queryset(request)
     return qs.filter(raceResult__race__season__isRunning=True)
@@ -50,14 +51,32 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
     for driver in queryset:
       resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='dsq')
   disqualify.short_description = "Disqualify Driver"
+
+  def addBonusPoint(modeladmin, request, queryset):
+    for driver in queryset:
+      bonus = DriverRaceResultInfo()
+      bonus.driverRaceResult = driver
+      bonus.name ="bonuspoints"
+      bonus.value = "1"
+      bonus.infoType = "int"
+      bonus.save()
+  addBonusPoint.short_description = "Grant 1 bonus point"
+
+  def removeBonusPoint(modeladmin, request, queryset):
+    for driver in queryset:
+      DriverRaceResultInfo.objects.filter(name='bonuspoints', driverRaceResult_id=driver.id).delete()
+  removeBonusPoint.short_description = "Remove bonus points"
+
   def undisqualify(modeladmin, request, queryset):
     for driver in queryset:
       resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='Finished Normally')
   undisqualify.short_description = "Un-Disqualify Driver (Finished Normally)"
+
   def undisqualify_dnf(modeladmin, request, queryset):
     for driver in queryset:
       resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='dnf')
   undisqualify_dnf.short_description = "Un-Disqualify Driver (DNF)"
+
 
 class RegistrationAdmin(admin.ModelAdmin):
   readonly_fields = ('downloadLink', 'gdprAccept', 'copyrightAccept')  
