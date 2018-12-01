@@ -36,4 +36,5 @@ class DriverOfTheDayVoteForm(forms.ModelForm):
     exclude = ('ipAddress',)
   def __init__(self, *args, **kwargs):
     super(DriverOfTheDayVoteForm, self).__init__(*args, **kwargs)
+    self.fields['driver'].queryset = DriverEntry.objects.filter(teamEntry__season__isRunning=True)
     self.fields['race'].queryset = Race.objects.filter(season__isRunning=True,driverOfTheDayVote=True)
