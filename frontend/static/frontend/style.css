@@ -203,7 +203,8 @@ a {
   position: absolute;
   top: 0px;
   left: -3.3em;
-  top: -0.5em; }
+  top: -0.5em;
+  filter: drop-shadow(0px 0px 1px white); }
 
 /* ================ The Timeline ================ */
 .timeline {
@@ -411,6 +412,9 @@ a {
 .leaflet-control-zoom-in, .leaflet-control-zoom-out {
   background: black !important; }
 
+.timezoneremark {
+  font-size: small; }
+
 .medal {
   width: 0;
   height: 0;
@@ -445,7 +449,7 @@ a {
   color: black;
   padding: 0.2em;
   border: 1px solid #00aeef;
-  width: auto;
+  min-width: 27px;
   height: 27px;
   text-align: center;
   font-size: 10pt;
