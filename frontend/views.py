@@ -354,11 +354,11 @@ def getTeamStandings(id: int):
         viewList[teamId]["detailPoints"] = []
       if len( viewList[teamId]["points"]) > key:
         # we already seen a result for that race
-        viewList[teamId]["points"][key].append(int(driver["points"]))
-        viewList[teamId]["detailPoints"][key].append(int(driver["points"]))
+        viewList[teamId]["points"][key].append(int(driver["sumPointsRace"])) # sum bonus points also
+        viewList[teamId]["detailPoints"][key].append(int(driver["sumPointsRace"])) # sum bonus points also
       else:
-        viewList[teamId]["points"].append([int(driver["points"])])
-        viewList[teamId]["detailPoints"].append([int(driver["points"])])
+        viewList[teamId]["points"].append([int(driver["sumPointsRace"])]) # sum bonus points also
+        viewList[teamId]["detailPoints"].append([int(driver["sumPointsRace"])]) # sum bonus points also
   viewList = list(viewList.values())
   # Rule: only the first two drivers will score
   for teamIndex, team in enumerate(viewList):
