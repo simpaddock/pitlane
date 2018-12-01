@@ -4,6 +4,9 @@ from .models import DriverOfTheDayVote, Upload, GenericPrivacyAccept, Registrati
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
+from django.contrib import messages
+from django.utils.html import mark_safe
+from django.db.models import Count
 
 class DriverEntryAdmin(admin.ModelAdmin):
   list_display = ['toString']
@@ -33,6 +36,36 @@ class RaceResultAdmin(admin.ModelAdmin):
         field.queryset = field.queryset.filter(season__isRunning=True).order_by("startDate")
 
       return field
+
+class DriverOfTheDayVoteAdmin(admin.ModelAdmin):
+  actions = ['getResult']
+  def changelist_view(self, request, extra_context=None):
+    try:
+        action = self.get_actions(request)[request.POST['action']][0]
+        action_acts_on_all = action.acts_on_all
+    except (KeyError, AttributeError):
+        action_acts_on_all = False
+
+    if action_acts_on_all:
+        post = request.POST.copy()
+        post.setlist(admin.helpers.ACTION_CHECKBOX_NAME,
+                     self.model.objects.values_list('id', flat=True))
+        request.POST = post
+
+    return admin.ModelAdmin.changelist_view(self, request, extra_context)
+    
+  def getResult(modeladmin, request, queryset):
+    voteResult = DriverOfTheDayVote.objects.values('driver').annotate(votes=Count('driver')).order_by("-votes")
+    if voteResult.count() ==0:
+      messages.error(request, "Not enought votes")
+    else:
+      message = ""
+      for driverVote in voteResult:
+        driver = Driver.objects.get(id=driverVote["driver"])
+        message = message + "{0}: {1}x<br>".format(driver, driverVote["votes"])
+      messages.info(request, mark_safe(message))
+  getResult.short_description = "Get Driver of the day vote result"
+  getResult.acts_on_all = True
 
 
 class RaceAdmin(admin.ModelAdmin):
@@ -111,7 +144,7 @@ class GenericPrivacyAcceptAdmin(admin.ModelAdmin):
   (Upload,),
   (Registration, RegistrationAdmin),
   (RegistrationStatus,),
-  (DriverOfTheDayVote,),
+  (DriverOfTheDayVote,DriverOfTheDayVoteAdmin),
   (GenericPrivacyAccept,GenericPrivacyAcceptAdmin),
 ]]
 
