@@ -525,10 +525,10 @@ def driverOfTheDayVote(request):
   error = None
 
   if request.POST:
-    form = DriverOfTheDayVoteForm(request.POST,request.FILES)
+    form = DriverOfTheDayVoteForm(request.POST)
     if form.is_valid():
-      if DriverOfTheDayVote.objects.filter(ipAddress=getClientIP(request)).count() == 0:
-        vote = form.save(commit=False)
+      vote = form.save(commit=False)
+      if DriverOfTheDayVote.objects.filter(season=vote.season,ipAddress=getClientIP(request)).count() == 0:
         vote.ipAddress = getClientIP(request)
         vote.save()
         submitted = True
