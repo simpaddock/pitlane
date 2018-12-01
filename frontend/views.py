@@ -522,6 +522,7 @@ def driverOfTheDayVote(request):
     raise Http404()
   form = DriverOfTheDayVoteForm()
   submitted = False
+  error = None
 
   if request.POST:
     form = DriverOfTheDayVoteForm(request.POST,request.FILES)
@@ -531,10 +532,14 @@ def driverOfTheDayVote(request):
         vote.ipAddress = getClientIP(request)
         vote.save()
         submitted = True
+      else:
+        error = "You already voted"
+      
      
   return renderWithCommonData(request, 'frontend/driveroftheday.html', {
     "form": form,
-    "submitted": submitted
+    "submitted": submitted,
+    "error": error
   })
 def signUpStatus(request):
   form = SignUpStatusForm()
