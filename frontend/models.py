@@ -147,27 +147,14 @@ def calculateRFactorResult(self, *args, **kwargs):
             runLaps  = runLaps + 1
 
       rawData["Laps"] = runLaps
-      pointMap = {
-        1: 25,
-        2: 18,
-        3: 15,
-        4: 12,
-        5: 10,
-        6: 8,
-        7: 6,
-        8: 4,
-        9: 2,
-        10: 1
-      }
-
-      if int(rawData["Position"]) in pointMap:
+      if str(rawData["Position"]) in LEAGUECONFIG["ruleset"]["points"]:
         if runLaps > 0 and maxLaps > 0:
           percentage = 100/(maxLaps/runLaps)
         else:
           percentage = 0
         # i assume that the rfactor xml is sorted.
-        if percentage > 70:
-          rawData["Points"] = pointMap[int(rawData["Position"])]
+        if percentage > float(LEAGUECONFIG["ruleset"]["scoreLimit"]):
+          rawData["Points"] = LEAGUECONFIG["ruleset"]["points"][str(rawData["Position"])]
         else:
           rawData["Points"]  = 0
       else:
