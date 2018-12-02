@@ -34,13 +34,10 @@
     "fontawesomeclass": "linkcontent"
   },
   "timezone": "Europe/Berlin",
-  "bannerConfig":[{
-    "type": "image",
-    "path":  "/frontend/bg.jpg",
-    "position": [
-      0,0
-    ],
-    "size": null,
-    "filter": "LA"
-  }]
+  "robots": {
+    "disallow": [
+      "/imprint/",
+      "/privacy/"
+    ]
+  }
 }

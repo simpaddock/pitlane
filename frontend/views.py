@@ -89,7 +89,9 @@ def getRoutes():
   return routes
 
 def get_robots(request):
-  text = "User-agent: *\nDisallow: /imprint/\nDisallow: /privacy/"
+  text = "User-agent: *\n"
+  for url in LEAGUECONFIG["robots"]["disallow"]:
+    text = text + "Disallow: {0}{1}".format(url,"\n")
   return HttpResponse(text, content_type='text/plain')
 
 def getCurrentCup():
