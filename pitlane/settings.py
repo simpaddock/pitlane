@@ -151,10 +151,6 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-SIMSOFTWARE = (
-    ('rFactor 2', 'rFactor 2'),
-)
-
 TEXTBLOCKCONTEXT = (
     ('about', 'About page'),
     ('rule', 'Reglement'),
