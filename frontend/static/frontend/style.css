@@ -273,6 +273,8 @@ a {
 
 /* ================ Timeline Media Queries ================ */
 @media screen and (max-width: 660px) {
+  .event-desc {
+    margin-right: 11em; }
   .timeline {
     width: 100%;
     padding: 0em 0 1em 0; }
@@ -357,7 +359,8 @@ a {
   color: #00aeef;
   font-weight: bold;
   font-family: oswald;
-  font-size: 16pt; }
+  font-size: 16pt;
+  margin-bottom: 0.5em; }
 
 .selected-season {
   font-weight: bold;
