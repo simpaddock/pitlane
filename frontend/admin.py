@@ -55,15 +55,20 @@ class DriverOfTheDayVoteAdmin(admin.ModelAdmin):
     return admin.ModelAdmin.changelist_view(self, request, extra_context)
     
   def getResult(modeladmin, request, queryset):
-    voteResult = DriverOfTheDayVote.objects.values('driver').annotate(votes=Count('driver')).order_by("-votes")
-    if voteResult.count() ==0:
-      messages.error(request, "Not enought votes")
-    else:
-      message = ""
-      for driverVote in voteResult:
-        driver = Driver.objects.get(id=driverVote["driver"])
-        message = message + "{0}: {1}x<br>".format(driver, driverVote["votes"])
-      messages.info(request, mark_safe(message))
+    voteResult = DriverOfTheDayVote.objects.all()
+    driverVoteMap = {}
+    for vote in voteResult:
+      if vote.driver.driver.id in driverVoteMap:
+        driverVoteMap[vote.driver.driver.id] = driverVoteMap[vote.driver.driver.id] +1
+      else:
+        driverVoteMap[vote.driver.driver.id] = 1
+    
+    ranked = dict(sorted(driverVoteMap.items()))
+    message = ""
+    for driverId, votes in ranked.items():
+      driver = Driver.objects.get(id=driverId)
+      message = message + "{0}: {1}x<br>".format(driver, votes)
+    messages.info(request, mark_safe(message))
   getResult.short_description = "Get Driver of the day vote result"
   getResult.acts_on_all = True
 

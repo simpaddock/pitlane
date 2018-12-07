@@ -429,7 +429,7 @@ class Upload(models.Model):
     return self.name
 
 class DriverOfTheDayVote(models.Model):
-  driver = models.ForeignKey(Driver, on_delete=models.CASCADE, default=None)
+  driver = models.ForeignKey(DriverEntry, on_delete=models.CASCADE, default=None)
   season = models.ForeignKey(Season, on_delete=models.CASCADE, default=None)
   ipAddress = models.GenericIPAddressField()
   def __str__(self):

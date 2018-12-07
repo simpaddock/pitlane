@@ -519,18 +519,25 @@ def privacyAccept(request):
     "submitted": submitted
   })
 
-def driverOfTheDayVote(request):
+def driverOfTheDayVote(request, id: int):
   if not LEAGUECONFIG["dotd"]:
     raise Http404()
+  season = Season.objects.get(id=id)
+  if not season.driverOfTheDayVote:
+    raise Http404()
   form = DriverOfTheDayVoteForm()
+  form.season = season
   submitted = False
   error = None
-
+  if DriverOfTheDayVote.objects.filter(season=season,ipAddress=getClientIP(request)).count():
+    # visitor already voted for something
+    error = "You already voted"
   if request.POST:
     form = DriverOfTheDayVoteForm(request.POST)
     if form.is_valid():
       vote = form.save(commit=False)
-      if DriverOfTheDayVote.objects.filter(season=vote.season,ipAddress=getClientIP(request)).count() == 0:
+      vote.season = season
+      if DriverOfTheDayVote.objects.filter(season=season,ipAddress=getClientIP(request)).count() == 0:
         vote.ipAddress = getClientIP(request)
         vote.save()
         submitted = True
@@ -539,10 +546,12 @@ def driverOfTheDayVote(request):
       
      
   return renderWithCommonData(request, 'frontend/driveroftheday.html', {
+    "season": season,
     "form": form,
     "submitted": submitted,
     "error": error
   })
+
 def signUpStatus(request):
   form = SignUpStatusForm()
   data = None

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registration, Incident, Race, Season, DriverEntry, GenericPrivacyAccept, DriverOfTheDayVote
+from .models import Registration, Incident, Race, Season, DriverEntry, GenericPrivacyAccept, DriverOfTheDayVote, Driver
 
 class RegistrationForm(forms.ModelForm): 
   class Meta:
@@ -32,8 +32,7 @@ class IncidentForm(forms.ModelForm):
 class DriverOfTheDayVoteForm(forms.ModelForm): 
   class Meta:
     model = DriverOfTheDayVote
-    fields = '__all__'
-    exclude = ('ipAddress',)
+    fields = ('driver',)
   def __init__(self, *args, **kwargs):
     super(DriverOfTheDayVoteForm, self).__init__(*args, **kwargs)
-    self.fields['season'].queryset = Season.objects.filter(isRunning=True,driverOfTheDayVote=True)
+    self.fields['driver'].queryset =  DriverEntry.objects.filter(teamEntry__season__driverOfTheDayVote=True).order_by("driver__lastName", "driver__firstName")
