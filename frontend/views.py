@@ -116,7 +116,7 @@ def get_index(request):
   gmt = datetime.now(tz)
   now = str(gmt.replace(microsecond=0))
   races = Race.objects.all().filter(season=getCurrentCup()).order_by("startDate")
-  newsArticles = NewsArticle.objects.filter(isDraft=False).order_by("-date")[:10]
+  newsArticles = NewsArticle.objects.filter(isDraft=False).order_by("-date")[:12]
   textBlocks = TextBlock.objects.filter(context='landing')
   return renderWithCommonData(request, 'frontend/index.html', {
     "events": races,
