@@ -35,6 +35,7 @@ COLUMNS = {
   "race": OrderedDict([
     ('position', None), 
     ('id', "baseInfos.driverEntry.driver.id"), 
+    ('country', "baseInfos.driverEntry.driver.country"), 
     ('firstName', "baseInfos.driverEntry.driver.firstName"),
     ('lastName', "baseInfos.driverEntry.driver.lastName"),
     ('team', "baseInfos.driverEntry.teamEntry.team.name"),
@@ -61,7 +62,8 @@ COLUMNS = {
     ('team', "team"),
     ('logo', "logo"),
     ('vehicle', "vehicle"),
-    ('number', "number")
+    ('number', "number"),
+    ('country', "country")
   ]),
   "teams": OrderedDict([
     ('team', "team"),

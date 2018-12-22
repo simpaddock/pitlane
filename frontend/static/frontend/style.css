@@ -437,7 +437,8 @@ a {
   border-top-width: 3px;
   border-top-style: solid;
   border-top-color: #00aeef;
-  margin-bottom: 1.5em; }
+  margin-bottom: 1.5em;
+  margin-left: 0.1em; }
 
 .half-top-margin {
   margin-top: 0.5em; }
@@ -501,6 +502,19 @@ a {
 
 .race-meta-entry i {
   padding-right: 1em; }
+
+.race-team-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.controlandaids {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.driver-country {
+  height: 27px; }
 
 .eu-cookies {
   position: fixed;
