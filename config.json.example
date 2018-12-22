@@ -1,8 +1,10 @@
 {
+  maintenance: false,
   logo: 'pathtothelogo',
   name: 'name of the league',
   "description": "description",
   "theme": "basement",
+  "templateDateTimeFormat": "dS M Y H:i:s",
   "dateFormat": "%Y-%m-%d %H:%M:%S",
   "nextRaceFormat": "d M Y",
   "articleFormat": "d.m.Y",
