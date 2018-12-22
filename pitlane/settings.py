@@ -20,7 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
 
 
+LEAGUECONFIG = None
+CONFIGPATH = os.path.join((BASE_DIR), "config.json")
+with open(CONFIGPATH,"r") as config:
+    LEAGUECONFIG = loads(config.read())
 
+SECRET_KEY = LEAGUECONFIG["secretKey"]
 
 # Application definition
 
@@ -41,6 +46,7 @@ INSTALLED_APPS = [
 CORS_ORIGIN_ALLOW_ALL=True
 
 MIDDLEWARE = [
+    #'frontend.middleware.TimezoneMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -70,12 +76,7 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'pitlane.wsgi.application'
 
-LEAGUECONFIG = None
-CONFIGPATH = os.path.join((BASE_DIR), "config.json")
-with open(CONFIGPATH,"r") as config:
-    LEAGUECONFIG = loads(config.read())
 
-SECRET_KEY = LEAGUECONFIG["secretKey"]
 
 DEBUG = LEAGUECONFIG["debug"]
 if not DEBUG:

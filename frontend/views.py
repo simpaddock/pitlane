@@ -692,3 +692,6 @@ def getDriverStats(request, id: int):
       sparkline(raceResults)
     ]
   })
+
+def maintenance(request):
+  return renderWithCommonData(request, 'frontend/maintenance.html', {})
