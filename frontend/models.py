@@ -20,7 +20,7 @@ class Country(models.Model):
   name = models.CharField(max_length=100)
   flag = models.FileField(default=None, blank=True, upload_to='uploads/flags/')
   def __str__(self):
-    return self.name
+    return self.flag.url
 
 class Track(models.Model):
   name = models.CharField(max_length=100)
@@ -136,6 +136,7 @@ def calculateRFactorResult(self, *args, **kwargs):
       for node in driver.childNodes:
         if "Element" in str(type(node)):
           key = node.tagName
+          print(key)
           if key == "Pitstops":
             key = "Stops"
           if key == "FinishTime":
@@ -163,7 +164,7 @@ def calculateRFactorResult(self, *args, **kwargs):
       # 1. Find Team
       teamName = rawData["TeamName"]
       carNumber = rawData["CarNumber"]
-      vehicle = rawData["CarClass"]
+      vehicle = rawData["CarType"]
       
       fittingTeams = Team.objects.all().filter(name=teamName)
       if fittingTeams.count() == 0:
