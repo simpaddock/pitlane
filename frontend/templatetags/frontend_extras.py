@@ -19,6 +19,10 @@ def dateFormat(value):
   return date(value, LEAGUECONFIG["articleFormat"])
 
 @register.filter
+def datetime(value):
+  return date(value, LEAGUECONFIG["templateDateTimeFormat"])
+
+@register.filter
 def index(list, i):
   if i >= len(list):
     return None
