@@ -1,11 +1,22 @@
-# paddock
+# pitlane
 
-Main website to manage a league
+Simracing website CMS
 
-# Configuration
+## Features
 
-See config.json.example for more details.
+- Manages multiple seasons
+- Driver & Team standings
+- News module
+- Driver profile/ statistics
+- Sign up with progression status
+- Incident report
+- Driver of the day votes
+- Number plate generation
 
-# License
+## Themes
+
+Please note that this repository is the core component and no themes are included here to prevent leagues from looking all the same.
+
+## License
 
 MPL-2.0
