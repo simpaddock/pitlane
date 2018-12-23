@@ -45,6 +45,7 @@ else:
         path('imprint/', views.get_imprint),
         path('calendar/<int:id>/', views.get_iCalender),
         path('news/<int:id>/', views.get_SingleNews),
+        path('generatenumberplate/', views.plate),
         path('incidents/<int:id>/', views.get_incidents),
         path('signup/', views.signUp),
         path('driveroftheday/<int:id>/', views.driverOfTheDayVote),

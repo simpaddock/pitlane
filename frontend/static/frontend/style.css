@@ -82,6 +82,9 @@ label {
 .block-image {
   width: 100%; }
 
+.textblock a {
+  text-decoration: underline; }
+
 a {
   color: white !important; }
 

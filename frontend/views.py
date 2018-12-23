@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from collections import OrderedDict
 from django.db import models
 from django.http import Http404
-from .models import RegistrationStatus, TextBlock, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team
+from .models import Upload, RegistrationStatus, TextBlock, NewsArticle, Season, Race, TeamEntry, Track, RaceResult, DriverRaceResult, DriverRaceResultInfo, DriverEntry, Driver, Team
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
@@ -697,3 +697,40 @@ def getDriverStats(request, id: int):
 
 def maintenance(request):
   return renderWithCommonData(request, 'frontend/maintenance.html', {})
+
+def plate(request):
+  form = NumberPlateForm()
+  if request.method=='POST':
+      form = NumberPlateForm(request.POST)
+      if form.is_valid():
+          formData = form.cleaned_data
+          #now in the object cd, you have the form as a dictionary.
+          number = int(formData.get('number'))
+          if number > 100 or number == 0:
+            return HttpResponse("Number invalid")
+          from PIL import Image
+          file = Upload.objects.filter(name = "plate").get()
+          img = Image.open(file.filePath.path)
+          draw = ImageDraw.Draw(img)
+          font =ImageFont.truetype( size=400, font=STATIC_ROOT + "/frontend/fonts/electrolize-v6-latin-regular.ttf")
+          text = str(number)
+          offsets = {
+            1: -20,
+            2: -30,
+            3: -30,
+            4: -40,
+            5: -30,
+            6: -30,
+            7: -20,
+            8: -40,
+            9: -40
+          }
+          if len(text) == 2:
+            draw.text((70+ offsets[int(text[0])], 80),text[0],(50,55,55),font=font)
+            draw.text((330+ offsets[int(text[1])], 80),text[1],(50,55,55),font=font)
+          else:
+            draw.text((200 + offsets[number], 80),str(number),(50,55,55),font=font)
+          response = HttpResponse(content_type="image/jpeg")
+          img.save(response, "JPEG")
+          return response
+  return renderWithCommonData(request, 'frontend/numberplate.html', { "form": form})

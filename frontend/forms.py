@@ -36,3 +36,6 @@ class DriverOfTheDayVoteForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super(DriverOfTheDayVoteForm, self).__init__(*args, **kwargs)
     self.fields['driver'].queryset =  DriverEntry.objects.filter(teamEntry__season__driverOfTheDayVote=True).order_by("driver__lastName", "driver__firstName")
+
+class NumberPlateForm(forms.Form):
+  number = forms.IntegerField(max_value=99,required = True,min_value=1)
