@@ -160,3 +160,10 @@ TEXTBLOCKCONTEXT = (
     ('dstandings', 'Driver standings (Preseason)'),
     ('tstandings', 'Team standings (Preseason)'),
 )
+
+TEXTBLOCKOPTIONS = (
+    ('left-image', 'Image left'),
+    ('right-image', 'Image right'),
+    ('top-image', 'Image top'),
+    ('bottom-image', 'Image bottom'),
+)

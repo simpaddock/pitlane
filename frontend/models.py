@@ -3,7 +3,7 @@ from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db.models.functions import Cast
 from django.db import transaction
-from pitlane.settings import LEAGUECONFIG, TEXTBLOCKCONTEXT
+from pitlane.settings import LEAGUECONFIG, TEXTBLOCKCONTEXT, TEXTBLOCKOPTIONS
 import re
 from django.utils.html import mark_safe
 from django.core.exceptions import ValidationError
@@ -331,6 +331,10 @@ class TextBlock(models.Model):
   text =  RichTextUploadingField()
   season = models.ForeignKey(Season, on_delete=models.CASCADE, blank=True, null=True)
   context = models.CharField(max_length=30,choices=TEXTBLOCKCONTEXT,default=TEXTBLOCKCONTEXT[0])
+  mediaFile = models.ImageField(default=None, null=True,blank=True, upload_to='uploads/news/')
+  orderIndex = models.IntegerField(default=0)
+  options = models.CharField(max_length=30,choices=TEXTBLOCKOPTIONS,default=TEXTBLOCKOPTIONS[0])
+  mediaFileThumbnail = models.BooleanField(default=False, blank=False)
   def __str__(self):
     return "{0}".format(self.title)
   @property

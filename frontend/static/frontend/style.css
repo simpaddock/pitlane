@@ -79,6 +79,9 @@ label {
 .centered {
   text-align: center; }
 
+.block-image {
+  width: 100%; }
+
 a {
   color: white !important; }
 
@@ -202,7 +205,7 @@ a {
   z-index: 9999;
   position: absolute;
   top: 0px;
-  left: -3.3em;
+  left: -2.2em;
   top: -0.5em;
   filter: drop-shadow(0px 0px 1px white); }
 
@@ -219,7 +222,7 @@ a {
   display: block;
   width: 6px;
   height: 100%;
-  margin-left: -3px;
+  margin-left: 1em;
   background: #505050;
   background: -moz-linear-gradient(top, rgba(80, 80, 80, 0) 0%, #505050 8%, #505050 92%, rgba(80, 80, 80, 0) 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1e5799), color-stop(100%, #7db9e8));
@@ -244,7 +247,8 @@ a {
   width: 100%;
   float: right;
   left: 2em;
-  margin-top: 1em; }
+  margin-top: 1em;
+  padding-left: 1.5em; }
 
 .timeline:first-child {
   margin-top: 0em; }
