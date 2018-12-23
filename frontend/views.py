@@ -140,7 +140,7 @@ def get_news(request):
 def get_about(request):
   name = LEAGUECONFIG["name"]
   logo = LEAGUECONFIG["logo"]
-  textBlocks = TextBlock.objects.filter(context='about')
+  textBlocks = TextBlock.objects.filter(context='about').order_by("orderIndex")
   return renderWithCommonData(request, 'frontend/about.html', {
     "name": name,
     "logo": logo,
@@ -150,7 +150,7 @@ def get_about(request):
 @cache_page(60 * 15)  
 def get_rules(request):
   return renderWithCommonData(request, 'frontend/rules.html', {
-    "rules": TextBlock.objects.filter(season__isRunning=True, context='rule')
+    "rules": TextBlock.objects.filter(season__isRunning=True, context='rule').order_by("orderIndex")
   })
 
 @cache_page(60 * 15)
