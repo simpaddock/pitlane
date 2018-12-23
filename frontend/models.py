@@ -336,7 +336,7 @@ class TextBlock(models.Model):
   options = models.CharField(max_length=30,choices=TEXTBLOCKOPTIONS,default=TEXTBLOCKOPTIONS[0])
   mediaFileThumbnail = models.BooleanField(default=False, blank=False)
   def __str__(self):
-    return "{0}".format(self.title)
+    return "{1}: {0} season: {2}".format(self.title, self.context, self.season)
   @property
   def plainText(self):
     return strip_tags(self.text.replace("\r",""))

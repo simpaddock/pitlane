@@ -154,7 +154,7 @@ CKEDITOR_CONFIGS = {
 
 TEXTBLOCKCONTEXT = (
     ('about', 'About page'),
-    ('rule', 'Reglement'),
+    ('rule', 'Rules'),
     ('landing', 'Landing page'),
     ('signup', 'SignUp'),
     ('dstandings', 'Driver standings (Preseason)'),
