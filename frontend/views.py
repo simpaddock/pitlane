@@ -15,7 +15,7 @@ from .forms import *
 from requests import get
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
-from pitlane.settings import STATIC_ROOT, LEAGUECONFIG, MEDIA_ROOT
+from pitlane.settings import STATIC_ROOT, LEAGUECONFIG, MEDIA_ROOT, COLUMNS, NUMBERGENERATOROFFSETS
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from icalendar import Calendar, Event
 import pytz
@@ -23,61 +23,20 @@ from datetime import datetime, date, time
 from urllib.parse import urljoin
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from io import BytesIO
 import base64
+from frontend.utils import generateSparkline, getChildValue, getSeasonDrivers, getRaceResult, getTeamStandings, getClientIP, embedYoutube, JSONEncoder
+from frontend.templatetags.frontend_tags import next_championship
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
 LIST_DATA_DRIVERS ="listdrivers"
 
-COLUMNS = {
-  "race": OrderedDict([
-    ('position', None), 
-    ('id', "baseInfos.driverEntry.driver.id"), 
-    ('country', "baseInfos.driverEntry.driver.country"), 
-    ('firstName', "baseInfos.driverEntry.driver.firstName"),
-    ('lastName', "baseInfos.driverEntry.driver.lastName"),
-    ('team', "baseInfos.driverEntry.teamEntry.team.name"),
-    ('teamid', "baseInfos.driverEntry.teamEntry.team.id"),
-    ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
-    ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
-    ('vehicleImage', "baseInfos.driverEntry.teamEntry.vehicleImage"),
-    ('number', "baseInfos.driverEntry.driverNumber"),
-    ('numberFormat', "baseInfos.driverEntry.driverNumberFormat"),
-    ('laps', None), # none leads to direct additional searching
-    ('stops', None),
-    ('time', None),
-    ('avg', None),
-    ('points', None),
-    ('finishstatus', None),
-    ('controlandaids', None),
-    ('bonuspoints', None),
-    ('cartype', None), # actual car class from rFactor reported
-  ]),
-  "drivers": OrderedDict([
-    ('id', "id"), 
-    ('firstName', "firstName"),
-    ('lastName', "lastName"),
-    ('team', "team"),
-    ('logo', "logo"),
-    ('vehicle', "vehicle"),
-    ('number', "number"),
-    ('country', "country")
-  ]),
-  "teams": OrderedDict([
-    ('team', "team"),
-    ('logo', "logo"),
-    ('vehicle', "vehicle"),
-    ('vehicleImage', "vehicleImage")
-  ])
-}
 
 from pitlane.settings import LEAGUECONFIG
 
 def getRoutes():
   routes = OrderedDict()
-  season = getCurrentCup()
+  season = next_championship()
   routes["news"] = "News"
   routes["seasons"] = "Seasons"
   if season is not None:
@@ -96,19 +55,10 @@ def get_robots(request):
     text = text + "Disallow: {0}{1}".format(url,"\n")
   return HttpResponse(text, content_type='text/plain')
 
-def getCurrentCup():
-  nextRace = Race.objects.filter(season__isRunning=True, endDate__gt=datetime.now()).order_by("startDate").first()
-  if nextRace is None:
-    return None
-  
-  cup = nextRace.season
-  cup.nextRace = nextRace
-  return cup
-
 def renderWithCommonData(request, template, context):
   context["routes"] = getRoutes()
   context["config"] = LEAGUECONFIG
-  context["running"] = getCurrentCup()
+  context["running"] = next_championship()
   template = template.replace("frontend/", "frontend/" + LEAGUECONFIG["theme"] + "/")
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
   return render(request, template, context)
@@ -117,7 +67,7 @@ def get_index(request):
   tz = pytz.timezone(LEAGUECONFIG["timezone"])
   gmt = datetime.now(tz)
   now = str(gmt.replace(microsecond=0))
-  races = Race.objects.all().filter(season=getCurrentCup()).order_by("startDate")
+  races = Race.objects.all().filter(season=next_championship()).order_by("startDate")
   newsArticles = NewsArticle.objects.filter(isDraft=False).order_by("-date")[:12]
   textBlocks = TextBlock.objects.filter(context='landing')
   return renderWithCommonData(request, 'frontend/index.html', {
@@ -168,61 +118,12 @@ def get_SingleNews(request, id:int):
   page = request.GET.get('page'),
   url = urljoin(LEAGUECONFIG["url"], '/news/'+ str(articles[0].id)) # ",/" does not work 
   title = articles[0].title
-  shareButtons = [
-    {
-      "name": "Twitter",
-      "icon": "fab fa-twitter-square",
-      "url": "https://twitter.com/intent/tweet?url=" + url + '&text=' + title
-    },
-    {
-      "name": "Facebook",
-      "icon": "fab fa-facebook-square",
-      "url": "http://www.facebook.com/sharer.php?u=" + url
-    },
-    {
-      "name": "reddit",
-      "icon": "fab fa-reddit-square",
-      "url": "https://reddit.com/submit?url=" + url + '&title=' + title
-    },
-    {
-      "name": "reddit",
-      "icon": "fab fa-get-pocket",
-      "url": "https://getpocket.com/edit?url=" +url
-    },
-    {
-      "name": "reddit",
-      "icon": "fab fa-flipboard",
-      "url": "https://share.flipboard.com/bookmarklet/popout?v=2&title=" + title + '&url=' + url
-    },
-    {
-      "name": "pinterest",
-      "icon": "fab fa-pinterest",
-      "url": "http://pinterest.com/pin/create/button/?url=" + url
-    },
-    {
-      "name": "RSS",
-      "icon": "fas fa-rss",
-      "url": "/feed"
-    }
-  ]
   return renderWithCommonData(request, 'frontend/article.html', {
     "articles": paginator.get_page(page),
-    "shareButtons": shareButtons,
     "title": title
   })
 
-def getSeasonDrivers(seasonId: int) -> list:
-  teams = TeamEntry.objects.all().filter(season_id=seasonId)
-  drivers = list()
-  for team in teams:
-    teamDrivers = DriverEntry.objects.all().filter(teamEntry_id=team.id)
-    for driver in teamDrivers:
-      drivers.append(driver) # FIXME: full object leads to json error
-  return drivers
 
-class JSONEncoder(DjangoJSONEncoder):
-    def default(self, o):
-        return str(o)
 
 @cache_page(60 * 15)
 def get_seasonList(request):
@@ -255,128 +156,6 @@ def get_seasonList(request):
     "seasonsJSON": seasonsJSON
   })
 
-
-def getChildValue(haystack, needle):
-  parts = needle.split(".")
-  value = haystack
-  for part in parts:
-    # last parent is dict or object -> extract children
-    if isinstance(value, dict):
-      value = value[part]
-    elif isinstance(value, models.Model):
-      value = getattr(value, part)
-    elif isinstance(value, object):
-      value = value.__dict__[part]
-  return value
-
-def getRaceResult(id: int):
-  results = DriverRaceResult.objects.all().filter(raceResult__race_id=id)
-  completeResults = []
-  # collect all infos
-  seasonId=None
-  knownDrivers = []
-  for result in results:
-    seasonId = result.driverEntry.teamEntry.season.id
-    infos = DriverRaceResultInfo.objects.all().filter(driverRaceResult_id=result.id)
-    knownDrivers.append(result.driverEntry.driverNumber)
-    completeResults.append(
-      {
-        "baseInfos": result,
-        "additionalInfos": infos,
-        "position": 0
-      })
-  # get all drivers to append DNS entries
-  drivers = DriverEntry.objects.filter(teamEntry__season__id=seasonId)
-  for driver in drivers:
-    infos = {
-      "laps": "0",
-      "points": "0",
-      "stops": "0",
-      "position": "999",
-      "finishstatus": "DNS",
-      "cartype": ""
-    }
-    if driver.driverNumber not in knownDrivers:
-      infosToAppend = []
-      for key, info in infos.items():
-        raceresultinfo = DriverRaceResultInfo()
-        raceresultinfo.name = key
-        raceresultinfo.value=info
-        infosToAppend.append(raceresultinfo)
-      completeResults.append(
-      {
-        "position":999,
-        "baseInfos": {
-          "driverEntry": driver
-        },
-        "additionalInfos": infosToAppend
-      })
-
-  viewList = []
-  for result in completeResults:
-    viewData = OrderedDict()
-    viewData["position"] = 999
-    viewData["points"] = 0
-    viewData["finishstatus"]  = ""
-    viewData["cartype"]  = ""
-    viewData["bonuspoints"] = 0
-    for columnName, columnPath in COLUMNS["race"].items():
-      if columnPath is None:  # None means "search in additional fields"
-        for info in result["additionalInfos"]:
-          if info.name.lower() == columnName:
-            valueToAdd = info.value
-            if columnName in ["bonuspoints"]: # only sum bonus points together
-              viewData[columnName] = viewData[columnName] + int(valueToAdd)
-            else:
-              viewData[columnName] = valueToAdd
-      else:
-        viewData[columnName] = getChildValue(result, columnPath)
-    viewData["number"] =  viewData["numberFormat"].format(viewData["number"])
-    # Alter the results if a driver was disqualified (after) the race booking
-    if "finishstatus" in viewData and viewData["finishstatus"] == "dsq":
-      viewData["position"] = 999
-      viewData["points"] = 0
-    if viewData["cartype"]:
-      viewData["vehicle"] = viewData["cartype"] # the actual cartype overwrites the team entry vehicle
-    viewData["sumPointsRace"] = int(viewData["points"]) + int(viewData["bonuspoints"]) # add bonus points
-    viewList.append(viewData)
-  return sorted(viewList, key=lambda x: int(x["position"]), reverse=False)
-
-def getTeamStandings(id: int):
-  races = Race.objects.filter(season_id = id).order_by('startDate')
-  viewList = {}
-  for key, race in enumerate(races):
-    results = getRaceResult(race.id)
-    for driver in results:
-      teamId = driver["teamid"]
-      if teamId not in viewList: # first race, create name column..
-        viewList[teamId] = OrderedDict()
-        for columnName, columnValue in COLUMNS["teams"].items():
-          viewList[teamId][columnName] = driver[columnValue]
-        viewList[teamId]["sum"] = 0   
-        viewList[teamId]["points"] = []
-        viewList[teamId]["detailPoints"] = []
-      if len( viewList[teamId]["points"]) > key:
-        # we already seen a result for that race
-        viewList[teamId]["points"][key].append(int(driver["sumPointsRace"])) # sum bonus points also
-        viewList[teamId]["detailPoints"][key].append(int(driver["sumPointsRace"])) # sum bonus points also
-      else:
-        viewList[teamId]["points"].append([int(driver["sumPointsRace"])]) # sum bonus points also
-        viewList[teamId]["detailPoints"].append([int(driver["sumPointsRace"])]) # sum bonus points also
-  viewList = list(viewList.values())
-  # Rule: only the first two drivers will score
-  for teamIndex, team in enumerate(viewList):
-    teamPointSum = 0
-    for key, race in enumerate(team["points"]):
-      newRacePoints = sorted(race, reverse=True)
-      if len(newRacePoints) > 2:
-        newRacePoints = newRacePoints[0:2]
-      newRacePointsSum = reduce(lambda x,y: int(x)+int(y),  newRacePoints)
-      teamPointSum = teamPointSum + newRacePointsSum
-      viewList[teamIndex]["points"][key]  = newRacePointsSum
-    
-    viewList[teamIndex]["sum"] =teamPointSum
-  return sorted(viewList, key=lambda tup: tup["sum"], reverse=True)
 
 
 def getDriversStandings(id: int):
@@ -493,13 +272,7 @@ def signUp(request):
     "form": form,
     "token": token
   })
-def getClientIP(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+
 
 def privacyAccept(request):
   if not LEAGUECONFIG["staticSignup"]:
@@ -627,33 +400,6 @@ def get_iCalender(request, id: int):
   response['Content-Disposition'] = 'attachment; filename="{0}.ics"'.format(season.name)
   return response
 
-def embedYoutube(request,argument: str):
-  url = "{0}video/youtube/{1}".format(LEAGUECONFIG["embettyUrl"],argument)
-  r = get(url)
-  contentType = r.headers['content-type']
-  return HttpResponse(r.content, content_type=contentType)
-
-def sparkline(data, figsize=(4, 0.25), **kwags):
-  data = list(data)
-  # based on https://markhneedham.com/blog/2017/09/23/python-3-create-sparklines-using-matplotlib/
-
-  fig, ax = plt.subplots(1, 1, figsize=figsize, **kwags)
-  ax.plot(data)
-  for k,v in ax.spines.items():
-      v.set_visible(False)
-  ax.set_xticks([])
-  ax.set_yticks([])
-
-  plt.plot(len(data) - 1, data[len(data) - 1], 'r.')
-
-  ax.fill_between(range(len(data)), data, len(data)*[min(data)], alpha=0.1)
-
-  img = BytesIO()
-  plt.savefig(img, transparent=True, bbox_inches='tight')
-  img.seek(0)
-  plt.close()
-
-  return base64.b64encode(img.read()).decode("UTF-8")
 
 def getDriverStats(request, id: int):
   from statistics import mean
@@ -682,16 +428,16 @@ def getDriverStats(request, id: int):
     "bestPosition": min(positions),
     "driverEntries": driverEntries,
     "seasons": seasons,
-    "pointsSparkline": sparkline(points),
-    "positionSparkline": sparkline(positions),
-    "dnfSparkline": sparkline(raceResults),
+    "pointsSparkline": generateSparkline(points),
+    "positionSparkline": generateSparkline(positions),
+    "dnfSparkline": generateSparkline(raceResults),
     "dnfCount": raceResults.count(1),
     "racesCount": races,
     "driver": driver,
     "sparklines": [
-      sparkline(positions),
-      sparkline(points),
-      sparkline(raceResults)
+      generateSparkline(positions),
+      generateSparkline(points),
+      generateSparkline(raceResults)
     ]
   })
 
@@ -714,17 +460,7 @@ def plate(request):
           draw = ImageDraw.Draw(img)
           font =ImageFont.truetype( size=400, font=STATIC_ROOT + "/frontend/fonts/electrolize-v6-latin-regular.ttf")
           text = str(number)
-          offsets = {
-            1: -20,
-            2: -30,
-            3: -30,
-            4: -40,
-            5: -30,
-            6: -30,
-            7: -20,
-            8: -40,
-            9: -40
-          }
+          offsets = NUMBERGENERATOROFFSETS
           if len(text) == 2:
             draw.text((70+ offsets[int(text[0])], 80),text[0],(50,55,55),font=font)
             draw.text((330+ offsets[int(text[1])], 80),text[1],(50,55,55),font=font)

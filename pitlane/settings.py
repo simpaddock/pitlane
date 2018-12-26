@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from json import loads
+from collections import OrderedDict
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,7 +47,6 @@ INSTALLED_APPS = [
 CORS_ORIGIN_ALLOW_ALL=True
 
 MIDDLEWARE = [
-    #'frontend.middleware.TimezoneMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -167,3 +167,58 @@ TEXTBLOCKOPTIONS = (
     ('top-image', 'Image top'),
     ('bottom-image', 'Image bottom'),
 )
+
+
+COLUMNS = {
+  "race": OrderedDict([
+    ('position', None), 
+    ('id', "baseInfos.driverEntry.driver.id"), 
+    ('country', "baseInfos.driverEntry.driver.country"), 
+    ('firstName', "baseInfos.driverEntry.driver.firstName"),
+    ('lastName', "baseInfos.driverEntry.driver.lastName"),
+    ('team', "baseInfos.driverEntry.teamEntry.team.name"),
+    ('teamid', "baseInfos.driverEntry.teamEntry.team.id"),
+    ('logo', "baseInfos.driverEntry.teamEntry.team.logo"),
+    ('vehicle', "baseInfos.driverEntry.teamEntry.vehicle"),
+    ('vehicleImage', "baseInfos.driverEntry.teamEntry.vehicleImage"),
+    ('number', "baseInfos.driverEntry.driverNumber"),
+    ('numberFormat', "baseInfos.driverEntry.driverNumberFormat"),
+    ('laps', None), # none leads to direct additional searching
+    ('stops', None),
+    ('time', None),
+    ('avg', None),
+    ('points', None),
+    ('finishstatus', None),
+    ('controlandaids', None),
+    ('bonuspoints', None),
+    ('cartype', None), # actual car class from rFactor reported
+  ]),
+  "drivers": OrderedDict([
+    ('id', "id"), 
+    ('firstName', "firstName"),
+    ('lastName', "lastName"),
+    ('team', "team"),
+    ('logo', "logo"),
+    ('vehicle', "vehicle"),
+    ('number', "number"),
+    ('country', "country")
+  ]),
+  "teams": OrderedDict([
+    ('team', "team"),
+    ('logo', "logo"),
+    ('vehicle', "vehicle"),
+    ('vehicleImage', "vehicleImage")
+  ])
+}
+
+NUMBERGENERATOROFFSETS = {
+    1: -20,
+    2: -30,
+    3: -30,
+    4: -40,
+    5: -30,
+    6: -30,
+    7: -20,
+    8: -40,
+    9: -40
+}
