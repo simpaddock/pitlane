@@ -24,7 +24,7 @@ from urllib.parse import urljoin
 import matplotlib
 matplotlib.use("Agg")
 import base64
-from frontend.utils import generateSparkline, getChildValue, getSeasonDrivers, getRaceResult, getTeamStandings, getClientIP, embedYoutube, JSONEncoder
+from frontend.utils import generateSparkline, getChildValue, getSeasonDrivers, getRaceResult, getTeamStandings, getClientIP, JSONEncoder
 from frontend.templatetags.frontend_tags import next_championship
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
@@ -470,3 +470,10 @@ def plate(request):
           img.save(response, "JPEG")
           return response
   return renderWithCommonData(request, 'frontend/numberplate.html', { "form": form})
+
+
+def embedYoutube(request,argument: str):
+  url = "{0}video/youtube/{1}".format(LEAGUECONFIG["embettyUrl"],argument)
+  r = get(url)
+  contentType = r.headers['content-type']
+  return HttpResponse(r.content, content_type=contentType)

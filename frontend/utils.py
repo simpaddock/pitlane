@@ -171,13 +171,6 @@ def getClientIP(request):
       ip = request.META.get('REMOTE_ADDR')
   return ip
 
-
-def embedYoutube(request,argument: str):
-  url = "{0}video/youtube/{1}".format(LEAGUECONFIG["embettyUrl"],argument)
-  r = get(url)
-  contentType = r.headers['content-type']
-  return HttpResponse(r.content, content_type=contentType)
-
 class JSONEncoder(DjangoJSONEncoder): # for json serializing
     def default(self, o):
         return str(o)
