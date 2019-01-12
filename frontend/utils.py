@@ -7,6 +7,9 @@ from pitlane.settings import LEAGUECONFIG, COLUMNS
 from collections import OrderedDict
 from functools import reduce
 from django.core.serializers.json import DjangoJSONEncoder
+import zipfile
+from os.path import basename
+from unidecode import unidecode 
 
 def generateSparkline(data, figsize=(4, 0.25), **kwags):
   data = list(data)
@@ -173,3 +176,38 @@ def getClientIP(request):
 class JSONEncoder(DjangoJSONEncoder): # for json serializing
     def default(self, o):
         return str(o)
+
+def getDriverName(firstName: str, lastName:str) -> str:
+  from re import sub
+  return sub(r"[^a-zA-Z\s:]","",unidecode(firstName) + " " + unidecode(lastName))
+
+
+def generateServerData(queryset):
+  zipf = zipfile.ZipFile('Python.zip', 'w', zipfile.ZIP_DEFLATED)
+  for key, tuple in enumerate(queryset):
+    # add skin file
+    driverName = getDriverName(tuple.firstName, tuple.lastName)
+
+    skinFile =  "/" + driverName + "/alt_" + str(tuple.number) + ".dds"
+    sourceSkinFile = tuple.skinFile.path
+    zipf.write(sourceSkinFile, skinFile)
+    # add rcd file
+    # TODO: map veh files
+    rcdTemplate = """//[[gMa1.002f (c)2016    ]] [[            ]]
+GT3
+{{
+  {name}
+  {{
+    Team = {team}
+    Component = McLaren_650S_GT3_2017
+    Skin = alt_{number}.dds
+    VehFile = 2AJIRA83B2A4.VEH
+    Description = {description}
+    Number = {number}
+  }}
+}}"""
+    rcdTemplateContent = rcdTemplate.format(name=driverName, number=tuple.number,description=tuple.teamName + " #" + str(tuple.number), team=tuple.teamName)
+    zipf.writestr(str(key) + ".rcd", rcdTemplateContent)
+
+    
+  zipf.close()
