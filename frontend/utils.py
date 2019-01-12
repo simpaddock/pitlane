@@ -19,9 +19,7 @@ def generateSparkline(data, figsize=(4, 0.25), **kwags):
   ax.set_xticks([])
   ax.set_yticks([])
 
-  plt.plot(len(data) - 1, data[len(data) - 1], 'r.')
-
-  ax.fill_between(range(len(data)), data, len(data)*[min(data)], alpha=0.1)
+  plt.plot(len(data) - 1, data[len(data) - 1], color='white', linestyle='dashed', marker='o',markerfacecolor='white', markersize=0)
 
   img = BytesIO()
   plt.savefig(img, transparent=True, bbox_inches='tight')
@@ -29,6 +27,7 @@ def generateSparkline(data, figsize=(4, 0.25), **kwags):
   plt.close()
 
   return base64.b64encode(img.read()).decode("UTF-8")
+
 
 def getChildValue(haystack, needle): # mostly needed for driver and team results, race
   parts = needle.split(".")

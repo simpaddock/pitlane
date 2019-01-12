@@ -64,17 +64,13 @@ def renderWithCommonData(request, template, context):
   return render(request, template, context)
 
 def get_index(request):
-  tz = pytz.timezone(LEAGUECONFIG["timezone"])
-  gmt = datetime.now(tz)
-  now = str(gmt.replace(microsecond=0))
   races = Race.objects.all().filter(season=next_championship()).order_by("startDate")
   newsArticles = NewsArticle.objects.filter(isDraft=False).order_by("-date")[:12]
   textBlocks = TextBlock.objects.filter(context='landing')
   return renderWithCommonData(request, 'frontend/index.html', {
     "events": races,
     "newsArticles": newsArticles,
-    "textBlocks": textBlocks,
-    "now": now
+    "textBlocks": textBlocks
   })
 
 @cache_page(60 * 15)
@@ -433,12 +429,7 @@ def getDriverStats(request, id: int):
     "dnfSparkline": generateSparkline(raceResults),
     "dnfCount": raceResults.count(1),
     "racesCount": races,
-    "driver": driver,
-    "sparklines": [
-      generateSparkline(positions),
-      generateSparkline(points),
-      generateSparkline(raceResults)
-    ]
+    "driver": driver
   })
 
 def maintenance(request):
