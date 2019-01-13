@@ -88,6 +88,13 @@ label {
 .empty {
   background: unset !important; }
 
+.registration-status {
+  margin-bottom: 3em;
+  margin-top: 3em; }
+
+.step .step-item:not(:first-child)::before {
+  background: #1da1f2; }
+
 a {
   color: white !important; }
 

@@ -355,17 +355,26 @@ class GenericPrivacyAccept(models.Model):
   def __str__(self):
     return "{0}, {1}".format(self.familyName, self.givenName)
 
+class VehicleClass(models.Model):
+  displayName = models.CharField(verbose_name="Vehicle display name", blank=False, max_length=300)
+  vehicleClass = models.CharField(verbose_name="Internal name", max_length=300, blank=False)
+  def __str__(self):
+    return self.displayName
+
 class Registration(models.Model):
   email =models.EmailField(max_length=200, default="")
-  number =models.IntegerField()
-  teamName =models.CharField(blank=False, max_length=200, default="")
+  number =models.IntegerField(verbose_name="Car entry number")
+  teamName =models.CharField(blank=False, max_length=200, default="", verbose_name="Team name")
+  firstName = models.CharField(blank=False, max_length=200, default="", verbose_name = "Driver first name")
+  lastName = models.CharField(blank=False, max_length=200, default="", verbose_name="Driver last name")
   skinFile = models.FileField(default=None, blank=True, upload_to='uploads/registration/',verbose_name="Skin file")
   season = models.ForeignKey(Season, on_delete=models.CASCADE, default=None)
   wasUploaded = models.BooleanField(default=False, blank=False)
   gdprAccept = models.BooleanField(default=False, blank=False, verbose_name="I consent the GDPR compilant processing of my submission data")
   copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
-  token = models.CharField(max_length=10, default="",blank=True)
+  token = models.CharField(max_length=10, default="",blank=True, verbose_name="Token (only needed if update)")
   ignoreReason = RichTextUploadingField(default="", blank=True)
+  vehicleClass = models.ForeignKey(VehicleClass, on_delete=models.CASCADE, default=None, blank=False, null=False, verbose_name="Vehicle")
   def __str__(self):
     return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ") on Server: " + str(self.wasUploaded)
   @property
@@ -376,6 +385,12 @@ class Registration(models.Model):
       raise ValidationError("You need to accept the GDPR that we can continue.")
     if not self.copyrightAccept:
       raise ValidationError("Please make sure your skin is free of any copyright violation.")
+    if self.skinFile and not self.skinFile.name.endswith(".dds"):
+      raise ValidationError("The skin file must be .dds")
+    if not self.skinFile:
+      raise ValidationError("Please attach your skin")
+    if not self.vehicleClass:
+      raise ValidationError("Please choose your vehicle")
 
     numberGiven = Registration.objects.filter(number=self.number, season_id = self.season.id).count() > 0
     if numberGiven:

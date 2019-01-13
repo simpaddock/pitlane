@@ -4,7 +4,7 @@ from .models import Registration, Incident, Race, Season, DriverEntry, GenericPr
 class RegistrationForm(forms.ModelForm): 
   class Meta:
     model = Registration
-    fields = ['email', 'teamName', 'skinFile', 'number', 'season', 'token', 'gdprAccept', 'copyrightAccept']
+    fields = ['email', 'teamName', 'firstName', 'lastName', 'skinFile', 'number', 'vehicleClass', 'season', 'token', 'gdprAccept', 'copyrightAccept']
   def __init__(self, *args, **kwargs):
     super(RegistrationForm, self).__init__(*args, **kwargs)
     if self.instance:
@@ -39,3 +39,6 @@ class DriverOfTheDayVoteForm(forms.ModelForm):
 
 class NumberPlateForm(forms.Form):
   number = forms.IntegerField(max_value=99,required = True,min_value=1)
+
+class SignUpStatusForm(forms.Form):
+  token = forms.CharField(label='Token', max_length=100)

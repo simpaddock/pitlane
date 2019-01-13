@@ -191,22 +191,20 @@ def generateServerData(queryset):
     skinFile =  "/" + driverName + "/alt_" + str(tuple.number) + ".dds"
     sourceSkinFile = tuple.skinFile.path
     zipf.write(sourceSkinFile, skinFile)
-    # add rcd file
-    # TODO: map veh files
     rcdTemplate = """//[[gMa1.002f (c)2016    ]] [[            ]]
 GT3
 {{
   {name}
   {{
     Team = {team}
-    Component = McLaren_650S_GT3_2017
+    Component = {carName}
     Skin = alt_{number}.dds
-    VehFile = 2AJIRA83B2A4.VEH
+    VehFile = {vehfile}
     Description = {description}
     Number = {number}
   }}
 }}"""
-    rcdTemplateContent = rcdTemplate.format(name=driverName, number=tuple.number,description=tuple.teamName + " #" + str(tuple.number), team=tuple.teamName)
+    rcdTemplateContent = rcdTemplate.format(name=driverName, number=tuple.number,description=tuple.teamName + " #" + str(tuple.number), team=tuple.teamName,vehfile=tuple.vehicleClass.vehicleClass,carName=tuple.vehicleClass.displayName)
     zipf.writestr(str(key) + ".rcd", rcdTemplateContent)
 
     

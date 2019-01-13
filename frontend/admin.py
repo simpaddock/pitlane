@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import DriverOfTheDayVote, Upload, GenericPrivacyAccept, RegistrationStatus, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
+from .models import VehicleClass, DriverOfTheDayVote, Upload, GenericPrivacyAccept, RegistrationStatus, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
 from django.contrib import messages
 from django.utils.html import mark_safe
 from django.db.models import Count
+from .utils import generateServerData
 
 class DriverEntryAdmin(admin.ModelAdmin):
   list_display = ['toString']
@@ -118,9 +119,13 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
 
 class RegistrationAdmin(admin.ModelAdmin):
   readonly_fields = ('downloadLink', 'gdprAccept', 'copyrightAccept')  
+  actions = ['downloadServerData']
   def get_queryset(self, request):
     qs = super(RegistrationAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
+  def downloadServerData(modeladmin, request, queryset):
+    generateServerData(queryset)
+  downloadServerData.short_description = "Download server data"
 
 class IncidentAdmin(admin.ModelAdmin):
   def get_queryset(self, request):
@@ -147,6 +152,7 @@ class GenericPrivacyAcceptAdmin(admin.ModelAdmin):
   (Incident, IncidentAdmin),
   (TextBlock,),
   (Upload,),
+  (VehicleClass,),
   (Registration, RegistrationAdmin),
   (RegistrationStatus,),
   (DriverOfTheDayVote,DriverOfTheDayVoteAdmin),
