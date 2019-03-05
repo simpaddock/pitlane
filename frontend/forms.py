@@ -1,14 +1,20 @@
 from django import forms
-from .models import Registration, Incident, Race, Season, DriverEntry, GenericPrivacyAccept, DriverOfTheDayVote, Driver
+from .models import Registration, Incident, Race, Season, DriverEntry, GenericPrivacyAccept, DriverOfTheDayVote, Driver, LiverySubmission
 
 class RegistrationForm(forms.ModelForm): 
   class Meta:
     model = Registration
-    fields = ['email', 'teamName', 'firstName', 'lastName', 'skinFile', 'number', 'vehicleClass', 'season', 'token', 'gdprAccept', 'copyrightAccept']
+    fields = ['email', 'teamName', 'firstName', 'lastName', 'number', 'vehicleClass', 'season', 'token', 'gdprAccept']
   def __init__(self, *args, **kwargs):
     super(RegistrationForm, self).__init__(*args, **kwargs)
     if self.instance:
         self.fields['season'].queryset = Season.objects.filter(isRunning=True,isOpen=True)
+
+class LiverySubmissionForm(forms.ModelForm): 
+  class Meta:
+    model = LiverySubmission
+    fields = ['registrationToken', 'skinFile', 'copyrightAccept']
+
 
 class GenericPrivacyAcceptAcceptForm(forms.ModelForm): 
   class Meta:

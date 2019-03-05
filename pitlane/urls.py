@@ -48,9 +48,9 @@ else:
         path('generatenumberplate/', views.plate),
         path('incidents/<int:id>/', views.get_incidents),
         path('signup/', views.signUp),
+        path('submitlivery/', views.liverySubmission),
         path('driveroftheday/<int:id>/', views.driverOfTheDayVote),
         path('privacyaccept/', views.privacyAccept), # is only enabled when using static signup
-        path('signupstatus/', views.signUpStatus),
         path('rules/', views.get_rules),
         path('incidentreport/', views.incidentReport),
         path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers),

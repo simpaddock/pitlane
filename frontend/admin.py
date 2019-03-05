@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import VehicleClass, DriverOfTheDayVote, Upload, GenericPrivacyAccept, RegistrationStatus, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
+from .models import LiverySubmission, VehicleClass, DriverOfTheDayVote, Upload, GenericPrivacyAccept, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.utils.html import mark_safe
 from django.db.models import Count
 from .utils import generateServerData
+
 
 class DriverEntryAdmin(admin.ModelAdmin):
   list_display = ['toString']
@@ -81,15 +82,10 @@ class RaceAdmin(admin.ModelAdmin):
     return qs.filter(season__isRunning=True)
 class DriverRaceResultAdmin(admin.ModelAdmin):
   readonly_fields = ('resultDetails',) 
-  actions = ['disqualify', 'undisqualify', 'undisqualify_dnf', 'addBonusPoint', 'removeBonusPoint']
+  actions = ['disqualify', 'addBonusPoint', 'removeBonusPoint']
   def get_queryset(self, request):
     qs = super(DriverRaceResultAdmin, self).get_queryset(request)
     return qs.filter(raceResult__race__season__isRunning=True)
-
-  def disqualify(modeladmin, request, queryset):
-    for driver in queryset:
-      resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='dsq')
-  disqualify.short_description = "Disqualify Driver"
 
   def addBonusPoint(modeladmin, request, queryset):
     for driver in queryset:
@@ -106,26 +102,17 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
       DriverRaceResultInfo.objects.filter(name='bonuspoints', driverRaceResult_id=driver.id).delete()
   removeBonusPoint.short_description = "Remove bonus points"
 
-  def undisqualify(modeladmin, request, queryset):
-    for driver in queryset:
-      resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='Finished Normally')
-  undisqualify.short_description = "Un-Disqualify Driver (Finished Normally)"
-
-  def undisqualify_dnf(modeladmin, request, queryset):
-    for driver in queryset:
-      resultInfo = DriverRaceResultInfo.objects.filter(name='finishstatus', driverRaceResult_id=driver.id).update(value='dnf')
-  undisqualify_dnf.short_description = "Un-Disqualify Driver (DNF)"
-
-
 class RegistrationAdmin(admin.ModelAdmin):
-  readonly_fields = ('downloadLink', 'gdprAccept', 'copyrightAccept')  
+  readonly_fields = ('gdprAccept',)  
   actions = ['downloadServerData']
   def get_queryset(self, request):
     qs = super(RegistrationAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
+  """
   def downloadServerData(modeladmin, request, queryset):
     generateServerData(queryset)
   downloadServerData.short_description = "Download server data"
+  """
 
 class IncidentAdmin(admin.ModelAdmin):
   def get_queryset(self, request):
@@ -135,6 +122,9 @@ class IncidentAdmin(admin.ModelAdmin):
 class GenericPrivacyAcceptAdmin(admin.ModelAdmin):
   def get_readonly_fields(self, request, obj=None):
     return self.fields or [f.name for f in self.model._meta.fields]
+
+class LiverySubmissionAdmin(admin.ModelAdmin):
+  readonly_fields = ('copyrightAccept', 'downloadLink','registrationLink')
 
 [admin.site.register(*models) for models in [
   (Track,),
@@ -154,7 +144,7 @@ class GenericPrivacyAcceptAdmin(admin.ModelAdmin):
   (Upload,),
   (VehicleClass,),
   (Registration, RegistrationAdmin),
-  (RegistrationStatus,),
+  (LiverySubmission,LiverySubmissionAdmin),
   (DriverOfTheDayVote,DriverOfTheDayVoteAdmin),
   (GenericPrivacyAccept,GenericPrivacyAcceptAdmin),
 ]]

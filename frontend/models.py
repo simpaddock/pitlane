@@ -367,28 +367,17 @@ class Registration(models.Model):
   teamName =models.CharField(blank=False, max_length=200, default="", verbose_name="Team name")
   firstName = models.CharField(blank=False, max_length=200, default="", verbose_name = "Driver first name")
   lastName = models.CharField(blank=False, max_length=200, default="", verbose_name="Driver last name")
-  skinFile = models.FileField(default=None, blank=True, upload_to='uploads/registration/',verbose_name="Skin file")
   season = models.ForeignKey(Season, on_delete=models.CASCADE, default=None)
-  wasUploaded = models.BooleanField(default=False, blank=False)
   gdprAccept = models.BooleanField(default=False, blank=False, verbose_name="I consent the GDPR compilant processing of my submission data")
-  copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
   token = models.CharField(max_length=10, default="",blank=True, verbose_name="Token (only needed if update)")
-  ignoreReason = RichTextUploadingField(default="", blank=True)
   vehicleClass = models.ForeignKey(VehicleClass, on_delete=models.CASCADE, default=None, blank=False, null=False, verbose_name="Vehicle")
+
   def __str__(self):
-    return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ") on Server: " + str(self.wasUploaded)
-  @property
-  def downloadLink(self):
-    return mark_safe("""<a target="blank" href="{}">Download skin file</a>""".format(self.skinFile.url)) 
+    return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ")"
+    
   def clean(self):
     if not self.gdprAccept:
       raise ValidationError("You need to accept the GDPR that we can continue.")
-    if not self.copyrightAccept:
-      raise ValidationError("Please make sure your skin is free of any copyright violation.")
-    if self.skinFile and not self.skinFile.name.endswith(".dds"):
-      raise ValidationError("The skin file must be .dds")
-    if not self.skinFile:
-      raise ValidationError("Please attach your skin")
     if not self.vehicleClass:
       raise ValidationError("Please choose your vehicle")
 
@@ -400,44 +389,46 @@ class Registration(models.Model):
           raise ValidationError("This number is given by another team")
         else:
           # update other entry
-          otherCarWithThatNumber.skinFile = self.skinFile
-          otherCarWithThatNumber.wasUploaded = False
+          # TODO: UPDATE OTHER ENTRY
+          otherCarWithThatNumber.email = self.email
+          otherCarWithThatNumber.number = self.number
+          otherCarWithThatNumber.teamName = self.teamName
+          otherCarWithThatNumber.firstName = self.firstName
+          otherCarWithThatNumber.lastName = self.lastName
+          otherCarWithThatNumber.season = self.season
+          otherCarWithThatNumber.vehicleClass = self.vehicleClass
           otherCarWithThatNumber.save() 
           self.token = otherCarWithThatNumber.token
           raise ValidationError("The old registration was updated.")
-    if self.token =="":
-      self.token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-  def save(self, *args, **kwargs):
-    super(Registration, self).save(*args, **kwargs)
-    states = RegistrationStatus.objects.filter(registration=self).order_by("date")
-    if states.count() == 0: # initial submission
-      newStatus = RegistrationStatus()
-      newStatus.registration = self
-      newStatus.text = "We received your submission of car #{0} for season {1}. Filename: <a target=\"blank\" href=\"/media/{2}\">{2}</a>".format(self.number, self.season, self.skinFile) 
-      newStatus.save()
-    else:
-      if self.ignoreReason != "":
-        newStatus = RegistrationStatus()
-        newStatus.registration = self
-        newStatus.text = "Your submission for car #{0} will be ignored. Reason: {1}".format(self.number, self.ignoreReason)
-        newStatus.save()
-      else:
-        newStatus = RegistrationStatus()
-        newStatus.registration = self
-        newStatus.text = "Your submission state changed. Car #{0}, on Server: {1}".format(self.number, self.wasUploaded)
-        if self.wasUploaded:
-          newStatus.text = newStatus.text + ". You can consider your submission as finished."
-        newStatus.save()
     
-
-
-class RegistrationStatus(models.Model):
-  registration = models.ForeignKey(Registration, on_delete=models.CASCADE, default=None, related_name="Registration")
-  text = models.TextField(max_length=500, blank=False, null=False)
-  date = models.DateTimeField(default=datetime.now)
+    self.token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+    
+class LiverySubmission(models.Model):
+  skinFile = models.FileField(default=None, blank=True, upload_to='uploads/registration/',verbose_name="Skin file")
+  registrationToken = models.CharField(max_length=10, blank=False, null=False,verbose_name="Registration token")
+  copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
+  
+  @property
+  def downloadLink(self):
+    return mark_safe("""<a target="blank" href="{}">Download skin file</a>""".format(self.skinFile.url)) 
+  
+  @property
+  def registrationLink(self):
+    registration =  Registration.objects.filter(token=self.registrationToken).first()
+    return mark_safe("""<a target="blank" href="/admin/frontend/registration/{}">{}</a>""".format(registration.id,registration)) 
+  
+  def clean(self):
+    if Registration.objects.filter(token=self.registrationToken).count() == 0:
+      raise ValidationError("Please check your registration token")
+    if not self.copyrightAccept:
+      raise ValidationError("Please make sure your skin is free of any copyright violation.")
+    if self.skinFile and not self.skinFile.name.endswith(".dds"):
+      raise ValidationError("The skin file must be .dds")
+    LiverySubmission.objects.filter(registrationToken=self.registrationToken).delete()
   def __str__(self):
-    return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.text)
+    return str(Registration.objects.filter(token=self.registrationToken).first())
 
+    
 class Upload(models.Model):
   name = models.CharField(default="", max_length=200,null=True)
   filePath = models.FileField(blank=True, default=None, null=True, upload_to='uploads/files')
