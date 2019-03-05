@@ -1,4 +1,4 @@
-Django==2.1.2
+django>=2.1.6
 django-ckeditor==5.6.1
 django-js-asset==1.1.0
 djangorestframework==3.8.2
@@ -13,3 +13,4 @@ gunicorn==19.9.0
 matplotlib==3.0.2
 sorl-thumbnail==12.5.0
 nameparser==1.0.2
+1.0.23==1.0.23
