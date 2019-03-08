@@ -104,15 +104,9 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
 
 class RegistrationAdmin(admin.ModelAdmin):
   readonly_fields = ('gdprAccept',)  
-  actions = ['downloadServerData']
   def get_queryset(self, request):
     qs = super(RegistrationAdmin, self).get_queryset(request)
     return qs.filter(season__isRunning=True)
-  """
-  def downloadServerData(modeladmin, request, queryset):
-    generateServerData(queryset)
-  downloadServerData.short_description = "Download server data"
-  """
 
 class IncidentAdmin(admin.ModelAdmin):
   def get_queryset(self, request):

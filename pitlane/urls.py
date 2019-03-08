@@ -52,7 +52,6 @@ else:
         path('withdrawsignup/', views.withdraw),
         path('submitlivery/', views.liverySubmission),
         path('driveroftheday/<int:id>/', views.driverOfTheDayVote),
-        path('privacyaccept/', views.privacyAccept), # is only enabled when using static signup
         path('rules/', views.get_rules),
         path('incidentreport/', views.incidentReport),
         path('seasons/<int:id>/drivers/', views.get_seasonStandingsDrivers),

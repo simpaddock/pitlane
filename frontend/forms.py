@@ -32,9 +32,9 @@ class IncidentForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super(IncidentForm, self).__init__(*args, **kwargs)
     if self.instance:
-        self.fields['race'].queryset = Race.objects.filter(season__isRunning=True)
-        self.fields['ownCar'].queryset = DriverEntry.objects.filter(teamEntry__season__isRunning=True)
-        self.fields['opponentCar'].queryset = self.fields['ownCar'].queryset
+      self.fields['race'].queryset = Race.objects.filter(season__isRunning=True)
+      self.fields['ownCar'].queryset = DriverEntry.objects.filter(teamEntry__season__isRunning=True)
+      self.fields['opponentCar'].queryset = self.fields['ownCar'].queryset
 
 class DriverOfTheDayVoteForm(forms.ModelForm): 
   class Meta:

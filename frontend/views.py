@@ -120,7 +120,6 @@ def get_SingleNews(request, id:int):
   })
 
 
-
 @cache_page(60 * 15)
 def get_seasonList(request):
   seasonList = Season.objects.all().order_by("-isRunning")
@@ -148,7 +147,7 @@ def get_seasonList(request):
   
   seasonsJSON = dumps(resultList, cls=JSONEncoder)
   return renderWithCommonData(request, 'frontend/seasons.html', {
-    "seasons": seasonList,
+    "seasons": resultList,
     "seasonsJSON": seasonsJSON
   })
 
