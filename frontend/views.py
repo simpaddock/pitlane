@@ -249,15 +249,23 @@ def get_seasonStandingsDrivers(request, id: int):
     "containerWidth": getRaceContainerWidth(racesRaw.count())
   })
 
-def signUp(request):
+def handleSignUpForm(request, update: bool):
   if LEAGUECONFIG["staticSignup"]:
-    textBlocks = TextBlock.objects.filter(context='signup')
-    return renderWithCommonData(request, 'frontend/signup.html', { "textBlocks": textBlocks})
-  form = RegistrationForm()
+      textBlocks = TextBlock.objects.filter(context='signup')
+      return renderWithCommonData(request, 'frontend/signup.html', { "textBlocks": textBlocks})
+  form = None
+  if update:
+    form = UpdateRegistrationForm()
+  else:
+    form = RegistrationForm()
   token = None
 
   if request.POST:
-    form = RegistrationForm(request.POST,request.FILES)
+    
+    if update:
+      form = UpdateRegistrationForm(request.POST,request.FILES)
+    else:
+      form = RegistrationForm(request.POST,request.FILES)
     if form.is_valid():
       registrationData = form.save(commit=False)
       registrationData.save()
@@ -268,6 +276,24 @@ def signUp(request):
     "form": form,
     "token": token
   })
+
+def signUp(request):
+  return handleSignUpForm(request, False)
+
+def signUpUpdate(request):
+  return handleSignUpForm(request, True)
+
+def withdraw(request):
+  form = WithdrawRegistrationForm()
+  if request.method=='POST':
+    form = WithdrawRegistrationForm(request.POST)
+    if form.is_valid():
+      formData = form.cleaned_data
+      token = formData.get('token')
+      registrations = Registration.objects.filter(token=token).delete()
+      liveries = LiverySubmission.objects.filter(registrationToken=token).delete()  
+      form = None # it's not needed anymore.     
+  return renderWithCommonData(request, 'frontend/withdraw.html', { "form": form})
 
 def liverySubmission(request):
   form = LiverySubmissionForm()

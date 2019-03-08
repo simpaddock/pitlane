@@ -4,11 +4,19 @@ from .models import Registration, Incident, Race, Season, DriverEntry, GenericPr
 class RegistrationForm(forms.ModelForm): 
   class Meta:
     model = Registration
-    fields = ['email', 'teamName', 'firstName', 'lastName', 'number', 'vehicleClass', 'season', 'token', 'gdprAccept']
+    fields = ['email', 'teamName', 'firstName', 'lastName', 'number', 'vehicleClass', 'season', 'gdprAccept']
   def __init__(self, *args, **kwargs):
     super(RegistrationForm, self).__init__(*args, **kwargs)
     if self.instance:
-        self.fields['season'].queryset = Season.objects.filter(isRunning=True,isOpen=True)
+      self.fields['season'].queryset = Season.objects.filter(isRunning=True,isOpen=True)
+
+class UpdateRegistrationForm(forms.ModelForm): 
+  class Meta:
+    model = Registration
+    fields = ['email', 'teamName', 'firstName', 'lastName', 'number', 'vehicleClass', 'season', 'token', 'gdprAccept']
+
+class WithdrawRegistrationForm(forms.Form):
+  token = forms.CharField(min_length=6,max_length=6,required = True)
 
 class LiverySubmissionForm(forms.ModelForm): 
   class Meta:
