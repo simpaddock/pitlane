@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import LiverySubmission, VehicleClass, DriverOfTheDayVote, Upload, GenericPrivacyAccept, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
+from .models import LiverySubmission, VehicleClass, DriverOfTheDayVote, Upload, TextBlock,Incident, Registration, Track, Race, Driver, Team, Country, DriverEntry, TeamEntry, RaceResult, DriverRaceResult, Season, DriverRaceResultInfo, NewsArticle
 from django.db.models.signals import post_save
 from django.core.cache import cache
 from django.dispatch import receiver
@@ -119,10 +119,6 @@ class IncidentAdmin(admin.ModelAdmin):
     qs = super(IncidentAdmin, self).get_queryset(request)
     return qs.filter(race__season__isRunning=True)
 
-class GenericPrivacyAcceptAdmin(admin.ModelAdmin):
-  def get_readonly_fields(self, request, obj=None):
-    return self.fields or [f.name for f in self.model._meta.fields]
-
 class LiverySubmissionAdmin(admin.ModelAdmin):
   readonly_fields = ('copyrightAccept', 'downloadLink','registrationLink')
 
@@ -146,7 +142,6 @@ class LiverySubmissionAdmin(admin.ModelAdmin):
   (Registration, RegistrationAdmin),
   (LiverySubmission,LiverySubmissionAdmin),
   (DriverOfTheDayVote,DriverOfTheDayVoteAdmin),
-  (GenericPrivacyAccept,GenericPrivacyAcceptAdmin),
 ]]
 
 @receiver(post_save)

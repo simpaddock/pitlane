@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registration, Incident, Race, Season, DriverEntry, GenericPrivacyAccept, DriverOfTheDayVote, Driver, LiverySubmission
+from .models import Registration, Incident, Race, Season, DriverEntry, DriverOfTheDayVote, Driver, LiverySubmission
 
 class RegistrationForm(forms.ModelForm): 
   class Meta:
@@ -23,13 +23,6 @@ class LiverySubmissionForm(forms.ModelForm):
     model = LiverySubmission
     fields = ['registrationToken', 'skinFile', 'copyrightAccept']
 
-
-class GenericPrivacyAcceptAcceptForm(forms.ModelForm): 
-  class Meta:
-    model = GenericPrivacyAccept
-    fields = ['email', 'givenName', 'familyName', 'privacyAccept']
-  def __init__(self, *args, **kwargs):
-    super(GenericPrivacyAcceptAcceptForm, self).__init__(*args, **kwargs)
 
 class IncidentForm(forms.ModelForm): 
   class Meta:

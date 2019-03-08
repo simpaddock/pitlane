@@ -341,20 +341,6 @@ class TextBlock(models.Model):
   def plainText(self):
     return strip_tags(self.text.replace("\r",""))
 
-class GenericPrivacyAccept(models.Model):
-  email =models.EmailField(max_length=200, default="", verbose_name="Email address")
-  givenName = models.CharField(blank=False, max_length=400, default="", verbose_name="Given name(s)")
-  familyName = models.CharField(blank=False, max_length=400, default="", verbose_name="Family name")
-  privacyAccept = models.BooleanField(default=False, blank=False, verbose_name="I give my consent")
-  acceptDate = models.DateTimeField(default=datetime.now, blank=False)
-  ipAddress = models.GenericIPAddressField()
-  userAgent = models.CharField(blank=False, max_length=255, default="")
-  def clean(self):
-    if not self.privacyAccept:
-      raise ValidationError("You need to accept.")
-  def __str__(self):
-    return "{0}, {1}".format(self.familyName, self.givenName)
-
 class VehicleClass(models.Model):
   displayName = models.CharField(verbose_name="Vehicle display name", blank=False, max_length=300)
   vehicleClass = models.CharField(verbose_name="Internal name", max_length=300, blank=False)

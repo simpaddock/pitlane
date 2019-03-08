@@ -309,26 +309,6 @@ def liverySubmission(request):
     "submitted": submitted
   })
 
-def privacyAccept(request):
-  if not LEAGUECONFIG["staticSignup"]:
-    raise Http404("Page does not exist")
-  form = GenericPrivacyAcceptAcceptForm()
-  submitted = False
-
-  if request.POST:
-    form = GenericPrivacyAcceptAcceptForm(request.POST,request.FILES)
-    if form.is_valid():
-      acceptData = form.save(commit=False)
-      acceptData.userAgent = request.META['HTTP_USER_AGENT']
-      acceptData.ipAddress = getClientIP(request)
-      acceptData.save()
-      submitted = True
-     
-  return renderWithCommonData(request, 'frontend/privacyaccept.html', {
-    "form": form,
-    "submitted": submitted
-  })
-
 def driverOfTheDayVote(request, id: int):
   if not LEAGUECONFIG["dotd"]:
     raise Http404()
