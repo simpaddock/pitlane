@@ -13,4 +13,5 @@ gunicorn==19.9.0
 matplotlib==3.0.2
 sorl-thumbnail==12.5.0
 nameparser==1.0.2
-1.0.23==1.0.23
+nameparser==1.0.2
+Unidecode==1.0.23
