@@ -302,19 +302,23 @@ class DriverRaceResultInfo(models.Model):
   def __str__(self):
     return self.name + ": " + str(self.value)
 
+class NewsArticleCategory(models.Model):
+  name = models.CharField(max_length=100)
+  def __str__(self):
+    return self.name
+
 class NewsArticle(models.Model):
   title =models.CharField(max_length=200)
   text = RichTextUploadingField()
   date = models.DateTimeField()
   isDraft = models.BooleanField(default=False, blank=False, verbose_name="Is draft?")
   mediaFile = models.ImageField(default=None, blank=True, upload_to='uploads/news/')
+  categories = models.ManyToManyField(NewsArticleCategory)
   def __str__(self):
     return "{0}: {1}".format(self.date.strftime(LEAGUECONFIG["dateFormat"]), self.title)  
   def clean(self):
     if "script" in self.text.lower():
       raise ValidationError("Script tags are not allowed")
-
-
 
 class Incident(models.Model):
   timeCode = models.FloatField()

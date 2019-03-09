@@ -26,6 +26,8 @@ matplotlib.use("Agg")
 import base64
 from frontend.utils import generateSparkline, getChildValue, getSeasonDrivers, getRaceResult, getTeamStandings, getClientIP, JSONEncoder
 from frontend.templatetags.frontend_tags import next_championship
+import re
+from requests import get
 LIST_DATA_RACE = "race"
 LIST_DATA_TEAM_STANDINGS = "teams"
 LIST_DATA_DRIVERS_STANDINGS = "drivers"
@@ -37,17 +39,22 @@ from pitlane.settings import LEAGUECONFIG
 def getRoutes():
   routes = OrderedDict()
   season = next_championship()
-  routes["news"] = "News"
-  routes["seasons"] = "Seasons"
-  if season is not None:
-    routes["seasons/"+str(season.id)+"/drivers"] = "Drivers"
-    routes["seasons/"+str(season.id)+"/teams"] = "Teams"
-  routes["about"] = "about"
-  if LEAGUECONFIG["pitlane"] is not None:
-    routes[LEAGUECONFIG["pitlane"]] = "Forum"
-  routes["rules"] = "Rules"
-  routes["incidentreport"] = "Incident report"
+  for key, route  in LEAGUECONFIG["routes"].items():
+    routes[key] = route.replace("%season%", str(season.id))
   return routes
+
+def getServerInfo(url: str):
+  pattern = r"<td class=.right.>(?P<name>[^<]+)<\/td><td>(?P<value>[^<]+)"
+  statusPattern = r"alt='(?P<status>[^\']+)"
+  data = get(url).text
+  matches = re.finditer(pattern, data,re.MULTILINE)
+  result = OrderedDict()
+  result["Server-Status"] = re.findall(statusPattern, data)[0]
+  for match in matches:
+    name = match.group("name")
+    value  = match.group("value")
+    result[name] = value
+  return result
 
 def get_robots(request):
   text = "User-agent: *\n"
@@ -61,6 +68,9 @@ def renderWithCommonData(request, template, context):
   context["running"] = next_championship()
   template = template.replace("frontend/", "frontend/" + LEAGUECONFIG["theme"] + "/")
   context["baseLayout"] = 'frontend/'+  LEAGUECONFIG["theme"] + '/layout.html'
+  context["servers"] = OrderedDict()
+  for key, url in LEAGUECONFIG["servers"].items():
+    context["servers"][key] = getServerInfo(url)
   return render(request, template, context)
 
 def get_index(request):
