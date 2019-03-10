@@ -362,7 +362,7 @@ class Registration(models.Model):
   token = models.CharField(max_length=10, default="",blank=True, verbose_name="Token (only needed if update)")
   vehicleClass = models.ForeignKey(VehicleClass, on_delete=models.CASCADE, default=None, blank=False, null=False, verbose_name="Vehicle")
   def __str__(self):
-    return "#" + str(self.number) + ": " + self.season.name + " (" + self.email + ")"
+    return "#" + str(self.number) + " " + self.teamName + ": " + self.season.name + " (" + self.email + ")"
     
   def clean(self):
     if not self.gdprAccept:
