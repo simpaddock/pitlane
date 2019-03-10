@@ -393,7 +393,7 @@ class Registration(models.Model):
     self.token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
     
 class LiverySubmission(models.Model):
-  skinFile = models.FileField(default=None, blank=True, upload_to='uploads/registration/',verbose_name="Skin file")
+  skinFile = models.FileField(default=None, blank=True, upload_to='uploads/registration/',verbose_name="Skin file (pack multiple files into a *.zip)")
   registrationToken = models.CharField(max_length=10, blank=False, null=False,verbose_name="Registration token")
   copyrightAccept = models.BooleanField(default=False, blank=False, verbose_name="Our submission is free of copyright violations.")
   
@@ -411,8 +411,8 @@ class LiverySubmission(models.Model):
       raise ValidationError("Please check your registration token")
     if not self.copyrightAccept:
       raise ValidationError("Please make sure your skin is free of any copyright violation.")
-    if self.skinFile and not self.skinFile.name.endswith(".dds"):
-      raise ValidationError("The skin file must be .dds")
+    if self.skinFile and not self.skinFile.name.endswith(".zip"):
+      raise ValidationError("The skin file must be .zip")
     LiverySubmission.objects.filter(registrationToken=self.registrationToken).delete()
   def __str__(self):
     return str(Registration.objects.filter(token=self.registrationToken).first())
