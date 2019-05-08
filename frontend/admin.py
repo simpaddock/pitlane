@@ -9,6 +9,8 @@ from django.utils.html import mark_safe
 from django.db.models import Count
 from .utils import generateServerData
 
+from django.db.models import Transform
+from django.db.models.fields import Field
 
 class DriverEntryAdmin(admin.ModelAdmin):
   list_display = ['toString']
@@ -82,7 +84,7 @@ class RaceAdmin(admin.ModelAdmin):
     return qs.filter(season__isRunning=True)
 class DriverRaceResultAdmin(admin.ModelAdmin):
   readonly_fields = ('resultDetails',) 
-  actions = ['disqualify', 'addBonusPoint', 'removeBonusPoint']
+  actions = ['disqualify', 'addBonusPoint', 'removeBonusPoint', 'addPenaltyTime']
   def get_queryset(self, request):
     qs = super(DriverRaceResultAdmin, self).get_queryset(request)
     return qs.filter(raceResult__race__season__isRunning=True)
@@ -101,6 +103,63 @@ class DriverRaceResultAdmin(admin.ModelAdmin):
     for driver in queryset:
       DriverRaceResultInfo.objects.filter(name='bonuspoints', driverRaceResult_id=driver.id).delete()
   removeBonusPoint.short_description = "Remove bonus points"
+
+  def addPenaltyTime(modeladmin, request, queryset):
+    for driver in queryset:
+      oldPosition = int(DriverRaceResultInfo.objects.filter(name='position', driverRaceResult_id=driver.id).first().value)
+      time = float(DriverRaceResultInfo.objects.filter(name='time', driverRaceResult_id=driver.id).first().value)
+      lap = int(DriverRaceResultInfo.objects.filter(name='laps', driverRaceResult_id=driver.id).first().value)
+      # correct now in front 
+      penalizedTime = float(time) + 3
+      print("penalized", time,penalizedTime, oldPosition, driver.pk)
+      affected = DriverRaceResultInfo.objects.filter(name='time', driverRaceResult__raceResult_id=driver.raceResult)
+      moved = 0
+      for result in affected:
+        affectedTime = float(result.value)
+        if affectedTime >= time and affectedTime <= penalizedTime:
+          position = DriverRaceResultInfo.objects.filter(name='position', driverRaceResult_id=result.driverRaceResult).first()
+          affectedLap = int(DriverRaceResultInfo.objects.filter(name='laps', driverRaceResult_id=result.driverRaceResult).first().value)
+
+          positionValue =  int(position.value)
+          if positionValue != oldPosition and affectedLap >= lap:
+            position.value = int(position.value) -1
+            position.save()
+            print("corrected -> ",affectedTime, position.id, positionValue)
+            
+            if str(position.value) in LEAGUECONFIG["ruleset"]["points"]:
+              newPoints = DriverRaceResultInfo.objects.filter(name='points', driverRaceResult_id=driver.id).first()
+              newPoints.value = LEAGUECONFIG["ruleset"]["points"][str(position.value)]
+              newPoints.save()
+            moved = moved + 1
+      
+      newPosition = DriverRaceResultInfo.objects.filter(name='position', driverRaceResult_id=driver.id).first()
+      newPosition.value = int(newPosition.value) + moved
+      newPosition.save()
+
+      newTime = DriverRaceResultInfo.objects.filter(name='time', driverRaceResult_id=driver.id).first()
+      newTime.value = penalizedTime
+      newTime.save()
+      if str(newPosition.value) in LEAGUECONFIG["ruleset"]["points"]:
+        newPoints = DriverRaceResultInfo.objects.filter(name='points', driverRaceResult_id=driver.id).first()
+        newPoints.value = LEAGUECONFIG["ruleset"]["points"][str(newPosition.value)]
+        newPoints.save()
+
+      if DriverRaceResultInfo.objects.filter(name='3spenaltycount', driverRaceResult_id=driver.id).count() == 0:
+        bonus = DriverRaceResultInfo()
+        bonus.driverRaceResult = driver
+        bonus.name ="3spenaltycount"
+        bonus.value = "1"
+        bonus.infoType = "int"
+        bonus.save()
+      else:
+        bonus = DriverRaceResultInfo.objects.filter(name='3spenaltycount', driverRaceResult_id=driver.id).first()
+        bonus.value = int(bonus.value) + 1
+        bonus.save()
+
+
+       
+    
+
 
 class RegistrationAdmin(admin.ModelAdmin):
   readonly_fields = ('gdprAccept',)  
